@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SensorDataRepository extends JpaRepository<SensorData, Long> {
+public interface SensorDataRepository extends JpaRepository<SensorData, Long>, SensorDataRepositoryCustom  {
     List<SensorData> findAllByOrderByDataHoraDesc();
 
     List<SensorData> findAllByOrderByDataHoraAsc();
-}
 
+}

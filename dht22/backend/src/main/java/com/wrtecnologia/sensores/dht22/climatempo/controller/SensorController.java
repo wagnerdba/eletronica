@@ -2,7 +2,9 @@ package com.wrtecnologia.sensores.dht22.climatempo.controller;
 
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
-import com.wrtecnologia.sensores.dht22.climatempo.repository.SensorDataRepository;
+import com.wrtecnologia.sensores.dht22.climatempo.service.SensorService;
+import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataStatisticsDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,10 @@ import java.util.List;
 @RequestMapping("/api/dht22")
 public class SensorController {
 
-    private SensorDataRepository sensorDataRepository;
+    private final SensorService sensorService;
 
-    public SensorController(SensorDataRepository sensorDataRepository) {
-        this.sensorDataRepository = sensorDataRepository;
+    public SensorController(SensorService sensorService) {
+        this.sensorService = sensorService;
     }
 
     @PostMapping("/post_data")
@@ -32,23 +34,12 @@ public class SensorController {
             // Log do JSON recebido
             System.out.println(" -> Requisição Recebida: " + sensorDataDTO.toString());
 
-            // Verificar se o campo dataHora é nulo ou vazio
-            if (sensorDataDTO.getDataHora() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo 'data_hora' é obrigatório e não pode ser nulo.");
-            }
-
-            // Criar e configurar o objeto SensorData
-            SensorData sensorData = new SensorData();
-            sensorData.setTemperaturaCelsius(sensorDataDTO.getTemperaturaCelsius());
-            sensorData.setTemperaturaFahrenheit(sensorDataDTO.getTemperaturaFahrenheit());
-            sensorData.setUmidade(sensorDataDTO.getUmidade());
-            sensorData.setDataHora(sensorDataDTO.getDataHoraAsLocalDateTime()); // Converter a string de data para LocalDateTime
-
-            // Salvar no banco de dados
-            sensorDataRepository.save(sensorData);
+            // Salvar dados do sensor usando o serviço
+            SensorData sensorData = sensorService.saveSensorData(sensorDataDTO);
 
             // Retornar o ID e UUID gerados pelo banco de dados
-            return ResponseEntity.status(HttpStatus.CREATED).body("/api/dht22/post_data - Sucesso - id: " + sensorData.getId() + ", uuid: " + sensorData.getUuid());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("/api/dht22/post_data - Sucesso - id: " + sensorData.getId() + ", uuid: " + sensorData.getUuid());
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("POST - Falha de validação: " + e.getMessage());
@@ -58,7 +49,7 @@ public class SensorController {
     }
 
     // Novo endpoint GET para consulta
-    @GetMapping("/consulta")
+    @GetMapping("/test")
     public ResponseEntity<String> consultarDados() {
         // Retorna uma string qualquer como resposta
         return ResponseEntity.ok("Retorno do endpoint de teste da aplicação do sensor DHT22");
@@ -68,31 +59,15 @@ public class SensorController {
     public ResponseEntity<List<SensorDataDTO>> getAllSensorData(
             @RequestParam(value = "order", defaultValue = "A") String order) {
 
-        List<SensorData> sensorDataList;
-
-        if ("D".equalsIgnoreCase(order)) {
-            // Busca dados em ordem decrescente
-            sensorDataList = sensorDataRepository.findAllByOrderByDataHoraDesc();
-        } else {
-            // Busca dados em ordem crescente
-            sensorDataList = sensorDataRepository.findAllByOrderByDataHoraAsc();
-        }
-
-        // Mapeia dados do sensor para DTO
-        List<SensorDataDTO> sensorDataDTOList = sensorDataList.stream()
-                .map(sensorData -> {
-                    SensorDataDTO dto = new SensorDataDTO();
-                    dto.setId(sensorData.getId());
-                    dto.setTemperaturaCelsius(sensorData.getTemperaturaCelsius());
-                    dto.setTemperaturaFahrenheit(sensorData.getTemperaturaFahrenheit());
-                    dto.setUmidade(sensorData.getUmidade());
-                    dto.setDataHora(sensorData.getDataHora().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                    dto.setUuid(sensorData.getUuid());
-                    return dto;
-                })
-                .toList();
+        // Obter todos os dados do sensor usando o serviço
+        List<SensorDataDTO> sensorDataDTOList = sensorService.getAllSensorData(order);
 
         return ResponseEntity.ok(sensorDataDTOList);
+    }
+
+    @GetMapping("/statistics")
+    public List<SensorDataStatisticsDTO> getSensorDataStatistics() {
+        return sensorService.getSensorDataStatistics();
     }
 
 }
