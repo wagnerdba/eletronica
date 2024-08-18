@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ClimatempoApplication<climatempo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.wrtecnologia.sensores.dht22.climatempo.ClimatempoApplication",
+            "projectName": "climatempo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

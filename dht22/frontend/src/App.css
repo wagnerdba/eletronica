@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 800px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.graph-container {
+  background-color: #f0f0f0; /* Cor de fundo cinza bem clarinho */
+  padding: 20px; /* Opcional: Adicione um pouco de espaçamento interno */
+  border-radius: 8px; /* Opcional: Adicione bordas arredondadas */
+}
+
+.tooltip-custom {
+  font-family: Arial, sans-serif;
+  color: #333;
+  font-weight: 100;
+  font-size: 13px;
+
+}

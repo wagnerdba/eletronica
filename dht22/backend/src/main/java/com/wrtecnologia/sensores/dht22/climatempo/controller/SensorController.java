@@ -50,7 +50,7 @@ public class SensorController {
 
     // Novo endpoint GET para consulta
     @GetMapping("/test")
-    public ResponseEntity<String> consultarDados() {
+    public ResponseEntity<String> consultarTest() {
         // Retorna uma string qualquer como resposta
         return ResponseEntity.ok("Retorno do endpoint de teste da aplicação do sensor DHT22");
     }
