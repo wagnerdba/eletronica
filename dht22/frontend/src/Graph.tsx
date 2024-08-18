@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Chart from 'react-apexcharts';
-import { ApexOptions } from 'apexcharts'; // Importar ApexOptions para tipagem
-import './App.css'; // Importe o arquivo CSS
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Chart from "react-apexcharts";
+import { ApexOptions } from "apexcharts"; // Importar ApexOptions para tipagem
+import "./App.css"; // Importe o arquivo CSS
 
 interface DataItem {
   datahoraTemperaturaMinima: string;
@@ -24,13 +24,14 @@ const Graph: React.FC = () => {
 
   useEffect(() => {
     const fetchData = () => {
-      axios.get('http://192.168.1.9:8081/api/dht22/statistics')
-        .then(response => {
+      axios
+        .get("http://192.168.1.9:8081/api/dht22/statistics")
+        .then((response) => {
           setData(response.data);
           setLoading(false);
         })
-        .catch(error => {
-          setError('Erro ao carregar os dados');
+        .catch((error) => {
+          setError("Erro ao carregar os dados");
           setLoading(false);
         });
     };
@@ -45,74 +46,88 @@ const Graph: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const dates = data.map(item => item.datahoraTemperaturaMinima.split(' ')[0]);
-  const tempMin = data.map(item => parseFloat(item.temperaturaMinima.replace('º', '').trim()));
-  const tempMax = data.map(item => parseFloat(item.temperaturaMaxima.replace('º', '').trim()));
-  const umidadeMin = data.map(item => parseFloat(item.umidadeMinima.replace('%', '').trim()));
-  const umidadeMax = data.map(item => parseFloat(item.umidadeMaxima.replace('%', '').trim()));
+  const dates = data.map(
+    (item) => item.datahoraTemperaturaMinima.split(" ")[0]
+  );
+  const tempMin = data.map((item) =>
+    parseFloat(item.temperaturaMinima.replace("º", "").trim())
+  );
+  const tempMax = data.map((item) =>
+    parseFloat(item.temperaturaMaxima.replace("º", "").trim())
+  );
+  const umidadeMin = data.map((item) =>
+    parseFloat(item.umidadeMinima.replace("%", "").trim())
+  );
+  const umidadeMax = data.map((item) =>
+    parseFloat(item.umidadeMaxima.replace("%", "").trim())
+  );
 
   const options: ApexOptions = {
     chart: {
-      type: 'line' as const, // Especificar o tipo literal corretamente
+      type: "line" as const, // Especificar o tipo literal corretamente
     },
     xaxis: {
       categories: dates,
-      tickPlacement: 'on',
+      tickPlacement: "on",
       labels: {
-        format: 'dd/MM/yyyy'
-      }
+        format: "dd/MM/yyyy",
+      },
     },
     yaxis: [
       {
         title: {
-          text: 'Temperatura (ºC)'
+          text: "Temperatura (ºC)",
         },
-        seriesName: 'Temperatura'
+        seriesName: "Temperatura",
       },
       {
         opposite: true,
         title: {
-          text: 'Umidade (%)'
-        }
-      }
+          text: "Umidade (%)",
+        },
+      },
     ],
     stroke: {
-      curve: 'smooth'
+      curve: "smooth",
     },
-    colors: ['#FF0000', '#3073f0', '#e3da29', '#d781fc'],
+    colors: ["#FF0000", "#3073f0", "#f0c905", "#23eb58"],
     series: [
       {
-        name: 'Temperatura Máxima (ºC)',
-        type: 'line', // Especificar o tipo literal corretamente
-        data: tempMax
+        name: "Temperatura Máxima (ºC)",
+        type: "line", // Especificar o tipo literal corretamente
+        data: tempMax,
       },
       {
-        name: 'Temperatura Mínima (ºC)',
-        type: 'line', // Especificar o tipo literal corretamente
-        data: tempMin
+        name: "Temperatura Mínima (ºC)",
+        type: "line", // Especificar o tipo literal corretamente
+        data: tempMin,
       },
       {
-        name: 'Umidade Mínima (%)',
-        type: 'bar', // Especificar o tipo literal corretamente
-        data: umidadeMin
+        name: "Umidade Mínima (%)",
+        type: "bar", // Especificar o tipo literal corretamente
+        data: umidadeMin,
       },
       {
-        name: 'Umidade Máxima (%)',
-        type: 'bar', // Especificar o tipo literal corretamente
-        data: umidadeMax
-      }
+        name: "Umidade Máxima (%)",
+        type: "bar", // Especificar o tipo literal corretamente
+        data: umidadeMax,
+      },
     ],
     plotOptions: {
       bar: {
-        columnWidth: '50%'
-      }
+        columnWidth: "50%",
+      },
     },
     tooltip: {
-      custom: function({ series, seriesIndex, dataPointIndex, w }) {
-        const tempMinTime = data[dataPointIndex].datahoraTemperaturaMinima.split(' ')[1];
-        const tempMaxTime = data[dataPointIndex].datahoraTemperaturaMaxima.split(' ')[1];
-        const umidMinTime = data[dataPointIndex].datahoraUmidadeMinima.split(' ')[1];
-        const umidMaxTime = data[dataPointIndex].datahoraUmidadeMaxima.split(' ')[1];
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        const tempMinTime =
+          data[dataPointIndex].datahoraTemperaturaMinima.split(" ")[1];
+        const tempMaxTime =
+          data[dataPointIndex].datahoraTemperaturaMaxima.split(" ")[1];
+        const umidMinTime =
+          data[dataPointIndex].datahoraUmidadeMinima.split(" ")[1];
+        const umidMaxTime =
+          data[dataPointIndex].datahoraUmidadeMaxima.split(" ")[1];
         const tempMin = series[1][dataPointIndex];
         const tempMax = series[0][dataPointIndex];
         const umidMin = series[2][dataPointIndex];
@@ -127,17 +142,22 @@ const Graph: React.FC = () => {
             <strong>Umidade Mínima:</strong> ${umidMin}% às ${umidMinTime}
           </div>
         `;
-      }
-    }
+      },
+    },
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="graph-container">
       <h2>Gráfico de Temperatura e Umidade</h2>
-      <Chart options={options} series={options.series} type="line" height={400} />
+      <Chart
+        options={options}
+        series={options.series}
+        type="line"
+        height={400}
+      />
     </div>
   );
 };
