@@ -26,5 +26,9 @@ h2 {
   color: #333;
   font-weight: 100;
   font-size: 13px;
+}
 
+.apexcharts-bar-series .apexcharts-bar-area {
+  stroke-width: 0;
+  stroke: none;
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Chart from "react-apexcharts";
-import { ApexOptions } from "apexcharts"; // Importar ApexOptions para tipagem
-import "./App.css"; // Importe o arquivo CSS
+import { ApexOptions } from "apexcharts";
+import "./App.css";
 
 interface DataItem {
   datahoraTemperaturaMinima: string;
@@ -31,18 +31,14 @@ const Graph: React.FC = () => {
           setLoading(false);
         })
         .catch((error) => {
-          setError("Erro ao carregar os dados");
+          setError("Erro ao carregar os dados...");
           setLoading(false);
         });
     };
 
-    // Buscar dados iniciais
     fetchData();
-
-    // Configure o intervalo para buscar dados a cada 60 segundos
     const intervalId = setInterval(fetchData, 60000);
 
-    // Limpe o intervalo na desmontagem do componente
     return () => clearInterval(intervalId);
   }, []);
 
@@ -64,7 +60,7 @@ const Graph: React.FC = () => {
 
   const options: ApexOptions = {
     chart: {
-      type: "line" as const, // Especificar o tipo literal corretamente
+      type: "line" as const,
     },
     xaxis: {
       categories: dates,
@@ -89,33 +85,52 @@ const Graph: React.FC = () => {
     ],
     stroke: {
       curve: "smooth",
+      width: 3,
     },
-    colors: ["#FF0000", "#3073f0", "#f0c905", "#23eb58"],
+    colors: ["#FF0000", "#0d00ff", "#f0c905", "#23eb58"],
     series: [
       {
         name: "Temperatura Máxima (ºC)",
-        type: "line", // Especificar o tipo literal corretamente
+        type: "line",
         data: tempMax,
       },
       {
         name: "Temperatura Mínima (ºC)",
-        type: "line", // Especificar o tipo literal corretamente
+        type: "line",
         data: tempMin,
       },
       {
         name: "Umidade Mínima (%)",
-        type: "bar", // Especificar o tipo literal corretamente
+        type: "bar",
         data: umidadeMin,
       },
       {
         name: "Umidade Máxima (%)",
-        type: "bar", // Especificar o tipo literal corretamente
+        type: "bar",
         data: umidadeMax,
       },
     ],
     plotOptions: {
       bar: {
-        columnWidth: "50%",
+        columnWidth: "65%",
+        borderRadius: 0, // Remove as bordas arredondadas
+        //borderWidth: 0, // Remove as bordas das barras
+        colors: {
+          ranges: [
+            {
+              from: -Infinity,
+              to: 29,
+              color: "#fc6579", // Cor vermelha para valores abaixo de 12%
+            },
+            
+            {
+              from: 30,
+              to: 34,
+              color: "#28eefc", // Cor rosa para valores entre 13% e 30%
+            },
+            
+          ],
+        },
       },
     },
     tooltip: {
@@ -128,6 +143,7 @@ const Graph: React.FC = () => {
           data[dataPointIndex].datahoraUmidadeMinima.split(" ")[1];
         const umidMaxTime =
           data[dataPointIndex].datahoraUmidadeMaxima.split(" ")[1];
+
         const tempMin = series[1][dataPointIndex];
         const tempMax = series[0][dataPointIndex];
         const umidMin = series[2][dataPointIndex];
