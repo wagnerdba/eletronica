@@ -39,6 +39,7 @@ const RealTimeGraph: React.FC = () => {
       data: [] as { x: number; y: number }[],
     },
   ]);
+  const [temperatureColor, setTemperatureColor] = useState<string>("#FF5733"); // Cor inicial
 
   useEffect(() => {
     const fetchTemperatureData = () => {
@@ -69,6 +70,17 @@ const RealTimeGraph: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (temperatureData.length > 0) {
+      const lastTemperature = temperatureData[temperatureData.length - 1].temperatura_celsius;
+      
+      // Define a cor com base na temperatura
+      if (lastTemperature < 23) {
+        setTemperatureColor("#0000FF"); // Azul para temperatura > 28
+      } else {
+        setTemperatureColor("#FF5733"); // Cor padrão
+      }
+    }
+
     const formattedSeries = [
       {
         name: "Temperatura (ºC)",
@@ -143,8 +155,7 @@ const RealTimeGraph: React.FC = () => {
     markers: {
       size: 0,
     },
-    colors: ["#FF5733", "#FFCA28"], // Cor laranja forte para umidade, outra cor para temperatura
-    
+    colors: [temperatureColor, "#FFCA28"], // Usa a cor definida dinamicamente para temperatura
 
     tooltip: {
       enabled: false,
