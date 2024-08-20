@@ -28,6 +28,7 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                         ROW_NUMBER() OVER (PARTITION BY TO_CHAR(data_hora, 'DD/MM/YYYY') ORDER BY temperatura_celsius ASC, data_hora DESC) AS rn_temp
                     FROM
                         sensor_data
+                   WHERE temperatura_celsius > 0 AND umidade > 0
                 ),
                 TempMax AS (
                     SELECT
@@ -38,6 +39,7 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                         ROW_NUMBER() OVER (PARTITION BY TO_CHAR(data_hora, 'DD/MM/YYYY') ORDER BY temperatura_celsius DESC, data_hora DESC) AS rn_temp
                     FROM
                         sensor_data
+                   WHERE temperatura_celsius > 0 AND umidade > 0
                 ),
                 UmidMin AS (
                     SELECT
@@ -47,6 +49,7 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                         ROW_NUMBER() OVER (PARTITION BY TO_CHAR(data_hora, 'DD/MM/YYYY') ORDER BY umidade ASC, data_hora DESC) AS rn_umid
                     FROM
                         sensor_data
+                   WHERE temperatura_celsius > 0 AND umidade > 0
                 ),
                 UmidMax AS (
                     SELECT
@@ -56,6 +59,7 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                         ROW_NUMBER() OVER (PARTITION BY TO_CHAR(data_hora, 'DD/MM/YYYY') ORDER BY umidade DESC, data_hora DESC) AS rn_umid
                     FROM
                         sensor_data
+                   WHERE temperatura_celsius > 0 AND umidade > 0
                 )
                 SELECT
                     -- Data e hora da temperatura mínima
