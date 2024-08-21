@@ -177,7 +177,7 @@ const RealTimeGraph: React.FC = () => {
 
   return (
     <div className="graph-item"> {/* Use a classe do gráfico para garantir a altura correta */}
-      <h2>Gráfico em tempo real</h2>
+      <h3>Análise gráfica em tempo real</h3>
       <Chart options={chartOptions} series={chartSeries} type="area" height="150%" />
     </div>
   );

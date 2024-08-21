@@ -160,7 +160,7 @@ const HistoricalGraph: React.FC = () => {
 
   return (
     <div className="graph-item">
-      <h2>Temperatura e Umidade - Máximas e Mínimas</h2>
+      <h3>Temperatura e umidade: Máximas e Mínimas</h3>
       <Chart
         options={options}
         series={options.series}
