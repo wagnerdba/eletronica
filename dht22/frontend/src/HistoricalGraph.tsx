@@ -20,8 +20,8 @@ interface DataItem {
 const formatNumber = (value: number | string) => {
   const num = parseFloat(value.toString());
   if (isNaN(num)) return "0.00"; // Adiciona verificação para valores inválidos
-  const [integer, decimal = ""] = num.toString().split('.');
-  return `${integer}.${decimal.padEnd(2, '0').substring(0, 2)}`;
+  const [integer, decimal = ""] = num.toString().split(".");
+  return `${integer}.${decimal.padEnd(2, "0").substring(0, 2)}`;
 };
 
 const HistoricalGraph: React.FC = () => {
@@ -74,7 +74,12 @@ const HistoricalGraph: React.FC = () => {
   const options: ApexOptions = {
     chart: {
       type: "line" as const,
+      toolbar: {
+        show: false, // Remove a barra de ferramentas
+      },
+      background: '#ADD8E6' // Azul bebê
     },
+    
     xaxis: {
       categories: dates,
       tickPlacement: "on",
@@ -86,6 +91,11 @@ const HistoricalGraph: React.FC = () => {
       {
         title: {
           text: "Temperatura (ºC)",
+          style: {
+            fontWeight: "normal", // Remove o negrito
+            fontSize:"16px",
+            cssClass: 'font-smooth' // Aplica a suavização
+          },
         },
         seriesName: "Temperatura",
       },
@@ -93,6 +103,11 @@ const HistoricalGraph: React.FC = () => {
         opposite: true,
         title: {
           text: "Umidade (%)",
+          style: {
+            fontWeight: "normal", // Remove o negrito
+            fontSize:"16px",
+            cssClass: 'font-smooth' // Aplica a suavização
+          },
         },
       },
     ],
@@ -105,27 +120,27 @@ const HistoricalGraph: React.FC = () => {
       {
         name: "Temperatura Máxima (ºC)",
         type: "line",
-        data: tempMax.map(value => parseFloat(value)),
+        data: tempMax.map((value) => parseFloat(value)),
       },
       {
         name: "Temperatura Mínima (ºC)",
         type: "line",
-        data: tempMin.map(value => parseFloat(value)),
+        data: tempMin.map((value) => parseFloat(value)),
       },
       {
         name: "Umidade Mínima (%)",
         type: "bar",
-        data: umidadeMin.map(value => parseFloat(value)),
+        data: umidadeMin.map((value) => parseFloat(value)),
       },
       {
         name: "Umidade Máxima (%)",
         type: "bar",
-        data: umidadeMax.map(value => parseFloat(value)),
+        data: umidadeMax.map((value) => parseFloat(value)),
       },
     ],
     plotOptions: {
       bar: {
-        columnWidth: "65%",
+        columnWidth: "75%",
         borderRadius: 0,
       },
     },
@@ -137,18 +152,34 @@ const HistoricalGraph: React.FC = () => {
         const umidMinTime = item.datahoraUmidadeMinima.split(" ")[1];
         const umidMaxTime = item.datahoraUmidadeMaxima.split(" ")[1];
 
-        const tempMin = formatNumber(parseFloat(item.temperaturaMinima.replace("º", "").trim()));
-        const tempMax = formatNumber(parseFloat(item.temperaturaMaxima.replace("º", "").trim()));
-        const umidMin = formatNumber(parseFloat(item.umidadeMinima.replace("%", "").trim()));
-        const umidMax = formatNumber(parseFloat(item.umidadeMaxima.replace("%", "").trim()));
+        const tempMin = formatNumber(
+          parseFloat(item.temperaturaMinima.replace("º", "").trim())
+        );
+        const tempMax = formatNumber(
+          parseFloat(item.temperaturaMaxima.replace("º", "").trim())
+        );
+        const umidMin = formatNumber(
+          parseFloat(item.umidadeMinima.replace("%", "").trim())
+        );
+        const umidMax = formatNumber(
+          parseFloat(item.umidadeMaxima.replace("%", "").trim())
+        );
+        const varTemp = formatNumber(
+          parseFloat(item.variacaoTemperatura.replace("%", "").trim())
+        );
+        const varUmid = formatNumber(
+          parseFloat(item.variacaoUmidade.replace("%", "").trim())
+        );
 
         return `
           <div class="tooltip-custom">
             <strong>Data:</strong> ${dates[dataPointIndex]}<br/>
             <strong>Temperatura Máxima:</strong> ${tempMax}ºC às ${tempMaxTime}<br/>
             <strong>Temperatura Mínima:</strong> ${tempMin}ºC às ${tempMinTime}<br/>
+            <strong>Variação de Temperatura:</strong> ${varTemp}ºC<br/>
             <strong>Umidade Máxima:</strong> ${umidMax}% às ${umidMaxTime}<br/>
-            <strong>Umidade Mínima:</strong> ${umidMin}% às ${umidMinTime}
+            <strong>Umidade Mínima:</strong> ${umidMin}% às ${umidMinTime}<br/>
+            <strong>Variação de Umidade:</strong> ${varUmid}ºC<br/>
           </div>
         `;
       },
@@ -160,7 +191,7 @@ const HistoricalGraph: React.FC = () => {
 
   return (
     <div className="graph-item">
-      <h3>Temperatura e umidade: Máximas e Mínimas</h3>
+      <h3>Mínimas e Máximas por dia</h3>
       <Chart
         options={options}
         series={options.series}

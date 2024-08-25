@@ -112,6 +112,10 @@ const RealTimeGraph: React.FC = () => {
   const chartOptions: ApexOptions = {
     chart: {
       type: "area",
+      toolbar: {
+        show: false, // Remove a barra de ferramentas
+      },
+      background: '#ADD8E6', // Azul bebê
       animations: {
         enabled: true,
         easing: "linear",
@@ -133,6 +137,11 @@ const RealTimeGraph: React.FC = () => {
       {
         title: {
           text: "Temperatura (ºC)",
+          style: {
+            fontWeight: "normal", // Remove o negrito
+            fontSize:"16px",
+            cssClass: "font-smooth" // Aplica a suavização
+          },
         },
         labels: {
           formatter: (val: number) => formatNumber(val), // Formata os valores do eixo Y para temperatura
@@ -142,6 +151,11 @@ const RealTimeGraph: React.FC = () => {
         opposite: true,
         title: {
           text: "Umidade (%)",
+          style: {
+            fontWeight: "normal", // Remove o negrito
+            fontSize:"16px",
+            cssClass: "font-smooth" // Aplica a suavização
+          },
         },
         labels: {
           formatter: (val: number) => formatNumber(val), // Formata os valores do eixo Y para umidade
