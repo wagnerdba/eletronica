@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Chart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
-import "./App.css";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Chart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
+import '../../assets/css/styles.css';
 
 interface DataItem {
   datahoraTemperaturaMinima: string;
@@ -19,9 +19,9 @@ interface DataItem {
 
 const formatNumber = (value: number | string) => {
   const num = parseFloat(value.toString());
-  if (isNaN(num)) return "0.00"; // Adiciona verificação para valores inválidos
-  const [integer, decimal = ""] = num.toString().split(".");
-  return `${integer}.${decimal.padEnd(2, "0").substring(0, 2)}`;
+  if (isNaN(num)) return '0.00'; // Adiciona verificação para valores inválidos
+  const [integer, decimal = ''] = num.toString().split('.');
+  return `${integer}.${decimal.padEnd(2, '0').substring(0, 2)}`;
 };
 
 const HistoricalGraph: React.FC = () => {
@@ -32,14 +32,14 @@ const HistoricalGraph: React.FC = () => {
   useEffect(() => {
     const fetchData = () => {
       axios
-        .get("http://192.168.1.9:8081/api/dht22/statistics")
+        .get('http://192.168.1.9:8081/api/dht22/statistics')
         .then((response) => {
-          // console.log("Dados recebidos:", response.data);
+          // console.log('Dados recebidos:', response.data);
           setData(response.data);
           setLoading(false);
         })
         .catch((error) => {
-          setError("Erro ao carregar os dados...");
+          setError('Erro ao carregar os dados...');
           setLoading(false);
         });
     };
@@ -56,24 +56,24 @@ const HistoricalGraph: React.FC = () => {
   }, []);
 
   const dates = data.map(
-    (item) => item.datahoraTemperaturaMinima.split(" ")[0]
+    (item) => item.datahoraTemperaturaMinima.split(' ')[0]
   );
   const tempMin = data.map((item) =>
-    formatNumber(parseFloat(item.temperaturaMinima.replace("º", "").trim()))
+    formatNumber(parseFloat(item.temperaturaMinima.replace('º', '').trim()))
   );
   const tempMax = data.map((item) =>
-    formatNumber(parseFloat(item.temperaturaMaxima.replace("º", "").trim()))
+    formatNumber(parseFloat(item.temperaturaMaxima.replace('º', '').trim()))
   );
   const umidadeMin = data.map((item) =>
-    formatNumber(parseFloat(item.umidadeMinima.replace("%", "").trim()))
+    formatNumber(parseFloat(item.umidadeMinima.replace('%', '').trim()))
   );
   const umidadeMax = data.map((item) =>
-    formatNumber(parseFloat(item.umidadeMaxima.replace("%", "").trim()))
+    formatNumber(parseFloat(item.umidadeMaxima.replace('%', '').trim()))
   );
 
   const options: ApexOptions = {
     chart: {
-      type: "line" as const,
+      type: 'line' as const,
       toolbar: {
         show: false, // Remove a barra de ferramentas
       },
@@ -82,104 +82,104 @@ const HistoricalGraph: React.FC = () => {
     
     xaxis: {
       categories: dates,
-      tickPlacement: "on",
+      tickPlacement: 'on',
       labels: {
-        format: "dd/MM/yyyy",
+        format: 'dd/MM/yyyy',
       },
     },
     yaxis: [
       {
         title: {
-          text: "Temperatura (ºC)",
+          text: 'Temperatura (ºC)',
           style: {
-            fontWeight: "normal", // Remove o negrito
-            fontSize:"16px",
+            fontWeight: 'normal', // Remove o negrito
+            fontSize:'16px',
             cssClass: 'font-smooth' // Aplica a suavização
           },
         },
-        seriesName: "Temperatura",
+        seriesName: 'Temperatura',
       },
       {
         opposite: true,
         title: {
-          text: "Umidade (%)",
+          text: 'Umidade (%)',
           style: {
-            fontWeight: "normal", // Remove o negrito
-            fontSize:"16px",
+            fontWeight: 'normal', // Remove o negrito
+            fontSize:'16px',
             cssClass: 'font-smooth' // Aplica a suavização
           },
         },
       },
     ],
     stroke: {
-      curve: "smooth",
+      curve: 'smooth',
       width: 4.0,
     },
-    colors: ["#FF0000", "#0d00ff", "#f0c905", "#23eb58"],
+    colors: ['#FF0000', '#0d00ff', '#f0c905', '#23eb58'],
     series: [
       {
-        name: "Temperatura Máxima (ºC)",
-        type: "line",
+        name: 'Temperatura Máxima (ºC)',
+        type: 'line',
         data: tempMax.map((value) => parseFloat(value)),
       },
       {
-        name: "Temperatura Mínima (ºC)",
-        type: "line",
+        name: 'Temperatura Mínima (ºC)',
+        type: 'line',
         data: tempMin.map((value) => parseFloat(value)),
       },
       {
-        name: "Umidade Mínima (%)",
-        type: "bar",
+        name: 'Umidade Mínima (%)',
+        type: 'bar',
         data: umidadeMin.map((value) => parseFloat(value)),
       },
       {
-        name: "Umidade Máxima (%)",
-        type: "bar",
+        name: 'Umidade Máxima (%)',
+        type: 'bar',
         data: umidadeMax.map((value) => parseFloat(value)),
       },
     ],
     plotOptions: {
       bar: {
-        columnWidth: "75%",
+        columnWidth: '75%',
         borderRadius: 0,
       },
     },
     tooltip: {
       custom: function ({ seriesIndex, dataPointIndex, w }) {
         const item = data[dataPointIndex];
-        const tempMinTime = item.datahoraTemperaturaMinima.split(" ")[1];
-        const tempMaxTime = item.datahoraTemperaturaMaxima.split(" ")[1];
-        const umidMinTime = item.datahoraUmidadeMinima.split(" ")[1];
-        const umidMaxTime = item.datahoraUmidadeMaxima.split(" ")[1];
+        const tempMinTime = item.datahoraTemperaturaMinima.split(' ')[1];
+        const tempMaxTime = item.datahoraTemperaturaMaxima.split(' ')[1];
+        const umidMinTime = item.datahoraUmidadeMinima.split(' ')[1];
+        const umidMaxTime = item.datahoraUmidadeMaxima.split(' ')[1];
 
         const tempMin = formatNumber(
-          parseFloat(item.temperaturaMinima.replace("º", "").trim())
+          parseFloat(item.temperaturaMinima.replace('º', '').trim())
         );
         const tempMax = formatNumber(
-          parseFloat(item.temperaturaMaxima.replace("º", "").trim())
+          parseFloat(item.temperaturaMaxima.replace('º', '').trim())
         );
         const umidMin = formatNumber(
-          parseFloat(item.umidadeMinima.replace("%", "").trim())
+          parseFloat(item.umidadeMinima.replace('%', '').trim())
         );
         const umidMax = formatNumber(
-          parseFloat(item.umidadeMaxima.replace("%", "").trim())
+          parseFloat(item.umidadeMaxima.replace('%', '').trim())
         );
         const varTemp = formatNumber(
-          parseFloat(item.variacaoTemperatura.replace("%", "").trim())
+          parseFloat(item.variacaoTemperatura.replace('%', '').trim())
         );
         const varUmid = formatNumber(
-          parseFloat(item.variacaoUmidade.replace("%", "").trim())
+          parseFloat(item.variacaoUmidade.replace('%', '').trim())
         );
 
         return `
-          <div class="tooltip-custom">
+          <div class='tooltip-custom'>
             <strong>Data:</strong> ${dates[dataPointIndex]}<br/>
             <strong>Temperatura Máxima:</strong> ${tempMax}ºC às ${tempMaxTime}<br/>
             <strong>Temperatura Mínima:</strong> ${tempMin}ºC às ${tempMinTime}<br/>
             <strong>Variação de Temperatura:</strong> ${varTemp}ºC<br/>
             <strong>Umidade Máxima:</strong> ${umidMax}% às ${umidMaxTime}<br/>
             <strong>Umidade Mínima:</strong> ${umidMin}% às ${umidMinTime}<br/>
-            <strong>Variação de Umidade:</strong> ${varUmid}ºC<br/>
+            <strong>Variação de Umidade:</strong> ${varUmid}%<br/>
           </div>
         `;
       },
@@ -190,13 +190,13 @@ const HistoricalGraph: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="graph-item">
+    <div className='graph-item'>
       <h3>Mínimas e Máximas por dia</h3>
       <Chart
         options={options}
         series={options.series}
-        type="line"
-        height="150%"
+        type='line'
+        height='150%'
       />
     </div>
   );

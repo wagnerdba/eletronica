@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
+import '../../assets/css/styles.css';
 
 interface TemperatureData {
   temperatura_celsius: number;

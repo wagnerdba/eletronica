@@ -1,9 +1,9 @@
 import React from "react";
-import HeaderTitle from "./HeaderTitle"; // Importe o novo componente
-import HistoricalGraph from "./HistoricalGraph";
-import RealTimeGraph from "./RealTimeGraph";
-import RealTimeText from "./RealTimeText";
-import "./App.css"; // Certifique-se de que este caminho está correto
+import HeaderTitle from "./components/text/HeaderTitle"; // Importe o novo componente
+import HistoricalGraph from "./components/charts/HistoricalGraph";
+import RealTimeGraph from "./components/charts/RealTimeGraph";
+import RealTimeText from "./components/text/RealTimeText";
+import './assets/css/styles.css'; // Certifique-se de que este caminho está correto
 
 const App: React.FC = () => {
   return (

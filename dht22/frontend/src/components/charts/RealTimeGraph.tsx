@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Chart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
-import "./App.css";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Chart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
+import '../../assets/css/styles.css';
 
 interface TemperatureData {
   temperatura_celsius: number;
@@ -12,7 +12,7 @@ interface TemperatureData {
 }
 
 const formatNumber = (value: number | string) => {
-  const [integer, decimal = ""] = value.toString().split('.');
+  const [integer, decimal = ''] = value.toString().split('.');
   return `${integer}.${decimal.padEnd(2, '0').substring(0, 2)}`;
 };
 
@@ -31,20 +31,21 @@ const RealTimeGraph: React.FC = () => {
   const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
   const [chartSeries, setChartSeries] = useState([
     {
-      name: "Temperatura (ºC)",
+      name: 'Temperatura (ºC)',
       data: [] as { x: number; y: number }[],
     },
     {
-      name: "Umidade (%)",
+      name: 'Umidade (%)',
       data: [] as { x: number; y: number }[],
     },
   ]);
-  const [temperatureColor, setTemperatureColor] = useState<string>("#FF5733"); // Cor inicial
+  const [temperatureColor, setTemperatureColor] = useState<string>('#FF5733'); // Cor inicial
+  const [umidadeColor, setUmidadeColor] = useState<string>('#FFCA28'); // Cor inicial
 
   useEffect(() => {
     const fetchTemperatureData = () => {
       axios
-        .get("http://192.168.1.100/esp32/api/temperatura")
+        .get('http://192.168.1.100/esp32/api/temperatura')
         .then((response) => {
           const newData = response.data;
           setTemperatureData((prevData) => {
@@ -54,7 +55,7 @@ const RealTimeGraph: React.FC = () => {
           });
         })
         .catch((error) => {
-          console.error("Erro ao carregar os dados de temperatura:", error);
+          console.error('Erro ao carregar os dados de temperatura:', error);
         });
     };
 
@@ -71,26 +72,36 @@ const RealTimeGraph: React.FC = () => {
 
   useEffect(() => {
     if (temperatureData.length > 0) {
-      const lastTemperature = temperatureData[temperatureData.length - 1].temperatura_celsius;
-      
+      const lastTemperature =
+        temperatureData[temperatureData.length - 1].temperatura_celsius;
+
+      const lastUmidade = temperatureData[temperatureData.length - 1].umidade;
+
       // Define a cor com base na temperatura
-      if (lastTemperature < 23) {
-        setTemperatureColor("#0000FF"); // Azul para temperatura > 28
+      if (lastTemperature < 24) {
+        setTemperatureColor('#0000FF'); // Azul para temperatura > 23
       } else {
-        setTemperatureColor("#FF5733"); // Cor padrão
+        setTemperatureColor('#FF5733'); // Cor padrão
+      }
+
+      // Define a cor com base na umidade
+      if (lastUmidade > 30) {
+        setUmidadeColor('#07B50D'); // Verde para umidade > 30
+      } else {
+        setUmidadeColor('#FFCA28'); // Cor padrão
       }
     }
 
     const formattedSeries = [
       {
-        name: "Temperatura (ºC)",
+        name: 'Temperatura (ºC)',
         data: temperatureData.map((data) => ({
           x: adjustTimeZone(data.data_hora),
           y: data.temperatura_celsius,
         })),
       },
       {
-        name: "Umidade (%)",
+        name: 'Umidade (%)',
         data: temperatureData.map((data) => ({
           x: adjustTimeZone(data.data_hora),
           y: data.umidade,
@@ -111,14 +122,14 @@ const RealTimeGraph: React.FC = () => {
 
   const chartOptions: ApexOptions = {
     chart: {
-      type: "area",
+      type: 'area',
       toolbar: {
         show: false, // Remove a barra de ferramentas
       },
       background: '#ADD8E6', // Azul bebê
       animations: {
         enabled: true,
-        easing: "linear",
+        easing: 'linear',
         dynamicAnimation: {
           speed: 1000,
         },
@@ -127,20 +138,20 @@ const RealTimeGraph: React.FC = () => {
     },
 
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
 
     xaxis: {
-      type: "datetime",
+      type: 'datetime',
     },
     yaxis: [
       {
         title: {
-          text: "Temperatura (ºC)",
+          text: 'Temperatura (ºC)',
           style: {
-            fontWeight: "normal", // Remove o negrito
-            fontSize:"16px",
-            cssClass: "font-smooth" // Aplica a suavização
+            fontWeight: 'normal', // Remove o negrito
+            fontSize: '16px',
+            cssClass: 'font-smooth', // Aplica a suavização
           },
         },
         labels: {
@@ -150,11 +161,11 @@ const RealTimeGraph: React.FC = () => {
       {
         opposite: true,
         title: {
-          text: "Umidade (%)",
+          text: 'Umidade (%)',
           style: {
-            fontWeight: "normal", // Remove o negrito
-            fontSize:"16px",
-            cssClass: "font-smooth" // Aplica a suavização
+            fontWeight: 'normal', // Remove o negrito
+            fontSize: '16px',
+            cssClass: 'font-smooth', // Aplica a suavização
           },
         },
         labels: {
@@ -163,13 +174,13 @@ const RealTimeGraph: React.FC = () => {
       },
     ],
     stroke: {
-      curve: "smooth",
+      curve: 'smooth',
       width: 4.0, // Define a largura das linhas para 1.5 pixels
     },
     markers: {
       size: 0,
     },
-    colors: [temperatureColor, "#FFCA28"], // Usa a cor definida dinamicamente para temperatura
+    colors: [temperatureColor, umidadeColor], // Usa a cor definida dinamicamente para temperatura
 
     tooltip: {
       enabled: false,
@@ -187,12 +198,20 @@ const RealTimeGraph: React.FC = () => {
     },
   };
 
-  if (temperatureData.length === 0) return <p>Carregando dados em tempo real...</p>;
+  if (temperatureData.length === 0)
+    return <p>Carregando dados em tempo real...</p>;
 
   return (
-    <div className="graph-item"> {/* Use a classe do gráfico para garantir a altura correta */}
+    <div className='graph-item'>
+      {' '}
+      {/* Use a classe do gráfico para garantir a altura correta */}
       <h3>Análise gráfica em tempo real</h3>
-      <Chart options={chartOptions} series={chartSeries} type="area" height="150%" />
+      <Chart
+        options={chartOptions}
+        series={chartSeries}
+        type='area'
+        height='150%'
+      />
     </div>
   );
 };

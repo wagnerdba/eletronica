@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import '../../assets/css/styles.css';
 
 const HeaderTitle: React.FC = () => {
   return (
