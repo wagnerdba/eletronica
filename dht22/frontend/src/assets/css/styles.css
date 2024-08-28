@@ -7,17 +7,18 @@ html, body {
 
 .background {
 /*
-  background-image: url('../background.jpg'); 
+  background-image: url('../weather.png'); 
   min-height: 100vh; 
   min-width: 100vw; 
 */
 
-  background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),  url('../background.jpg');
+  background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),  url('../background.jpg');
   background-repeat: repeat; 
   background-size: auto; 
   background-position: center;
   width: 100vw;
   height: 100vh;
+
 }
 
 .App {
@@ -44,7 +45,7 @@ html, body {
 .chart-container {
   flex: 1; /* Faz cada gráfico ocupar espaço igual dentro do contêiner */
   margin: 0 10px; /* Margem horizontal entre os gráficos */
-  background-color: #ADD8E6; /* Fundo Azul bebê */
+  /* background-color: #ADD8E6; /* Fundo Azul bebê */
   padding: 5px;
   box-sizing: border-box; /* Inclui padding e border na largura total */
   border-top-left-radius: 5px; /* Bordas superiores arredondadas do gráfico */
