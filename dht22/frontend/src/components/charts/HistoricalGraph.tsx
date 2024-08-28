@@ -77,7 +77,7 @@ const HistoricalGraph: React.FC = () => {
       toolbar: {
         show: false, // Remove a barra de ferramentas
       },
-      background: '#ADD8E6' // Azul bebê
+      background: 'transparent' //'#ADD8E6' // Azul bebê
     },
     
     xaxis: {
@@ -113,7 +113,7 @@ const HistoricalGraph: React.FC = () => {
     ],
     stroke: {
       curve: 'smooth',
-      width: 4.0,
+      width: 5.0,
     },
     colors: ['#FF0000', '#0d00ff', '#f0c905', '#23eb58'],
     series: [

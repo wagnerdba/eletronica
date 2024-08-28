@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,6 +68,23 @@ public class SensorService {
 
     public List<SensorDataStatisticsDTO> getSensorDataStatistics() {
         return sensorDataRepository.findSensorDataStatistics();
+    }
+
+    public Optional<SensorDataDTO> getLastSensorData() {
+        Optional<SensorData> sensorDataOpt = sensorDataRepository.findLatestSensorData();
+        if (sensorDataOpt.isPresent()) {
+            SensorData sensorData = sensorDataOpt.get();
+            SensorDataDTO sensorDataDTO = new SensorDataDTO();
+            sensorDataDTO.setId(sensorData.getId());
+            sensorDataDTO.setTemperaturaCelsius(sensorData.getTemperaturaCelsius());
+            sensorDataDTO.setTemperaturaFahrenheit(sensorData.getTemperaturaFahrenheit());
+            sensorDataDTO.setUmidade(sensorData.getUmidade());
+            sensorDataDTO.setDataHora(sensorData.getDataHora().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            sensorDataDTO.setUuid(sensorData.getUuid());
+            return Optional.of(sensorDataDTO);
+        } else {
+            return Optional.empty();
+        }
     }
 
 }

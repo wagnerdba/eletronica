@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import '../../assets/css/styles.css';
 
+// Interface para os dados de temperatura
 interface TemperatureData {
   temperatura_celsius: number;
   temperatura_fahrenheit: number;
@@ -16,6 +17,7 @@ const formatNumber = (value: number | string) => {
 
 const RealTimeText: React.FC = () => {
   const [temperatureData, setTemperatureData] = useState<TemperatureData | null>(null);
+  const [uuid, setUuid] = useState<string>("Carregando UUID...");
 
   useEffect(() => {
     const fetchTemperatureData = () => {
@@ -29,14 +31,31 @@ const RealTimeText: React.FC = () => {
         });
     };
 
+    const fetchUuidData = () => {
+      axios
+        .get("http://192.168.1.9:8081/api/dht22/last")
+        .then((response) => {
+          setUuid(response.data.uuid);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar o UUID:", error);
+        });
+    };
+
     fetchTemperatureData();
+    fetchUuidData();
 
     const intervalIdTemp = setInterval(() => {
       fetchTemperatureData();
     }, 1000);
 
+    const intervalIdUuid = setInterval(() => {
+      fetchUuidData();
+    }, 60000);
+
     return () => {
       clearInterval(intervalIdTemp);
+      clearInterval(intervalIdUuid);
     };
   }, []);
 
@@ -51,7 +70,6 @@ const RealTimeText: React.FC = () => {
 
   return (
     <div className="temperature-panel">
-      
       <p>
         <strong>Temperatura Atual:</strong>{" "}
         {formatNumber(temperatureData.temperatura_celsius)} ºC /{" "}
@@ -65,8 +83,12 @@ const RealTimeText: React.FC = () => {
         <strong>Data e Hora da Leitura:</strong>{" "}
         {formatDateTime(temperatureData.data_hora)}
       </p>
+      <p className="font-size-1">
+        <strong>ID:</strong> {uuid}
+      </p>
     </div>
   );
 };
 
 export default RealTimeText;
+//57d64078-4543-45bd-b1a5-3e3cbf80122b

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/dht22")
@@ -70,4 +71,11 @@ public class SensorController {
         return sensorService.getSensorDataStatistics();
     }
 
+    // @CrossOrigin(origins = "http://localhost:3000") // Para testes locais
+    @GetMapping("/last")
+    public ResponseEntity<SensorDataDTO> getLastSensorData() {
+        Optional<SensorDataDTO> sensorDataDTO = sensorService.getLastSensorData();
+        return sensorDataDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }

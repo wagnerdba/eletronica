@@ -86,7 +86,7 @@ const RealTimeGraph: React.FC = () => {
 
       // Define a cor com base na umidade
       if (lastUmidade > 30) {
-        setUmidadeColor('#07B50D'); // Verde para umidade > 30
+        setUmidadeColor('#369c03'); // Verde para umidade > 30
       } else {
         setUmidadeColor('#FFCA28'); // Cor padrão
       }
@@ -126,7 +126,7 @@ const RealTimeGraph: React.FC = () => {
       toolbar: {
         show: false, // Remove a barra de ferramentas
       },
-      background: '#ADD8E6', // Azul bebê
+      background: 'transparent',  // '#ADD8E6', // Azul bebê
       animations: {
         enabled: true,
         easing: 'linear',
@@ -175,7 +175,7 @@ const RealTimeGraph: React.FC = () => {
     ],
     stroke: {
       curve: 'smooth',
-      width: 4.0, // Define a largura das linhas para 1.5 pixels
+      width:5.0, // Define a largura das linhas para 1.5 pixels
     },
     markers: {
       size: 0,

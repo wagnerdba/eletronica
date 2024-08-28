@@ -7,7 +7,9 @@ import './assets/css/styles.css'; // Certifique-se de que este caminho está cor
 
 const App: React.FC = () => {
   return (
-    <div className="App">
+    <div className="background">
+   
+   <div className="App">
       <HeaderTitle /> {/* Adicione o título ao topo */}
       <div className="graph-container">
         <div className="chart-container">
@@ -21,7 +23,11 @@ const App: React.FC = () => {
         <RealTimeText />
       </div>
     </div>
+
+
+    </div>
   );
 };
 
 export default App;
+
