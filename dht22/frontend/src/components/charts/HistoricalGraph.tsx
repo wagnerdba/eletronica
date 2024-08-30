@@ -173,13 +173,16 @@ const HistoricalGraph: React.FC = () => {
 
         return `
           <div class='tooltip-custom'>
-            <strong>Data:</strong> ${dates[dataPointIndex]}<br/>
-            <strong>Temperatura Máxima:</strong> ${tempMax}ºC às ${tempMaxTime}<br/>
-            <strong>Temperatura Mínima:</strong> ${tempMin}ºC às ${tempMinTime}<br/>
-            <strong>Variação de Temperatura:</strong> ${varTemp}ºC<br/>
-            <strong>Umidade Máxima:</strong> ${umidMax}% às ${umidMaxTime}<br/>
-            <strong>Umidade Mínima:</strong> ${umidMin}% às ${umidMinTime}<br/>
-            <strong>Variação de Umidade:</strong> ${varUmid}%<br/>
+            <b>Mínimas e Máximas</b><br/>
+            ${dates[dataPointIndex]}<br/>
+            <b>Temperatura</b><br/>
+            <b>Manhã:</b> ${tempMin}ºC às ${tempMinTime}<br/>
+            <b>Tarde:</b> ${tempMax}ºC às ${tempMaxTime}<br/>            
+            <b>Variação:</b> ${varTemp}ºC<br/>
+            <b>Umidade</b><br/>
+            <b>Manhã:</b> ${umidMax}% às ${umidMaxTime}<br/>
+            <b>Tarde:</b> ${umidMin}% às ${umidMinTime}<br/>
+            <b>Variação:</b> ${varUmid}%<br/>
           </div>
         `;
       },
