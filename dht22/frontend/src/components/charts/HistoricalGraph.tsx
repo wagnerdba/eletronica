@@ -173,7 +173,7 @@ const HistoricalGraph: React.FC = () => {
 
         return `
           <div class='tooltip-custom'>
-            <b>Mínimas e Máximas</b><br/>
+            <b>Data</b><br/>
             ${dates[dataPointIndex]}<br/>
             <b>Temperatura</b><br/>
             <b>Mínima:</b> ${tempMin}ºC às ${tempMinTime}<br/>

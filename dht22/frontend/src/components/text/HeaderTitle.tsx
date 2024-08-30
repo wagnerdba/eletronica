@@ -5,7 +5,7 @@ const HeaderTitle: React.FC = () => {
   return (
     <div className="header-title-container">
       <h1 className="header-title">
-        Monitoramento de Temperatura e Umidade
+        Temperatura e Umidade (ESP32 + DHT22)
       </h1>
       <p className="header-subtitle">
          Monitore tendências passadas e dados atuais em tempo real

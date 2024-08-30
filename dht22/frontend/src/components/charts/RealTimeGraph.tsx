@@ -205,7 +205,7 @@ const RealTimeGraph: React.FC = () => {
     <div className="graph-item">
       {" "}
       {/* Use a classe do gráfico para garantir a altura correta */}
-      <h3>DHT22 em Tempo Real</h3>
+      <h3>Análise em Tempo Real</h3>
       <Chart
         options={chartOptions}
         series={chartSeries}
