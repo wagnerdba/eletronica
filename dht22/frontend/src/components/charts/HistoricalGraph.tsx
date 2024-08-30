@@ -176,12 +176,12 @@ const HistoricalGraph: React.FC = () => {
             <b>Mínimas e Máximas</b><br/>
             ${dates[dataPointIndex]}<br/>
             <b>Temperatura</b><br/>
-            <b>Manhã:</b> ${tempMin}ºC às ${tempMinTime}<br/>
-            <b>Tarde:</b> ${tempMax}ºC às ${tempMaxTime}<br/>            
+            <b>Mínima:</b> ${tempMin}ºC às ${tempMinTime}<br/>
+            <b>Máxima:</b> ${tempMax}ºC às ${tempMaxTime}<br/>            
             <b>Variação:</b> ${varTemp}ºC<br/>
             <b>Umidade</b><br/>
-            <b>Manhã:</b> ${umidMax}% às ${umidMaxTime}<br/>
-            <b>Tarde:</b> ${umidMin}% às ${umidMinTime}<br/>
+            <b>Mínima:</b> ${umidMin}% às ${umidMinTime}<br/>
+            <b>Máxima:</b> ${umidMax}% às ${umidMaxTime}<br/>
             <b>Variação:</b> ${varUmid}%<br/>
           </div>
         `;
