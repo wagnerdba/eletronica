@@ -78,4 +78,10 @@ public class SensorController {
         return sensorDataDTO.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<SensorDataDTO>> getSensorDataForToday() {
+        List<SensorDataDTO> sensorDataList = sensorService.getSensorDataForCurrentDate();
+        return ResponseEntity.ok(sensorDataList);
+    }
 }

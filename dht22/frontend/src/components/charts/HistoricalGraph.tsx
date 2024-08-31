@@ -32,7 +32,7 @@ const HistoricalGraph: React.FC = () => {
   useEffect(() => {
     const fetchData = () => {
       axios
-        .get('http://192.168.1.9:8081/api/dht22/statistics')
+        .get('http://192.168.1.14:8081/api/dht22/statistics')
         .then((response) => {
           // console.log('Dados recebidos:', response.data);
           setData(response.data);

@@ -33,7 +33,7 @@ const RealTimeText: React.FC = () => {
 
     const fetchUuidData = () => {
       axios
-        .get("http://192.168.1.9:8081/api/dht22/last")
+        .get("http://192.168.1.14:8081/api/dht22/last")
         .then((response) => {
           setUuid(response.data.uuid);
         })

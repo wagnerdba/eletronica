@@ -1,13 +1,14 @@
 package com.wrtecnologia.sensores.dht22.climatempo.service;
 
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
+import com.wrtecnologia.sensores.dht22.climatempo.mapper.SensorDataMapper;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
 import com.wrtecnologia.sensores.dht22.climatempo.repository.SensorDataRepository;
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataStatisticsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,9 @@ public class SensorService {
     public SensorService(SensorDataRepository sensorDataRepository) {
         this.sensorDataRepository = sensorDataRepository;
     }
+
+    @Autowired
+    private SensorDataMapper sensorDataMapper;  // Certifique-se de que esta linha está presente
 
     public SensorData saveSensorData(SensorDataDTO sensorDataDTO) {
         // Verificar se o campo dataHora é nulo ou vazio
@@ -87,4 +91,13 @@ public class SensorService {
         }
     }
 
+    public List<SensorDataDTO> getSensorDataForCurrentDate() {
+        // Busca a lista de entidades
+        List<SensorData> sensorDataList = sensorDataRepository.findAllByCurrentDate();
+
+        // Converte a lista de entidades para uma lista de DTOs
+        return sensorDataList.stream()
+                .map(sensorDataMapper::toDTO) // Converte cada entidade para DTO
+                .collect(Collectors.toList()); // Coleta em uma lista de DTOs
+    }
 }

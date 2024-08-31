@@ -22,8 +22,6 @@ html, body {
   top: 0;
   left: 0;
   z-index: -1; /* Garante que o fundo fique atrás de todo o conteúdo */  
-
-
 }
 
 .App {
@@ -37,6 +35,10 @@ html, body {
   padding: 20px;
   box-sizing: border-box;
   margin-top: 2px;
+}
+
+.temperature-panel {
+  margin-top: 0px;
 }
 
 .graph-container {
@@ -60,6 +62,8 @@ html, body {
   height: 400px;
   border-radius: 18px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.9); /* Sombra suave */
+  margin-top: 15px;
+
 }
 
 .font-smooth {
@@ -94,6 +98,7 @@ html, body {
   }
 
   .RealTimeText {
+    margin-top: 10px;
     margin-bottom: 0; /* Remove a margem inferior */
     padding-bottom: 5px; /* Adiciona um pequeno padding para espaçamento */
   }
@@ -102,6 +107,10 @@ html, body {
     margin-top: 0; /* Remove a margem superior */
     padding-top: 5px; /* Adiciona um pequeno padding para espaçamento */
   }
+  .temperature-panel {
+    width: 10;
+  }
+
 }
 
 .tooltip-custom {
@@ -140,4 +149,22 @@ html, body {
 
 .graph-item {
  /* background-color: none; */
+}
+
+.chart-container-humid {
+  width: 99%; 
+}
+
+/* Esconde o painel de temperatura e umidade em orientação vertical */
+@media (orientation: portrait) {
+  .temperature-panel-container {
+    display: none;
+  }
+}
+
+/* Mostra o painel de temperatura e umidade em orientação horizontal */
+@media (orientation: landscape) {
+  .temperature-panel-container {
+    display: block;
+  }
 }
