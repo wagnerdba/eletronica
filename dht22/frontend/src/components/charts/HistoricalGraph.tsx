@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
-import '../../assets/css/styles.css';
+import "../../assets/css/styles.css";
 
 interface DataItem {
   datahoraTemperaturaMinima: string;

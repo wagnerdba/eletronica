@@ -90,8 +90,14 @@ const TemperatureHumidityChart: React.FC = () => {
     yaxis: [
       {
         title: {
-          text: 'Temperatura (°C)'
+          text: 'Temperatura (°C)',
+          style: {
+            fontWeight: 'normal', // Remove o negrito
+            fontSize:'16px',
+            cssClass: 'font-smooth' // Aplica a suavização
+          },
         },
+        
         labels: {
           formatter: (value: number) => formatNumber(value),
         }
@@ -99,7 +105,12 @@ const TemperatureHumidityChart: React.FC = () => {
       {
         opposite: true,
         title: {
-          text: 'Umidade (%)'
+          text: 'Umidade (%)',
+          style: {
+            fontWeight: 'normal', // Remove o negrito
+            fontSize:'16px',
+            cssClass: 'font-smooth' // Aplica a suavização
+          },
         },
         labels: {
           formatter: (value: number) => formatNumber(value),
