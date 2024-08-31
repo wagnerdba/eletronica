@@ -149,7 +149,7 @@ const TemperatureHumidityChart: React.FC = () => {
         options={options}
         series={series}
         type="line"
-        height="90%"
+        height="150%"
       />
 
 
