@@ -32,13 +32,13 @@ html, body {
   justify-content: center;
   width: 100%;
   min-height: 100vh; /* Garante que a div .App ocupe pelo menos toda a altura da tela */
-  padding: 20px;
+  padding-top: 20px;
   box-sizing: border-box;
-  margin-top: 2px;
 }
 
 .temperature-panel {
   margin-top: 0px;
+  padding: 0px;
 }
 
 .graph-container {

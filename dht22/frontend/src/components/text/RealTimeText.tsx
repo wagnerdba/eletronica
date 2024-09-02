@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import '../../assets/css/styles.css';
+import "../../assets/css/styles.css";
 
 // Interface para os dados de temperatura
 interface TemperatureData {
@@ -11,12 +11,13 @@ interface TemperatureData {
 }
 
 const formatNumber = (value: number | string) => {
-  const [integer, decimal = ""] = value.toString().split('.');
-  return `${integer}.${decimal.padEnd(2, '0').substring(0, 2)}`;
+  const [integer, decimal = ""] = value.toString().split(".");
+  return `${integer}.${decimal.padEnd(2, "0").substring(0, 2)}`;
 };
 
 const RealTimeText: React.FC = () => {
-  const [temperatureData, setTemperatureData] = useState<TemperatureData | null>(null);
+  const [temperatureData, setTemperatureData] =
+    useState<TemperatureData | null>(null);
   const [uuid, setUuid] = useState<string>("Carregando UUID...");
 
   useEffect(() => {
@@ -70,6 +71,8 @@ const RealTimeText: React.FC = () => {
 
   return (
     <div className="temperature-panel">
+      
+      {/*}
       <p>
         <strong>Temperatura Atual:</strong>{" "}
         {formatNumber(temperatureData.temperatura_celsius)} ºC /{" "}
@@ -86,6 +89,20 @@ const RealTimeText: React.FC = () => {
       <p className="font-size-1">
         <strong>ID:</strong> {uuid}
       </p>
+      */}
+
+<p style={{ whiteSpace: "nowrap" }}>
+  <strong>Temperatura Atual:</strong> {formatNumber(temperatureData.temperatura_celsius)} ºC / {formatNumber(temperatureData.temperatura_fahrenheit)} ºF{" "}
+  <strong>Umidade Atual:</strong> {formatNumber(temperatureData.umidade)} %{" "}
+  <strong>Data e Hora da Leitura:</strong> {formatDateTime(temperatureData.data_hora)} - <strong>ID:</strong> <span>{uuid}</span>
+</p>
+
+
+      {/*
+      <p className="font-size-1">
+        <strong>ID:</strong> {uuid}
+      </p>
+      */}
     </div>
   );
 };

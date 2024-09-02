@@ -29,6 +29,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
+                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 ),
                 TempMax AS (
                     SELECT
@@ -40,6 +42,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
+                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 ),
                 UmidMin AS (
                     SELECT
@@ -50,6 +54,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
+                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 ),
                 UmidMax AS (
                     SELECT
@@ -60,6 +66,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
+                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 )
                 SELECT
                     -- Data e hora da temperatura mínima

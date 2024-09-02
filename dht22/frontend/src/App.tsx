@@ -4,14 +4,21 @@ import HistoricalGraph from "./components/charts/HistoricalGraph";
 import RealTimeGraph from "./components/charts/RealTimeGraph";
 import RealTimeText from "./components/text/RealTimeText";
 import "./assets/css/styles.css"; // Certifique-se de que este caminho está correto
-import TemperatureHumidityChart from "./components/charts/TemperatureHumidityChart";
-// import TestsChart from "./components/charts/TestsChart";
+//import TemperatureHumidityChart from "./components/charts/TemperatureHumidityChart";
+import TemperatureHumidityChart2 from "./components/charts/TemperatureHumidityChart2";
 
 const App: React.FC = () => {
   return (
     <div className="background">
       <div className="App">
         <HeaderTitle /> {/* Adicione o título ao topo */}
+        
+        {/* 
+        <div className="chart-container">
+        */}
+          <RealTimeText />
+        {/*</div> */}
+
         <div className="graph-container">
           <div className="chart-container">
             <HistoricalGraph />
@@ -20,19 +27,16 @@ const App: React.FC = () => {
             <RealTimeGraph />
           </div>
         </div>
+        
+        <div className="temperature-panel-container chart-container-humid">
+          <TemperatureHumidityChart2 />
+        </div>
+
+       {/*
         <div className="temperature-panel-container chart-container-humid">
           <TemperatureHumidityChart />
         </div>
-
-        <div className="chart-container">
-          <RealTimeText />
-        </div>
-
-        {/*
-        <div className="chart-container chart-container-humid">
-          <TestsChart />
-        </div>
-        **/}
+      */}
 
       </div>
     </div>
