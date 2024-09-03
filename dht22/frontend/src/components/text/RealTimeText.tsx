@@ -91,7 +91,7 @@ const RealTimeText: React.FC = () => {
       </p>
       */}
 
-<p style={{ whiteSpace: "nowrap" }}>
+<p className="temperature-info">
   <strong>Temperatura Atual:</strong> {formatNumber(temperatureData.temperatura_celsius)} ºC / {formatNumber(temperatureData.temperatura_fahrenheit)} ºF{" "}
   <strong>Umidade Atual:</strong> {formatNumber(temperatureData.umidade)} %{" "}
   <strong>Data e Hora da Leitura:</strong> {formatDateTime(temperatureData.data_hora)} - <strong>ID:</strong> <span>{uuid}</span>

@@ -168,3 +168,20 @@ html, body {
     display: block;
   }
 }
+
+@media (max-width: 600px) {
+  .temperature-info {
+    white-space: normal;
+    text-align: center;
+    font-size: 0.7rem;
+  }
+}
+
+@media (min-width: 601px) {
+  .temperature-info {
+    white-space: normal;
+    text-align: center;
+    font-size: 15px;
+  }
+  
+}

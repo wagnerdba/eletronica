@@ -44,6 +44,11 @@ const TemperatureHumidityChart2: React.FC = () => {
     };
 
     fetchData();
+
+    // as duas próximas linhas setam a atualização do gráfico a cada 60 segundos
+    const intervalId = setInterval(fetchData, 60000); // Fetch data every minute
+    return () => clearInterval(intervalId);           // Clear interval on component unmount
+
   }, []);
 
   const dates = data.map(item => item.data_hora);
