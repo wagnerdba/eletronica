@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../../assets/css/styles.css";
+/*import "../../assets/css/styles.css"; */
 
 // Interface para os dados de temperatura
 interface TemperatureData {
@@ -18,7 +18,7 @@ const formatNumber = (value: number | string) => {
 const RealTimeText: React.FC = () => {
   const [temperatureData, setTemperatureData] =
     useState<TemperatureData | null>(null);
-  const [uuid, setUuid] = useState<string>("Carregando UUID...");
+  //const [uuid, setUuid] = useState<string>("Carregando UUID...");
 
   useEffect(() => {
     const fetchTemperatureData = () => {
@@ -36,7 +36,7 @@ const RealTimeText: React.FC = () => {
       axios
         .get("http://192.168.1.14:8081/api/dht22/last")
         .then((response) => {
-          setUuid(response.data.uuid);
+          //setUuid(response.data.uuid);
         })
         .catch((error) => {
           console.error("Erro ao carregar o UUID:", error);
@@ -91,11 +91,46 @@ const RealTimeText: React.FC = () => {
       </p>
       */}
 
+{/*
 <p className="temperature-info">
   <strong>Temperatura Atual:</strong> {formatNumber(temperatureData.temperatura_celsius)} ºC / {formatNumber(temperatureData.temperatura_fahrenheit)} ºF{" "}
   <strong>Umidade Atual:</strong> {formatNumber(temperatureData.umidade)} %{" "}
   <strong>Data e Hora da Leitura:</strong> {formatDateTime(temperatureData.data_hora)} - <strong>ID:</strong> <span>{uuid}</span>
 </p>
+*/}
+
+<div className="display-text">
+  <div className="panel-container">
+    <strong>Celsius</strong>
+    <span
+      className={temperatureData.temperatura_celsius > 25 ? 'temp-hot' : 'temp-cold'}
+    >
+      {formatNumber(temperatureData.temperatura_celsius)} ºC
+    </span>
+  </div>
+  <div className="panel-container">
+    <strong>Fahrenheit</strong>
+    <span>{formatNumber(temperatureData.temperatura_fahrenheit)} ºF</span>
+  </div>
+  <div className="panel-container">
+    <strong>Umidade</strong>
+    <span
+      className={temperatureData.umidade < 30 ? 'humidity-low' : 'humidity-high'}
+    >
+      {formatNumber(temperatureData.umidade)} %
+    </span>
+  </div>
+  <div className="panel-container">
+    <strong>Data/Hora</strong>
+    <span>{formatDateTime(temperatureData.data_hora)}</span>
+  </div>
+</div>
+
+
+
+
+
+
 
 
       {/*

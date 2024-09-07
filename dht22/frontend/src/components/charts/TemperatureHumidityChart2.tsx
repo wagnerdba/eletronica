@@ -27,7 +27,7 @@ const TemperatureHumidityChart2: React.FC = () => {
       try {
         const response = await fetch('http://192.168.1.14:8081/api/dht22/today');
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Network response problem');
         }
         const result = await response.json();
         
@@ -72,10 +72,19 @@ const TemperatureHumidityChart2: React.FC = () => {
     xaxis: {
       categories: dates,
       labels: {
-        show: false  // Remove os labels do eixo x
+        show: false // Hide x-axis labels
+      },
+      axisBorder: {
+        show: false // Hide x-axis border
+      },
+      axisTicks: {
+        show: false // Hide x-axis ticks
       },
       title: {
-        text: ''  // Remove o título do eixo x
+        text: '', // Ensure no title is shown
+        style: {
+          color: 'transparent' // Ensure the title is transparent
+        }
       }
     },
     yaxis: [

@@ -1,5 +1,5 @@
 import React from "react";
-import HeaderTitle from "./components/text/HeaderTitle"; // Importe o novo componente
+/* import HeaderTitle from "./components/text/HeaderTitle"; // Importe o novo componente */
 import HistoricalGraph from "./components/charts/HistoricalGraph";
 import RealTimeGraph from "./components/charts/RealTimeGraph";
 import RealTimeText from "./components/text/RealTimeText";
@@ -11,13 +11,17 @@ const App: React.FC = () => {
   return (
     <div className="background">
       <div className="App">
-        <HeaderTitle /> {/* Adicione o título ao topo */}
-        
-        {/* 
-        <div className="chart-container">
+        {/* <HeaderTitle /> */}
+        <RealTimeText />
+
+        {/*
+        <div className="graph-container">
+          <div className="panel-container"></div>
+          <div className="panel-container"></div>
+          <div className="panel-container"></div>
+          <div className="panel-container"></div>
+        </div>
         */}
-          <RealTimeText />
-        {/*</div> */}
 
         <div className="graph-container">
           <div className="chart-container">
@@ -27,16 +31,9 @@ const App: React.FC = () => {
             <RealTimeGraph />
           </div>
         </div>
-        
         <div className="temperature-panel-container chart-container-humid">
           <TemperatureHumidityChart2 />
         </div>
-
-       {/*
-        <div className="temperature-panel-container chart-container-humid">
-          <TemperatureHumidityChart />
-        </div>
-      */}
 
       </div>
     </div>
