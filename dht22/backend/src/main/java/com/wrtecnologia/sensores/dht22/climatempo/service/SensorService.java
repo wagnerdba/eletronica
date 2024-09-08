@@ -2,6 +2,7 @@ package com.wrtecnologia.sensores.dht22.climatempo.service;
 
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataCountDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
+import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataHoraDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.mapper.SensorDataMapper;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
 import com.wrtecnologia.sensores.dht22.climatempo.repository.SensorDataRepository;
@@ -105,5 +106,18 @@ public class SensorService {
     public SensorDataCountDTO getCount() {
         long count = sensorDataRepository.countSensorData();
         return new SensorDataCountDTO(count);
+    }
+
+    public List<SensorDataHoraDTO> getSensorDataForToday() {
+        List<Object[]> results = sensorDataRepository.findSensorDataForToday();
+
+        // Convertendo os resultados em DTOs
+        return results.stream().map(result -> {
+            SensorDataHoraDTO dto = new SensorDataHoraDTO();
+            dto.setHora((String) result[0]);
+            dto.setTemperaturaCelsius((String) result[1]);
+            dto.setUmidade((String) result[2]);
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

@@ -33,4 +33,28 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long>, S
 
     @Query("SELECT COUNT(s.id) FROM SensorData s")
     long countSensorData();
+
+    @Query(value = """
+            WITH MaxValues AS (
+                SELECT 
+                    DATE_TRUNC('hour', data_hora) AS hour_start,
+                    MAX(temperatura_celsius::numeric) AS max_temperatura_celsius,
+                    MAX(umidade::numeric) AS max_umidade
+                FROM 
+                    sensor_data
+                WHERE 
+                    data_hora::date = CURRENT_DATE
+                GROUP BY 
+                    DATE_TRUNC('hour', data_hora)
+            )
+            SELECT DISTINCT ON (hour_start)
+                TO_CHAR(hour_start, 'HH24:MI') AS hora,
+                TO_CHAR(TRUNC(max_temperatura_celsius, 2), 'FM999990.00') AS temperatura_celsius,
+                TO_CHAR(TRUNC(max_umidade, 2), 'FM999990.00') AS umidade
+            FROM 
+                MaxValues
+            ORDER BY 
+                hour_start
+            """, nativeQuery = true)
+    List<Object[]> findSensorDataForToday();
 }

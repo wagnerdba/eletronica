@@ -2,6 +2,7 @@ package com.wrtecnologia.sensores.dht22.climatempo.controller;
 
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataCountDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
+import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataHoraDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
 import com.wrtecnologia.sensores.dht22.climatempo.service.SensorService;
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataStatisticsDTO;
@@ -89,5 +90,11 @@ public class SensorController {
     @GetMapping("/count")
     public SensorDataCountDTO getCount() {
         return sensorService.getCount();
+    }
+
+    @GetMapping("/hour")
+    public ResponseEntity<List<SensorDataHoraDTO>> getSensorDataForHour() {
+        List<SensorDataHoraDTO> data = sensorService.getSensorDataForToday();
+        return ResponseEntity.ok(data);
     }
 }

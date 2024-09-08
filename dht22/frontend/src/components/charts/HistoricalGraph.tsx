@@ -194,7 +194,7 @@ const HistoricalGraph: React.FC = () => {
 
   return (
     <div className='graph-item'>
-      <h3>Mínimas e Máximas por dia</h3>
+      <h3>Mínimas e Máximas do Mês</h3>
       <Chart
         options={options}
         series={options.series}

@@ -6,7 +6,7 @@ import RealTimeText from "./components/text/RealTimeText";
 import "./assets/css/styles.css"; // Certifique-se de que este caminho está correto
 //import TemperatureHumidityChart from "./components/charts/TemperatureHumidityChart";
 import TemperatureHumidityChart2 from "./components/charts/TemperatureHumidityChart2";
-import SensorDataCountText from "./components/text/SensorDataCountText";
+import TemperatureHumidityHourChart from "./components/charts/TemperatureHumidityHourChart";
 
 const App: React.FC = () => {
   return (
@@ -30,11 +30,13 @@ const App: React.FC = () => {
           <div className="chart-container">
             <RealTimeGraph />
           </div>
+          <div className="chart-container">
+            <TemperatureHumidityHourChart />
+          </div>
         </div>
         <div className="temperature-panel-container chart-container-humid">
           <TemperatureHumidityChart2 />
         </div>
-
       </div>
     </div>
   );
