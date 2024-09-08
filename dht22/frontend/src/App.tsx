@@ -6,6 +6,7 @@ import RealTimeText from "./components/text/RealTimeText";
 import "./assets/css/styles.css"; // Certifique-se de que este caminho está correto
 //import TemperatureHumidityChart from "./components/charts/TemperatureHumidityChart";
 import TemperatureHumidityChart2 from "./components/charts/TemperatureHumidityChart2";
+import SensorDataCountText from "./components/text/SensorDataCountText";
 
 const App: React.FC = () => {
   return (
@@ -13,7 +14,6 @@ const App: React.FC = () => {
       <div className="App">
         {/* <HeaderTitle /> */}
         <RealTimeText />
-
         {/*
         <div className="graph-container">
           <div className="panel-container"></div>

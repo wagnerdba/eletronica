@@ -31,4 +31,6 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long>, S
     @Query("SELECT s FROM SensorData s WHERE FUNCTION('DATE', s.dataHora) = CURRENT_DATE ORDER BY s.dataHora DESC LIMIT 720")
     List<SensorData> findAllByCurrentDate();*/
 
+    @Query("SELECT COUNT(s.id) FROM SensorData s")
+    long countSensorData();
 }

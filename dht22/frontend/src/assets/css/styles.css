@@ -69,7 +69,7 @@ html, body {
   border-top-right-radius: 5px; /* Bordas superiores arredondadas do gráfico */
   text-align: center;
 
-  border: 3px solid #000; /* Borda de 3px ao redor da div .chart-container */
+  /* border: 3px solid #000; /* Borda de 3px ao redor da div .chart-container */
 
   height: 400px;
   border-radius: 18px;
@@ -85,7 +85,7 @@ html, body {
   box-sizing: border-box;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border: 3px solid #000;
+  /* border: 3px solid #000; */
   height: 100px;
   width: 370px;
   border-radius: 18px;

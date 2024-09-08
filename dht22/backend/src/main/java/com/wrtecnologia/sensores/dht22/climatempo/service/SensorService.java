@@ -1,5 +1,6 @@
 package com.wrtecnologia.sensores.dht22.climatempo.service;
 
+import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataCountDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.mapper.SensorDataMapper;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
@@ -99,5 +100,10 @@ public class SensorService {
         return sensorDataList.stream()
                 .map(sensorDataMapper::toDTO) // Converte cada entidade para DTO
                 .collect(Collectors.toList()); // Coleta em uma lista de DTOs
+    }
+
+    public SensorDataCountDTO getCount() {
+        long count = sensorDataRepository.countSensorData();
+        return new SensorDataCountDTO(count);
     }
 }
