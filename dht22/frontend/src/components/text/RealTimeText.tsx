@@ -19,7 +19,7 @@ const formatNumber = (value: number | string) => {
 const RealTimeText: React.FC = () => {
   const [temperatureData, setTemperatureData] =
     useState<TemperatureData | null>(null);
-  //const [uuid, setUuid] = useState<string>("Carregando UUID...");
+  const [uuid, setUuid] = useState<string>("Carregando UUID...");
 
   useEffect(() => {
     const fetchTemperatureData = () => {
@@ -37,7 +37,7 @@ const RealTimeText: React.FC = () => {
       axios
         .get("http://192.168.1.14:8081/api/dht22/last")
         .then((response) => {
-          //setUuid(response.data.uuid);
+          setUuid(response.data.uuid);
         })
         .catch((error) => {
           console.error("Erro ao carregar o UUID:", error);
@@ -132,10 +132,10 @@ const RealTimeText: React.FC = () => {
         </div>
 
         <div className="panel-container">
-        <strong>Registros</strong>
-        <span><SensorDataCountText /></span>          
+          <strong>Registros</strong>
+          <span><SensorDataCountText /></span>
+          <div className="font-size-1">{uuid}</div>
         </div>
-
       </div>
 
       {/*
