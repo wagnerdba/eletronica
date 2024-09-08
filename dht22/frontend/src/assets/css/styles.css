@@ -121,7 +121,7 @@ html, body {
   box-sizing: border-box;
   text-align: center; /* Centraliza o conteúdo do painel */
   
-  border: 3px solid #000; /* Borda de 3px ao redor da div .temperature-panel-container */
+ /* border: 3px solid #000; /* Borda de 3px ao redor da div .temperature-panel-container */
   
   border-radius: 18px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.9); /* Sombra suave */
@@ -196,7 +196,8 @@ html, body {
 }
 
 .chart-container-humid {
-  width: 99%; 
+  width: 98.5%;
+  height: 200%; /* Ajusta a altura para se adequar à tela pequena */
 }
 
 .temp-hot {
@@ -212,13 +213,14 @@ html, body {
 }
 
 .humidity-high {
-  color: rgb(4, 136, 4);
+  color: rgb(54, 156, 3);
+  
 }
 
 /* Esconde o painel de temperatura e umidade em orientação vertical */
 @media (orientation: portrait) {
   .temperature-panel-container {
-    display: none;
+    display:inline-table;
   }
   .display-text {
     font-size: clamp(0.8rem, 1vw + 0.2rem, 0.8rem); /* Diminui mais a fonte no modo vertical */
@@ -250,6 +252,5 @@ html, body {
     text-align: center;
     font-size: 15px;
   }
- 
-  
+   
 }

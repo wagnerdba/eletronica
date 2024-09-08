@@ -135,7 +135,7 @@ const TemperatureHumidityChart2: React.FC = () => {
   return (
     <div>
       <h3>Análise Diária Minuto a Minuto</h3>
-      <ApexCharts options={options} series={series} type="line" height={350} />
+      <ApexCharts options={options} series={series} type="line" height="160%" />
     </div>
   );
 };
