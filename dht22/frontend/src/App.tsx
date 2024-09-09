@@ -30,12 +30,15 @@ const App: React.FC = () => {
           <div className="chart-container">
             <RealTimeGraph />
           </div>
+        </div>
+        <div className="espacamento-entre-charts"></div>
+        <div className="graph-container">
           <div className="chart-container">
             <TemperatureHumidityHourChart />
           </div>
-        </div>
-        <div className="temperature-panel-container chart-container-humid">
-          <TemperatureHumidityChart2 />
+          <div className="chart-container">
+            <TemperatureHumidityChart2 />
+          </div>
         </div>
       </div>
     </div>

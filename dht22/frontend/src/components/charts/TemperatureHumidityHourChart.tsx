@@ -46,11 +46,13 @@ const TemperatureHumidityHourChart: React.FC = () => {
     },
     stroke: {
       curve: 'smooth',
+      width: 0.5,
     },
     xaxis: {
       categories: data.map(item => item.hora), // Eixo X com as horas
       title: {
         text: '', // Remove o título "Hora" do eixo X
+      
       },
     },
     yaxis: {
@@ -72,17 +74,17 @@ const TemperatureHumidityHourChart: React.FC = () => {
         opacityTo: 1,
         colorStops: [
           {
-            offset: 40,
+            offset: 50,
             color: '#F9440A',
             opacity: 1
           },
           {
-            offset: 50,
+            offset: 70,
             color: '#FFE663',
             opacity: 1
           },
           {
-            offset: 60,
+            offset: 80,
             color: '#2a6af5',
             opacity: 1
           }
@@ -107,16 +109,34 @@ const TemperatureHumidityHourChart: React.FC = () => {
             },
           },
           position: 'top', // Posiciona a anotação abaixo do eixo X
-          offsetY: -42, // Ajusta verticalmente a posição abaixo do eixo X
+          offsetY: -43, // Ajusta verticalmente a posição abaixo do eixo X
         },
       })),
+    },
+    tooltip: {
+      enabled: false, // Desativa a tooltip
+    },
+    markers: {
+      size: 3, // Remove os marcadores de pontos
+    },
+    dataLabels: {
+      enabled: true,
+      offsetX: 0,
+      offsetY: -4,
+      style: {
+        fontSize: '12px',
+        colors: ['#000000'], // Cor da fonte preta
+      },
+      background: {
+        enabled: false, // Remove o fundo dos rótulos de dados
+      },
     },
   };
 
   return (
     <div>
       <h3>Máximas por Hora</h3>
-      <Chart options={options} series={series} type="line" height={320} />
+      <Chart options={options} series={series} type="area" height={320} />
     </div>
   );
 };
