@@ -97,24 +97,24 @@ const TemperatureHumidityHourChart: React.FC = () => {
         label: {
           text: `${item.umidade}%`, // Remove "Umidade:" e exibe apenas o valor
           style: {
-            fontSize: '12px',
+            fontSize: '10px',
             color: '#000', // Cor da fonte preta
             background: 'rgba(0, 0, 0, 0)', // Cor de fundo transparente
-            borderRadius: 2,
+            borderRadius: 1,
             padding: {
-              left: 5,
-              right: 5,
-              top: 3,
-              bottom: 3,
+              left: 1,
+              right: 2,
+              top: 2,
+              bottom: 2,
             },
           },
-          position: 'top', // Posiciona a anotação abaixo do eixo X
-          offsetY: -43, // Ajusta verticalmente a posição abaixo do eixo X
+          position: 'bottom', // Posiciona a anotação abaixo do eixo X
+          offsetY: 2, // Ajusta verticalmente a posição abaixo do eixo X
         },
       })),
     },
     tooltip: {
-      enabled: false, // Desativa a tooltip
+      enabled: true, // Desativa a tooltip
     },
     markers: {
       size: 3, // Remove os marcadores de pontos
