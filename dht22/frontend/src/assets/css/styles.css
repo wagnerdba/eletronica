@@ -1,5 +1,6 @@
 html, body {
   height: 100%; /* Garante que html e body ocupem 100% da altura da tela */
+  width: 100%;
   margin: 0; /* Remove margens padrão do body */
   padding: 0; /* Remove padding padrão do body */
   overflow-x: hidden; /* Evita rolagem horizontal */
@@ -7,21 +8,17 @@ html, body {
 
 .background {
 /*
-  background-image: url('../weather.png'); 
+  background-image: url('../images/background.jpg'); 
   min-height: 100vh; 
   min-width: 100vw; 
 */
-
   background-image: linear-gradient(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.65)),  url('../images/background.jpg');
-  background-repeat: repeat; 
+  background-repeat: no-repeat; 
   background-size: auto;  /* tamanho da imagem no centro... cover/auto */ 
   background-position: center;
-  width: 100%;
-  min-height: 100vh; /* Garante que o fundo cubra pelo menos a altura da tela */
   position: center; /* Deixa a imagem em posição absoluta */
-  top: 0;
-  left: 0;
   z-index: -1; /* Garante que o fundo fique atrás de todo o conteúdo */  
+
 }
 
 .App {
@@ -86,7 +83,7 @@ html, body {
   box-sizing: border-box;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  /* border: 3px solid #000; */
+  border: 1px solid #000; 
   height: 100px;
   width: 370px;
   border-radius: 18px;

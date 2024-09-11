@@ -1,10 +1,7 @@
 import React from "react";
-/* import HeaderTitle from "./components/text/HeaderTitle"; // Importe o novo componente */
 import HistoricalGraph from "./components/charts/HistoricalGraph";
 import RealTimeGraph from "./components/charts/RealTimeGraph";
 import RealTimeText from "./components/text/RealTimeText";
-import "./assets/css/styles.css"; // Certifique-se de que este caminho está correto
-//import TemperatureHumidityChart from "./components/charts/TemperatureHumidityChart";
 import TemperatureHumidityChart2 from "./components/charts/TemperatureHumidityChart2";
 import TemperatureHumidityHourChart from "./components/charts/TemperatureHumidityHourChart";
 
