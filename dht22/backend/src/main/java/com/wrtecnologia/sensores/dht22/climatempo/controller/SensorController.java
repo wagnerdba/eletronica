@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -96,5 +98,16 @@ public class SensorController {
     public ResponseEntity<List<SensorDataHoraDTO>> getSensorDataForHour() {
         List<SensorDataHoraDTO> data = sensorService.getSensorDataForToday();
         return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/now")
+    public ResponseEntity<Map<String, String>> getCurrentDateTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String currentDateTime = LocalDateTime.now().format(formatter);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("data_hora", currentDateTime);
+
+        return ResponseEntity.ok(response);
     }
 }
