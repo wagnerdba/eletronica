@@ -113,7 +113,7 @@ const HistoricalGraph: React.FC = () => {
     ],
     stroke: {
       curve: 'smooth',
-      width: 5.0,
+      width: 4.0,
     },
     colors: ['#FF0000', '#0d00ff', '#f0c905', '#23eb58'],
     series: [
