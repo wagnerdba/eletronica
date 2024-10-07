@@ -192,7 +192,6 @@ void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, floa
   }
 }
 
-
 /*
 #include <WiFi.h>
 #include <DHT.h>
@@ -206,7 +205,7 @@ const char* ssid = "GABRIEL_HOME";
 const char* password = "@FlakE2021#";
 
 // Configurar IP estático
-IPAddress local_IP(192, 168, 1, 100);  // Endereço IP desejado para o ESP32
+IPAddress local_IP(192, 168, 1, 101);  // Endereço IP desejado para o ESP32
 IPAddress gateway(192, 168, 1, 1);     // Gateway (normalmente o IP do roteador)
 IPAddress subnet(255, 255, 255, 0);    // Máscara de sub-rede
 IPAddress primaryDNS(8, 8, 8, 8);      // Servidor DNS primário (opcional)
@@ -241,7 +240,7 @@ String getCurrentDateTime() {
 
 void setup() {
   // Iniciar comunicação serial
-  Serial.begin(4800);
+  Serial.begin(115200);
 
   // Iniciar sensor DHT
   dht.begin();
