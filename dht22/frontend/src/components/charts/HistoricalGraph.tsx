@@ -115,7 +115,7 @@ const HistoricalGraph: React.FC = () => {
       curve: 'smooth',
       width: 4.0,
     },
-    colors: ['#FF0000', '#0d00ff', '#f0c905', '#23eb58'],
+    colors: ['#FF0000', '#0d00ff', '#d9ff00', '#058fad'], //d9ff00
     series: [
       {
         name: 'Temperatura Máxima (ºC)',

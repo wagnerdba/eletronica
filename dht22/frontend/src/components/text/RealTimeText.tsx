@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SensorDataCountText from "./SensorDataCountText";
-/*import "../../assets/css/styles.css"; */
 
 // Interface para os dados de temperatura
 interface TemperatureData {
@@ -19,12 +18,13 @@ const formatNumber = (value: number | string) => {
 const RealTimeText: React.FC = () => {
   const [temperatureData, setTemperatureData] =
     useState<TemperatureData | null>(null);
+  const [dateTimeNow, setDateTimeNow] = useState<string>("");
   const [uuid, setUuid] = useState<string>("Carregando UUID...");
 
   useEffect(() => {
     const fetchTemperatureData = () => {
       axios
-        .get("http://192.168.1.100/esp32/api/temperatura")
+        .get("http://192.168.1.100/esp32/api/temperatura") // Mantém o endpoint original para dados de temperatura
         .then((response) => {
           setTemperatureData(response.data);
         })
@@ -33,9 +33,20 @@ const RealTimeText: React.FC = () => {
         });
     };
 
+    const fetchDateTimeNow = () => {
+      axios
+        .get("http://192.168.1.14:8081/api/dht22/now") // Novo endpoint para a data e hora
+        .then((response) => {
+          setDateTimeNow(response.data.data_hora);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar a data e hora:", error);
+        });
+    };
+
     const fetchUuidData = () => {
       axios
-        .get("http://192.168.1.14:8081/api/dht22/last")
+        .get("http://192.168.1.14:8081/api/dht22/last") // Mantém o endpoint original para o UUID
         .then((response) => {
           setUuid(response.data.uuid);
         })
@@ -44,19 +55,26 @@ const RealTimeText: React.FC = () => {
         });
     };
 
+    // Buscar dados de temperatura e UUID a cada 1 segundo
     fetchTemperatureData();
+    fetchDateTimeNow();
     fetchUuidData();
 
     const intervalIdTemp = setInterval(() => {
       fetchTemperatureData();
-    }, 1000);
+    }, 2000); // Mantém a atualização de temperatura a cada 2 segundos
+
+    const intervalIdDateTime = setInterval(() => {
+      fetchDateTimeNow();
+    }, 1000); // Atualiza a data e hora a cada 1 segundo
 
     const intervalIdUuid = setInterval(() => {
       fetchUuidData();
-    }, 60000);
+    }, 60000); // Mantém a atualização de UUID a cada 60 segundos
 
     return () => {
       clearInterval(intervalIdTemp);
+      clearInterval(intervalIdDateTime);
       clearInterval(intervalIdUuid);
     };
   }, []);
@@ -72,33 +90,6 @@ const RealTimeText: React.FC = () => {
 
   return (
     <div className="temperature-panel">
-      {/*}
-      <p>
-        <strong>Temperatura Atual:</strong>{" "}
-        {formatNumber(temperatureData.temperatura_celsius)} ºC /{" "}
-        {formatNumber(temperatureData.temperatura_fahrenheit)} ºF
-      </p>
-      <p>
-        <strong>Umidade Atual:</strong>{" "}
-        {formatNumber(temperatureData.umidade)} %
-      </p>
-      <p>
-        <strong>Data e Hora da Leitura:</strong>{" "}
-        {formatDateTime(temperatureData.data_hora)}
-      </p>
-      <p className="font-size-1">
-        <strong>ID:</strong> {uuid}
-      </p>
-      */}
-
-      {/*
-<p className="temperature-info">
-  <strong>Temperatura Atual:</strong> {formatNumber(temperatureData.temperatura_celsius)} ºC / {formatNumber(temperatureData.temperatura_fahrenheit)} ºF{" "}
-  <strong>Umidade Atual:</strong> {formatNumber(temperatureData.umidade)} %{" "}
-  <strong>Data e Hora da Leitura:</strong> {formatDateTime(temperatureData.data_hora)} - <strong>ID:</strong> <span>{uuid}</span>
-</p>
-*/}
-
       <div className="display-text">
         <div className="panel-container">
           <strong>Celsius</strong>
@@ -128,7 +119,7 @@ const RealTimeText: React.FC = () => {
         </div>
         <div className="panel-container">
           <strong>Data e Hora</strong>
-          <span>{formatDateTime(temperatureData.data_hora)}</span>
+          <span>{formatDateTime(dateTimeNow)}</span> {/* Exibindo a data e hora do novo endpoint */}
         </div>
 
         <div className="panel-container">
@@ -137,15 +128,8 @@ const RealTimeText: React.FC = () => {
           <div className="font-size-1">{uuid}</div>
         </div>
       </div>
-
-      {/*
-      <p className="font-size-1">
-        <strong>ID:</strong> {uuid}
-      </p>
-      */}
     </div>
   );
 };
 
 export default RealTimeText;
-//57d64078-4543-45bd-b1a5-3e3cbf80122b

@@ -114,7 +114,7 @@ const TemperatureHumidityChart2: React.FC = () => {
       curve: 'smooth',
       width: 2.5  // Define a espessura das linhas
     },
-    colors: ['#2350d9', '#FF9900'], // Define cores para as séries (Temperatura e Umidade)
+    colors: ['#2350d9', '#d9ff00'], // #FF9900 (laranja anterior) Define cores para as séries (Temperatura e Umidade)
     tooltip: {
       shared: true,
       intersect: false

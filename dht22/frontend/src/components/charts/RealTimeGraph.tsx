@@ -63,7 +63,7 @@ const RealTimeGraph: React.FC = () => {
 
     const intervalIdTemp = setInterval(() => {
       fetchTemperatureData();
-    }, 1000);
+    }, 2000);
 
     return () => {
       clearInterval(intervalIdTemp);
@@ -131,7 +131,7 @@ const RealTimeGraph: React.FC = () => {
         enabled: true,
         easing: "linear",
         dynamicAnimation: {
-          speed: 1000,
+          speed: 2000,
         },
       },
       id: "realtime", // Identificador para controlar atualizações
@@ -175,7 +175,7 @@ const RealTimeGraph: React.FC = () => {
     ],
     stroke: {
       curve: "smooth",
-      width: 5.0, // Define a largura das linhas para 1.5 pixels
+      width: 4.0, // Define a largura das linhas
     },
     markers: {
       size: 0,

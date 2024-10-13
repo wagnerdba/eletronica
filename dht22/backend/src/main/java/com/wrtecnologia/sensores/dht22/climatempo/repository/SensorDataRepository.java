@@ -1,6 +1,5 @@
 package com.wrtecnologia.sensores.dht22.climatempo.repository;
 
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -36,24 +35,24 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long>, S
 
     @Query(value = """
             WITH MaxValues AS (
-                SELECT 
+                SELECT
                     DATE_TRUNC('hour', data_hora) AS hour_start,
                     MAX(temperatura_celsius::numeric) AS max_temperatura_celsius,
                     MAX(umidade::numeric) AS max_umidade
-                FROM 
+                FROM
                     sensor_data
-                WHERE 
+                WHERE
                     data_hora::date = CURRENT_DATE
-                GROUP BY 
+                GROUP BY
                     DATE_TRUNC('hour', data_hora)
             )
             SELECT DISTINCT ON (hour_start)
                 TO_CHAR(hour_start, 'HH24:MI') AS hora,
                 TO_CHAR(TRUNC(max_temperatura_celsius, 2), 'FM999990.00') AS temperatura_celsius,
                 TO_CHAR(TRUNC(max_umidade, 2), 'FM999990.00') AS umidade
-            FROM 
+            FROM
                 MaxValues
-            ORDER BY 
+            ORDER BY
                 hour_start
             """, nativeQuery = true)
     List<Object[]> findSensorDataForToday();
