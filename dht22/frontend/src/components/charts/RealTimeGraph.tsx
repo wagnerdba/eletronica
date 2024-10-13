@@ -63,7 +63,7 @@ const RealTimeGraph: React.FC = () => {
 
     const intervalIdTemp = setInterval(() => {
       fetchTemperatureData();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearInterval(intervalIdTemp);
