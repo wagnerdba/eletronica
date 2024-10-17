@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
+import ApexCharts from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
-import axios from 'axios';
-import { format } from 'date-fns'; // Importa a função de formatação
+import { format } from 'date-fns'; // Importa a função format da biblioteca date-fns
 
 interface DataPoint {
   id: number;
@@ -13,47 +12,54 @@ interface DataPoint {
   uuid: string;
 }
 
+/*
 const formatNumber = (value: number | string) => {
-  const num = parseFloat(value.toString());
-  if (isNaN(num)) return '0.00'; // Adiciona verificação para valores inválidos
-  const [integer, decimal = ''] = num.toString().split('.');
-  return `${integer}.${decimal.padEnd(2, '0').substring(0, 2)}`;
+  const [integer, decimal = ""] = value.toString().split(".");
+  return `${integer}.${decimal.padEnd(2, "0").substring(0, 2)}`;
 };
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    return ''; // Retorna uma string vazia se a data for inválida
-  }
-  return format(date, 'dd/MM/yyyy HH:mm:ss'); // Formata a data no formato desejado
-};
+*/
 
 const TemperatureHumidityChart: React.FC = () => {
   const [data, setData] = useState<DataPoint[]>([]);
-  
-  const fetchData = async () => {
-    try {
-      const response = await axios.get<DataPoint[]>('http://192.168.1.14:8081/api/dht22/today');
-      setData(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar dados:', error);
-    }
-  };
+  const apiUrl = process.env.REACT_APP_API_TODAY_URL; // Usa a variável de ambiente
 
   useEffect(() => {
-    fetchData(); // Fetch data on component mount
+    const fetchData = async () => {
+      if (!apiUrl) {
+        console.error('A URL da API de temperatura não está definida nas variáveis de ambiente.');
+        return;
+      }
+    
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error('Network response problem');
+        }
+        const result = await response.json();
+          
+        // Formata a data e hora
+        const formattedData = result.map((item: DataPoint) => ({
+          ...item,
+          data_hora: format(new Date(item.data_hora), 'dd/MM/yyyy HH:mm:ss')
+        }));
 
-    const interval = setInterval(() => {
-      fetchData(); // Fetch data every minute
-    }, 60000);
+        setData(formattedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
+    fetchData();
 
-  const dates = data.map(dataPoint => dataPoint.data_hora);
-  const temperatures = data.map(dataPoint => dataPoint.temperatura_celsius);
-  const humidities = data.map(dataPoint => dataPoint.umidade);
+    // as duas próximas linhas setam a atualização do gráfico a cada 60 segundos
+    const intervalId = setInterval(fetchData, 60000); // Fetch data every minute
+    return () => clearInterval(intervalId);           // Clear interval on component unmount
+
+  }, [apiUrl]);
+
+  const dates = data.map(item => item.data_hora);
+  const temperatures = data.map(item => item.temperatura_celsius);
+  const humidities = data.map(item => item.umidade);
 
   const options: ApexOptions = {
     chart: {
@@ -61,8 +67,8 @@ const TemperatureHumidityChart: React.FC = () => {
       type: 'line',
       height: 230,
       dropShadow: {
-          enabled: true,
-          enabledOnSeries: [0,1],
+        enabled: true,
+        enabledOnSeries: [0, 1],
       },
       toolbar: {
         autoSelected: 'pan',
@@ -90,80 +96,52 @@ const TemperatureHumidityChart: React.FC = () => {
     yaxis: [
       {
         title: {
-          text: 'Temperatura (°C)',
+          text: 'Temperatura (°C)',  // Mantém o título do eixo y (Temperatura)
           style: {
             fontWeight: 'normal', // Remove o negrito
-            fontSize:'16px',
+            fontSize: '16px',
             cssClass: 'font-smooth' // Aplica a suavização
           },
-        },
-        
-        labels: {
-          formatter: (value: number) => formatNumber(value),
         }
       },
       {
         opposite: true,
         title: {
-          text: 'Umidade (%)',
+          text: 'Umidade (%)',  // Mantém o título do eixo y (Umidade)
           style: {
             fontWeight: 'normal', // Remove o negrito
-            fontSize:'16px',
+            fontSize: '16px',
             cssClass: 'font-smooth' // Aplica a suavização
           },
-        },
-        labels: {
-          formatter: (value: number) => formatNumber(value),
         }
       }
     ],
     stroke: {
-      curve: 'smooth', // Apply smooth curves to lines
-      width: 2.5,
+      curve: 'smooth',
+      width: 2.5  // Define a espessura das linhas
     },
-    colors: ['#2350d9', '#FF9900'], // Define cores para as séries (Temperatura e Umidade)
+    colors: ['#2350d9', '#d9ff00'], // Define cores para as séries (Temperatura e Umidade)
     tooltip: {
       shared: true,
-      intersect: false,
-      y: {
-        formatter: (value: number) => formatNumber(value),
-      },
-      x: {
-        formatter: (value: number) => {
-          // Aqui, o valor pode ser um número, então garantimos a conversão correta
-          const index = Math.round(value);
-          const date = dates[index] || '';
-          return formatDate(date); // Formata a data no formato desejado
-        }
-      }
+      intersect: false
     }
   };
 
   const series = [
     {
       name: 'Temperatura (°C)',
-      data: temperatures // Aqui, os dados devem ser números, não strings
+      data: temperatures
     },
     {
       name: 'Umidade (%)',
-      data: humidities // Aqui, os dados devem ser números, não strings
+      data: humidities
     }
   ];
 
   return (
     <div>
       <h3>Análise Diária Minuto a Minuto</h3>
-      
-      {/* <ApexCharts options={options} series={series} type="line" height={350} /> */}
-
-      <Chart
-        options={options}
-        series={series}
-        type="line"
-        height="150%"
-      />
-
-
+      <ApexCharts options={options} series={series} type="line" height="160%" />
     </div>
   );
 };

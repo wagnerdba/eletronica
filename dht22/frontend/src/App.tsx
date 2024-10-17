@@ -2,7 +2,7 @@ import React from "react";
 import HistoricalGraph from "./components/charts/HistoricalGraph";
 import RealTimeGraph from "./components/charts/RealTimeGraph";
 import RealTimeText from "./components/text/RealTimeText";
-import TemperatureHumidityChart2 from "./components/charts/TemperatureHumidityChart2";
+import TemperatureHumidityChart from "./components/charts/TemperatureHumidityChart";
 import TemperatureHumidityHourChart from "./components/charts/TemperatureHumidityHourChart";
 
 const App: React.FC = () => {
@@ -34,7 +34,7 @@ const App: React.FC = () => {
             <TemperatureHumidityHourChart />
           </div>
           <div className="chart-container">
-            <TemperatureHumidityChart2 />
+            <TemperatureHumidityChart />
           </div>
         </div>
       </div>

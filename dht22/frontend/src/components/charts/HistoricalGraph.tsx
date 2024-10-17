@@ -29,10 +29,18 @@ const HistoricalGraph: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const apiUrl = process.env.REACT_APP_API_STATISTICS_URL;
+
   useEffect(() => {
+
+    if (!apiUrl) {
+      console.error("A URL da API de temperatura não está definida nas variáveis de ambiente.");
+      return;
+    }
+
     const fetchData = () => {
       axios
-        .get('http://192.168.1.14:8081/api/dht22/statistics')
+        .get(apiUrl)
         .then((response) => {
           // console.log('Dados recebidos:', response.data);
           setData(response.data);
@@ -53,7 +61,7 @@ const HistoricalGraph: React.FC = () => {
     return () => {
       clearInterval(intervalIdData);
     };
-  }, []);
+  }, [apiUrl]);
 
   const dates = data.map(
     (item) => item.datahoraTemperaturaMinima.split(' ')[0]

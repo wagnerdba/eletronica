@@ -10,9 +10,21 @@ interface TemperatureData {
   data_hora: string;
 }
 
+/*
 const formatNumber = (value: number | string) => {
   const [integer, decimal = ""] = value.toString().split(".");
   return `${integer}.${decimal.padEnd(2, "0").substring(0, 2)}`;
+};
+*/
+
+/*
+const formatNumber = (value: number | string) => {
+  return Math.floor(Number(value)).toString();
+};
+*/
+
+const formatNumber = (value: number | string) => {
+  return value.toString().split(".")[0];
 };
 
 const RealTimeText: React.FC = () => {
@@ -21,10 +33,20 @@ const RealTimeText: React.FC = () => {
   const [dateTimeNow, setDateTimeNow] = useState<string>("");
   const [uuid, setUuid] = useState<string>("Carregando UUID...");
 
+  const apiUrl = process.env.REACT_APP_API_TEMPERATURE_URL;
+  const apiUrlNow = process.env.REACT_APP_API_NOW_URL;
+  const apiUrlUuid = process.env.REACT_APP_API_UUID_URL;
+
   useEffect(() => {
+
+    if (!apiUrl || !apiUrlNow || !apiUrlUuid) {
+      console.error("A URL da API de temperatura não está definida nas variáveis de ambiente.");
+      return;
+    }
+
     const fetchTemperatureData = () => {
       axios
-        .get("http://192.168.1.100/esp32/api/temperatura") // Mantém o endpoint original para dados de temperatura
+        .get(apiUrl) // Mantém o endpoint original para dados de temperatura
         .then((response) => {
           setTemperatureData(response.data);
         })
@@ -35,7 +57,7 @@ const RealTimeText: React.FC = () => {
 
     const fetchDateTimeNow = () => {
       axios
-        .get("http://192.168.1.14:8081/api/dht22/now") // Novo endpoint para a data e hora
+        .get(apiUrlNow) // Novo endpoint para a data e hora
         .then((response) => {
           setDateTimeNow(response.data.data_hora);
         })
@@ -46,7 +68,7 @@ const RealTimeText: React.FC = () => {
 
     const fetchUuidData = () => {
       axios
-        .get("http://192.168.1.14:8081/api/dht22/last") // Mantém o endpoint original para o UUID
+        .get(apiUrlUuid) // Mantém o endpoint original para o UUID
         .then((response) => {
           setUuid(response.data.uuid);
         })
@@ -77,7 +99,7 @@ const RealTimeText: React.FC = () => {
       clearInterval(intervalIdDateTime);
       clearInterval(intervalIdUuid);
     };
-  }, []);
+  }, [apiUrl, apiUrlNow, apiUrlUuid]);
 
   const formatDateTime = (dateTime: string) => {
     const date = new Date(dateTime);
@@ -114,7 +136,7 @@ const RealTimeText: React.FC = () => {
               temperatureData.umidade < 30 ? "humidity-low" : "humidity-high"
             }
           >
-            {formatNumber(temperatureData.umidade)} %
+             {formatNumber(temperatureData.umidade)} % 
           </span>
         </div>
         <div className="panel-container">

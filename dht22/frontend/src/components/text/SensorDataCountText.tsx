@@ -10,10 +10,18 @@ const SensorDataCountText: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const apiUrl = process.env.REACT_APP_API_COUNT_URL;
+
   useEffect(() => {
+
+    if (!apiUrl) {
+      console.error("A URL da API de temperatura não está definida nas variáveis de ambiente.");
+      return;
+    }
+
     const fetchCount = async () => {
       try {
-        const response = await axios.get<SensorDataCount>('http://192.168.1.14:8081/api/dht22/count');
+        const response = await axios.get<SensorDataCount>(apiUrl);
         setCount(response.data.count);
         setError(null); // Reset error on successful fetch
       } catch (err) {
@@ -31,7 +39,7 @@ const SensorDataCountText: React.FC = () => {
 
     // Limpa o intervalo quando o componente for desmontado
     return () => clearInterval(interval);
-  }, []);
+  }, [apiUrl]);
 
   if (loading) {
     return <div>Carregando...</div>;

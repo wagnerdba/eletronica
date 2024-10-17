@@ -42,10 +42,18 @@ const RealTimeGraph: React.FC = () => {
   const [temperatureColor, setTemperatureColor] = useState<string>("#FF5733"); // Cor inicial
   const [umidadeColor, setUmidadeColor] = useState<string>("#FFCA28"); // Cor inicial
 
+  const apiUrl = process.env.REACT_APP_API_TEMPERATURE_URL;
+
   useEffect(() => {
+
+    if (!apiUrl) {
+      console.error("A URL da API de temperatura não está definida nas variáveis de ambiente.");
+      return;
+    }
+
     const fetchTemperatureData = () => {
       axios
-        .get("http://192.168.1.100/esp32/api/temperatura")
+        .get(apiUrl)
         .then((response) => {
           const newData = response.data;
           setTemperatureData((prevData) => {
@@ -68,7 +76,7 @@ const RealTimeGraph: React.FC = () => {
     return () => {
       clearInterval(intervalIdTemp);
     };
-  }, []);
+  }, [apiUrl]);
 
   useEffect(() => {
     if (temperatureData.length > 0) {

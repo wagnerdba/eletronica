@@ -12,10 +12,18 @@ interface SensorData {
 const TemperatureHumidityHourChart: React.FC = () => {
   const [data, setData] = useState<SensorData[]>([]);
 
+  const apiUrl = process.env.REACT_APP_API_HOUR_URL; // Usa a variável de ambiente
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<SensorData[]>('http://192.168.1.14:8081/api/dht22/hour');
+
+  const fetchData = async () => {
+    if (!apiUrl) {
+      console.error('A URL da API de temperatura não está definida nas variáveis de ambiente.');
+      return;
+    }
+
+    try {
+        const response = await axios.get<SensorData[]>(apiUrl);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -28,7 +36,7 @@ const TemperatureHumidityHourChart: React.FC = () => {
     const intervalId = setInterval(fetchData, 60000); // 3600000); // 3600000 ms = 1 hour
 
     return () => clearInterval(intervalId); // Clear interval on component unmount
-  }, []);
+  }, [apiUrl]);
 
   // Preparando os dados para o gráfico
   const series = [{
