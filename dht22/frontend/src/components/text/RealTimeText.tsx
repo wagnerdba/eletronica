@@ -117,7 +117,7 @@ const RealTimeText: React.FC = () => {
           <strong>Celsius</strong>
           <span
             className={
-              temperatureData.temperatura_celsius > 25
+              temperatureData.temperatura_celsius > 25.99
                 ? "temp-hot"
                 : "temp-cold"
             }

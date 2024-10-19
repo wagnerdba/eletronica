@@ -86,7 +86,7 @@ const RealTimeGraph: React.FC = () => {
       const lastUmidade = temperatureData[temperatureData.length - 1].umidade;
 
       // Define a cor com base na temperatura
-      if (lastTemperature <= 25) {
+      if (lastTemperature <= 25.99) {
         setTemperatureColor("#0000FF"); // Azul para temperatura > 23
       } else {
         setTemperatureColor("#FF5733"); // Cor padrão
