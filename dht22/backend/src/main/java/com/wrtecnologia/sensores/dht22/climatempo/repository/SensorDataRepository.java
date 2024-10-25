@@ -56,4 +56,7 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long>, S
                 hour_start
             """, nativeQuery = true)
     List<Object[]> findSensorDataForToday();
+
+    @Query(value = "SELECT DATE(data_hora) AS data_hora, CURRENT_DATE, CURRENT_TIME AS curr_date FROM sensor_data ORDER BY id DESC LIMIT 1", nativeQuery = true)
+    List<Object[]> findSensorDataAndCurrentDate();
 }

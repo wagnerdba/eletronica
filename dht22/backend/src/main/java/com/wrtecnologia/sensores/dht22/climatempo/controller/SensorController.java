@@ -1,11 +1,8 @@
 package com.wrtecnologia.sensores.dht22.climatempo.controller;
 
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataCountDTO;
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataHoraDTO;
+import com.wrtecnologia.sensores.dht22.climatempo.dto.*;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
 import com.wrtecnologia.sensores.dht22.climatempo.service.SensorService;
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataStatisticsDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,5 +106,11 @@ public class SensorController {
         response.put("data_hora", currentDateTime);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/current-date-test")
+    public ResponseEntity<List<SensorDataCurrentDateTestDTO>> getSensorDataCurrentDate() {
+        List<SensorDataCurrentDateTestDTO> data = sensorService.getSensorDataAndCurrentDate();
+        return ResponseEntity.ok(data);
     }
 }

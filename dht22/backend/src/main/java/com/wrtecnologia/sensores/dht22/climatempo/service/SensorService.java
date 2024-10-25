@@ -1,12 +1,9 @@
 package com.wrtecnologia.sensores.dht22.climatempo.service;
 
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataCountDTO;
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataHoraDTO;
+import com.wrtecnologia.sensores.dht22.climatempo.dto.*;
 import com.wrtecnologia.sensores.dht22.climatempo.mapper.SensorDataMapper;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
 import com.wrtecnologia.sensores.dht22.climatempo.repository.SensorDataRepository;
-import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataStatisticsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -119,5 +116,12 @@ public class SensorService {
             dto.setUmidade((String) result[2]);
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    public List<SensorDataCurrentDateTestDTO> getSensorDataAndCurrentDate() {
+        List<Object[]> result = sensorDataRepository.findSensorDataAndCurrentDate();
+        return result.stream()
+                .map(sensorDataMapper::toSensorDataCurrentDateTestDTO) // Usa o mapper para converter cada resultado
+                .collect(Collectors.toList());
     }
 }
