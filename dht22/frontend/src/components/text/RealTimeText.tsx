@@ -84,7 +84,7 @@ const RealTimeText: React.FC = () => {
 
     const intervalIdTemp = setInterval(() => {
       fetchTemperatureData();
-    }, 2000); // Mantém a atualização de temperatura a cada 2 segundos
+    }, 10000); // Mantém a atualização de temperatura a cada 10 segundos
 
     const intervalIdDateTime = setInterval(() => {
       fetchDateTimeNow();
