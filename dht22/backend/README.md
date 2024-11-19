@@ -64,6 +64,28 @@ Ou usar o script `start-app.sh` para iniciar a aplicação:
 - **GET** `/sensor/data/current` : Retorna os dados atuais do sensor.
 - **POST** `/sensor/data` : Adiciona um novo registro de dados do sensor.
 
-## Estrutura do Projeto
+## Testes
 
-O código-fonte da aplicação está organizado da seguinte forma:
+Os testes unitários e de integração estão incluídos no projeto. As classes de teste estão localizadas no diretório `src/test`.
+
+Você pode executar os testes usando Maven:
+
+```bash
+mvn test
+```
+
+## Contribuições
+
+1. Faça um fork do projeto.
+2. Crie uma nova branch: `git checkout -b minha-nova-feature`.
+3. Faça suas alterações e commite elas: `git commit -m 'Adiciona nova feature'`.
+4. Envie para o branch original: `git push origin minha-nova-feature`.
+5. Crie um pull request.
+
+## Licença
+
+Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## Contato
+
+Para mais informações ou suporte, entre em contato com [seu-email@dominio.com].
