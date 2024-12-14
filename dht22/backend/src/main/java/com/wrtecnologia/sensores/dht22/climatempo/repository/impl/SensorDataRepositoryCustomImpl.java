@@ -103,7 +103,7 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
 
                     -- Variação de umidade com sinal
                     (CASE
-                        WHEN ux.data_hora_max_umid < um.data_hora_min_umid\s
+                        WHEN ux.data_hora_max_umid < um.data_hora_min_umid
                         THEN TRUNC(CAST(um.umidade_minima AS NUMERIC), 2) - TRUNC(CAST(ux.umidade_maxima AS NUMERIC), 2) || '%'
                         ELSE '+' || (TRUNC(CAST(ux.umidade_maxima AS NUMERIC), 2) - TRUNC(CAST(um.umidade_minima AS NUMERIC), 2)) || '%'
                     END) AS variacao_umidade
