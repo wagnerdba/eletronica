@@ -32,6 +32,7 @@ const RealTimeText: React.FC = () => {
     useState<TemperatureData | null>(null);
   const [dateTimeNow, setDateTimeNow] = useState<string>("");
   const [uuid, setUuid] = useState<string>("Carregando UUID...");
+  const [data_hora, setDataHora] = useState<string>("Carregando Data e Hora Último Registro");
 
   const apiUrl = process.env.REACT_APP_API_TEMPERATURE_URL;
   const apiUrlNow = process.env.REACT_APP_API_NOW_URL;
@@ -71,9 +72,10 @@ const RealTimeText: React.FC = () => {
         .get(apiUrlUuid) // Mantém o endpoint original para o UUID
         .then((response) => {
           setUuid(response.data.uuid);
+          setDataHora(response.data.data_hora);
         })
         .catch((error) => {
-          console.error("Erro ao carregar o UUID:", error);
+          console.error("Erro ao carregar o UUID/Data Hora:", error);
         });
     };
 
@@ -148,6 +150,7 @@ const RealTimeText: React.FC = () => {
           <strong>Registros</strong>
           <span><SensorDataCountText /></span>
           <div className="font-size-1">{uuid}</div>
+          <div className="font-size-1">{formatDateTime(data_hora)}</div>
         </div>
       </div>
     </div>
