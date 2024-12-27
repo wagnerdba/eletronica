@@ -94,7 +94,7 @@ const RealTimeText: React.FC = () => {
 
     const intervalIdUuid = setInterval(() => {
       fetchUuidData();
-    }, 60000); // Mantém a atualização de UUID a cada 60 segundos
+    }, 30000); // Mantém a atualização de UUID a cada 60 segundos
 
     return () => {
       clearInterval(intervalIdTemp);
@@ -149,8 +149,7 @@ const RealTimeText: React.FC = () => {
         <div className="panel-container">
           <strong>Registros</strong>
           <span><SensorDataCountText /></span>
-          <div className="font-size-1">{uuid}</div>
-          <div className="font-size-1">{formatDateTime(data_hora)}</div>
+          <div className="font-size-1">{uuid} - {formatDateTime(data_hora)} </div>
         </div>
       </div>
     </div>

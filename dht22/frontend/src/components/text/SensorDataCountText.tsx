@@ -34,8 +34,8 @@ const SensorDataCountText: React.FC = () => {
     // Faz a primeira consulta imediatamente
     fetchCount();
 
-    // Define o intervalo para atualizar o count a cada 1 minuto (60000 milissegundos)
-    const interval = setInterval(fetchCount, 60000);
+    // Define o intervalo para atualizar o count a cada 30 segundos (30000 milissegundos)
+    const interval = setInterval(fetchCount, 30000);
 
     // Limpa o intervalo quando o componente for desmontado
     return () => clearInterval(interval);

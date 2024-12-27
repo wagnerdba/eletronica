@@ -1,17 +1,21 @@
-# Use uma versão específica do Node.js para maior controle
+# Use a imagem oficial do Node.js mais recente
+# FROM node:latest
+# FROM node:20.18.0
 FROM node:20.18.0-alpine
 
+# Instale o xsel
+# RUN apt-get update && apt-get install -y xsel
 # Instale o xsel usando o apk
-RUN apk update && apk add --no-cache xsel
+RUN apk update && apk add xsel
 
 # Defina o diretório de trabalho no container
 WORKDIR /app
 
-# Copie os arquivos de dependências e o package-lock.json para o container
+# Copie os arquivos de dependências e o package.json para o container
 COPY package*.json ./
 
-# Instale as dependências com compatibilidade para conflitos de peer dependencies
-RUN npm install --legacy-peer-deps
+# Instale as dependências da aplicação
+RUN npm install
 
 # Copie todo o código da aplicação para o container
 COPY . .
@@ -27,3 +31,6 @@ EXPOSE 3000
 
 # Comando para servir o conteúdo da pasta 'build'
 CMD ["serve", "-s", "build"]
+# CMD ["yarn", "start"]
+# CMD ["serve", "-s", "build", "--no-request-logging"]  
+
