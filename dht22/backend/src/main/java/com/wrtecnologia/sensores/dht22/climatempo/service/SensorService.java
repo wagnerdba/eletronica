@@ -73,7 +73,7 @@ public class SensorService {
         return sensorDataRepository.findSensorDataStatistics();
     }
 
-    public List<SensorDataStatisticsDTO> getSensorDataStatisticsYear() {
+    public List<SensorDataStatisticsYearDTO> getSensorDataStatisticsYear() {
         return sensorDataRepository.findSensorDataStatisticsYear();
     }
 

@@ -73,7 +73,7 @@ public class SensorController {
     }
 
     @GetMapping("/statisticsyear")
-    public List<SensorDataStatisticsDTO> getSensorDataStatisticsYear() {
+    public List<SensorDataStatisticsYearDTO> getSensorDataStatisticsYear() {
         return sensorService.getSensorDataStatisticsYear();
     }
 

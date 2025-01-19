@@ -1,6 +1,7 @@
 package com.wrtecnologia.sensores.dht22.climatempo.repository.impl;
 
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataStatisticsDTO;
+import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataStatisticsYearDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.repository.SensorDataRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -144,7 +145,7 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
     }
 
     @Override
-    public List<SensorDataStatisticsDTO> findSensorDataStatisticsYear() {
+    public List<SensorDataStatisticsYearDTO> findSensorDataStatisticsYear() {
         String sql = """
                 WITH TempMin AS (
                     SELECT
@@ -250,10 +251,10 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
         Query query = entityManager.createNativeQuery(sql);
 
         List<Object[]> results = query.getResultList();
-        List<SensorDataStatisticsDTO> dtos = new ArrayList<>();
+        List<SensorDataStatisticsYearDTO> dtos = new ArrayList<>();
 
         for (Object[] result : results) {
-            SensorDataStatisticsDTO dto = new SensorDataStatisticsDTO(
+            SensorDataStatisticsYearDTO dto = new SensorDataStatisticsYearDTO(
                     (String) result[0],
                     (String) result[1],
                     (String) result[2],
@@ -263,12 +264,11 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     (String) result[6],
                     (String) result[7],
                     (String) result[8],
-                    (String) result[9]
+                    (String) result[9],
+                    (String) result[10]
             );
             dtos.add(dto);
         }
         return dtos;
     }
-
-
 }
