@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface SensorDataRepositoryCustom {
     List<SensorDataStatisticsDTO> findSensorDataStatistics();
+    List<SensorDataStatisticsDTO> findSensorDataStatisticsYear();
 }
 

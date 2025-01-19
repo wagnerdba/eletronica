@@ -73,6 +73,10 @@ public class SensorService {
         return sensorDataRepository.findSensorDataStatistics();
     }
 
+    public List<SensorDataStatisticsDTO> getSensorDataStatisticsYear() {
+        return sensorDataRepository.findSensorDataStatisticsYear();
+    }
+
     public Optional<SensorDataDTO> getLastSensorData() {
         Optional<SensorData> sensorDataOpt = sensorDataRepository.findLatestSensorData();
         if (sensorDataOpt.isPresent()) {

@@ -72,6 +72,11 @@ public class SensorController {
         return sensorService.getSensorDataStatistics();
     }
 
+    @GetMapping("/statisticsyear")
+    public List<SensorDataStatisticsDTO> getSensorDataStatisticsYear() {
+        return sensorService.getSensorDataStatisticsYear();
+    }
+
     // @CrossOrigin(origins = "http://localhost:3000") // Para testes locais
     @GetMapping("/last")
     public ResponseEntity<SensorDataDTO> getLastSensorData() {
