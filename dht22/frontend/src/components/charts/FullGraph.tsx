@@ -88,12 +88,12 @@ const FullGraphChart: React.FC = () => {
         return `
           <div class="tooltip-custom">
             <strong>${currentData.mesAno}</strong>
-            <br/><strong>Temperatura Mínima:</strong> ${currentData.temperaturaMinima}º (Hora: ${tempMinTime})
-            <br/><strong>Temperatura Máxima:</strong> ${currentData.temperaturaMaxima}º (Hora: ${tempMaxTime})
-            <br/><strong>Variação de Temperatura:</strong> ${currentData.variacaoTemperatura}º
-            <br/><strong>Umidade Mínima:</strong> ${currentData.umidadeMinima}% (Hora: ${humidityMinTime})
-            <br/><strong>Umidade Máxima:</strong> ${currentData.umidadeMaxima}% (Hora: ${humidityMaxTime})
-            <br/><strong>Variação de Umidade:</strong> ${currentData.variacaoUmidade}%
+            <br/><strong>Temperatura Mínima:</strong> ${currentData.temperaturaMinima} (Hora: ${tempMinTime})
+            <br/><strong>Temperatura Máxima:</strong> ${currentData.temperaturaMaxima} (Hora: ${tempMaxTime})
+            <br/><strong>Variação de Temperatura:</strong> ${currentData.variacaoTemperatura}
+            <br/><strong>Umidade Mínima:</strong> ${currentData.umidadeMinima} (Hora: ${humidityMinTime})
+            <br/><strong>Umidade Máxima:</strong> ${currentData.umidadeMaxima} (Hora: ${humidityMaxTime})
+            <br/><strong>Variação de Umidade:</strong> ${currentData.variacaoUmidade}
           </div>
         `;
       },
