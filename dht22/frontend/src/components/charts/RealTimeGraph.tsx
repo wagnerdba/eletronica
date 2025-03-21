@@ -53,6 +53,7 @@ const RealTimeGraph: React.FC = () => {
 
     const fetchTemperatureData = () => {
       axios
+        // .get("http://192.168.1.100/esp32/api/temperatura")
         .get(apiUrl)
         .then((response) => {
           const newData = response.data;

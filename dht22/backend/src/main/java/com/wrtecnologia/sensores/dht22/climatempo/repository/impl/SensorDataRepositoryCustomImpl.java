@@ -30,8 +30,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
-                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
-                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
+                    -- AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                    -- AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 ),
                 TempMax AS (
                     SELECT
@@ -43,8 +43,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
-                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
-                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
+                    -- AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                    -- AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 ),
                 UmidMin AS (
                     SELECT
@@ -55,8 +55,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
-                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
-                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
+                    -- AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                    -- AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 ),
                 UmidMax AS (
                     SELECT
@@ -67,8 +67,8 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                     FROM
                         sensor_data
                    WHERE temperatura_celsius > 0 AND umidade > 0
-                     AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
-                     AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
+                    -- AND EXTRACT(MONTH FROM data_hora) = EXTRACT(MONTH FROM CURRENT_DATE)
+                    -- AND EXTRACT(YEAR FROM data_hora) = EXTRACT(YEAR FROM CURRENT_DATE)
                 )
                 SELECT
                     -- Data e hora da temperatura mínima
@@ -117,7 +117,9 @@ public class SensorDataRepositoryCustomImpl implements SensorDataRepositoryCusto
                 JOIN
                     UmidMax ux ON tm.data = ux.data AND ux.rn_umid = 1
                 ORDER BY
-                    tm.data ASC;
+                    -- tm.data ASC;
+                    TO_DATE(tm.data, 'DD/MM/YYYY') ASC;
+
         """;
 
         Query query = entityManager.createNativeQuery(sql);

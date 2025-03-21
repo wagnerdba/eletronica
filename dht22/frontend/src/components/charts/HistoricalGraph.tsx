@@ -121,7 +121,7 @@ const HistoricalGraph: React.FC = () => {
     ],
     stroke: {
       curve: 'smooth',
-      width: 4.0,
+      width: 2.0,
     },
     colors: ['#FF0000', '#0d00ff', '#d9ff00', '#058fad'], //d9ff00
     series: [
@@ -202,7 +202,7 @@ const HistoricalGraph: React.FC = () => {
 
   return (
     <div className='graph-item'>
-      <h3>Mínimas e Máximas do Mês</h3>
+      <h3>Histórico Diário de Temperatura e Umidade</h3>
       <Chart
         options={options}
         series={options.series}

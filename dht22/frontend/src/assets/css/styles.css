@@ -7,16 +7,11 @@ html, body {
 }
 
 .background {
-/*
-  background-image: url('../images/background.jpg'); 
-  min-height: 100vh; 
-  min-width: 100vw; 
-*/
   background-image: linear-gradient(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.65)),  url('../images/background.jpg');
   background-repeat: no-repeat; 
   background-size: auto;  /* tamanho da imagem no centro... cover/auto */ 
   background-position: center;
-  position: center; /* Deixa a imagem em posição absoluta */
+  position: center;
   z-index: -1; /* Garante que o fundo fique atrás de todo o conteúdo */  
 
 }
@@ -37,7 +32,7 @@ html, body {
 .display-text {
   display: flex;
   flex-wrap: wrap; /* Permite que o conteúdo se mova para a linha seguinte se necessário */
-  padding-bottom: 20px;
+  padding-bottom: 5px;
   max-width: 100%; /* Garante que o elemento não ultrapasse a largura da tela */
   box-sizing: border-box; /* Inclui o padding e a borda na largura total */
   font-size: clamp(1rem, 1.5vw + 0.5rem, 1rem); /* Ajusta o tamanho da fonte para diminuir mais em telas menores */
@@ -52,7 +47,7 @@ html, body {
   display: flex;
   width: 100%;
   justify-content: space-between; /* Distribui o espaço igualmente entre os gráficos */
-  height: 350px;
+  height: 423px;
   box-sizing: border-box; /* Inclui padding e border na largura total */
   /*margin-top: 10px; /* Reduz a margem superior para 10px */
 }
@@ -235,7 +230,7 @@ html, body {
     display: block;
   }
   .espacamento-entre-charts {
-    margin: 40px;
+    margin: 1px;
   }
   
 }
