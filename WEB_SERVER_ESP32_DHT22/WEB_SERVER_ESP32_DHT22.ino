@@ -9,7 +9,7 @@ const char* ssid = "GABRIEL_HOME";
 const char* password = "@FlakE2021#";
 
 // Configurar IP estático
-IPAddress local_IP(192, 168, 1, 100);  // Endereço IP desejado para o ESP32
+IPAddress local_IP(192, 168, 1, 101);  // Endereço IP desejado para o ESP32
 IPAddress gateway(192, 168, 1, 1);     // Gateway (normalmente o IP do roteador)
 IPAddress subnet(255, 255, 255, 0);    // Máscara de sub-rede
 IPAddress primaryDNS(8, 8, 8, 8);      // Servidor DNS primário (opcional)
@@ -24,8 +24,8 @@ DHT dht(DHTPIN, DHTTYPE);
 AsyncWebServer server(80);
 
 // Configurar URL do servidor externo destino dos dados
-const char* postServerUrl = "http://192.168.1.14:8081/api/dht22/post_data";
-const char* timeServerUrl = "http://192.168.1.14:8081/api/dht22/now";  // Substitua pelo seu endpoint que retorna a data e hora
+const char* postServerUrl = "http://192.168.1.10:8081/api/dht22/post_data";
+const char* timeServerUrl = "http://192.168.1.10:8081/api/dht22/now";  // Substitua pelo seu endpoint que retorna a data e hora
 
 // Criar variável para armazenar o tempo do último envio de dados
 unsigned long lastPostTime = 0;
@@ -193,7 +193,7 @@ void setup() {
 void loop() {
   // Verificar se é hora de enviar os dados
   unsigned long currentTime = millis();
-  if (currentTime - lastPostTime >= 60000) {
+  if (currentTime - lastPostTime >= 2000) { // aqui 60000
     lastPostTime = currentTime;
 
     // Obter os dados do sensor
