@@ -1,3 +1,6 @@
+-- Criar o database
+CREATE DATABASE sensordb WITH OWNER postgres;
+
 -- Criar a extensão pgcrypto se ainda não estiver instalada
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
