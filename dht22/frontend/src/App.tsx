@@ -25,9 +25,9 @@ const App: React.FC = () => {
           <div className="chart-container">
             <HistoricalGraph />
           </div>
-        </div>
+        {/* </div> */}
         <div className="espacamento-entre-charts"></div>
-        <div className="graph-container">
+        {/* <div className="graph-container"> */}
           <div className="chart-container">
             <RealTimeGraph />
           </div>

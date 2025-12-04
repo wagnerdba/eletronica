@@ -24,12 +24,14 @@ DHT dht(DHTPIN, DHTTYPE);
 AsyncWebServer server(80);
 
 // Configurar URL do servidor externo destino dos dados
-const char* postServerUrl = "http://192.168.1.10:8081/api/dht22/post_data";
-const char* timeServerUrl = "http://192.168.1.10:8081/api/dht22/now";  // Substitua pelo seu endpoint que retorna a data e hora
+const char* postServerUrl = "http://192.168.1.7:8081/api/dht22/post_data";
+const char* timeServerUrl = "http://192.168.1.7:8081/api/dht22/now";  // Substitua pelo seu endpoint que retorna a data e hora
 
 // Criar variável para armazenar o tempo do último envio de dados
 unsigned long lastPostTime = 0;
 unsigned long nextPostTime = 0;  // Próximo tempo de envio em segundos
+int lastMinuteSent = -1;  // <-- ADICIONADO
+// int lastMinuteGet = -1;          // <-- ADICIONADO
 
 // Função para obter a data e hora atual com número de tentativas na assinatura
 String getCurrentDateTime(int attempts = 3) {
@@ -153,6 +155,7 @@ void setup() {
   Serial.println("Endereço IP: " + WiFi.localIP().toString());
 
   // Configurar o endpoint "/esp32/api/temperatura" para GET
+  /*
   server.on("/esp32/api/temperatura", HTTP_GET, [](AsyncWebServerRequest* request) {
     float temperatureCelsius, temperatureFahrenheit, humidity;
 
@@ -181,6 +184,56 @@ void setup() {
       request->send(response);
     }
   });
+  */
+
+  server.on("/esp32/api/temperatura", HTTP_GET, [](AsyncWebServerRequest* request) {
+    float temperatureCelsius, temperatureFahrenheit, humidity;
+
+    // Obter a hora do servidor primeiro
+    String dateTimeCheck = getCurrentDateTime();
+    int currentMinute = dateTimeCheck.substring(14, 16).toInt();
+
+// REMOVIDO O BLOQUEIO POR MINUTO (somente isto)
+/*
+    if (currentMinute == lastMinuteGet) {
+      // Responder com o último valor sem ler novamente
+      DynamicJsonDocument jsonDoc(1024);
+      jsonDoc["erro"] = "Aguarde a mudança de minuto.";
+      jsonDoc["minuto_atual"] = currentMinute;
+      String jsonString;
+      serializeJson(jsonDoc, jsonString);
+      request->send(200, "application/json", jsonString);
+      return;
+    }
+
+    lastMinuteGet = currentMinute;
+    */
+
+    // Tentar ler os dados do sensor
+    if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
+      // Obter data e hora atual do endpoint
+      String dateTime = getCurrentDateTime();
+
+      // Criar objeto JSON com os dados
+      DynamicJsonDocument jsonDoc(1024);
+
+      jsonDoc["temperatura_celsius"] = temperatureCelsius;
+      jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
+      jsonDoc["umidade"] = humidity;
+      jsonDoc["data_hora"] = dateTime;
+
+      String jsonString;
+      serializeJson(jsonDoc, jsonString);
+
+      // Adicionar cabeçalhos CORS
+      AsyncResponseStream* response = request->beginResponseStream("application/json");
+      response->print(jsonString);
+      response->addHeader("Access-Control-Allow-Origin", "*");
+      response->addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+      response->addHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      request->send(response);
+    }
+});
 
   server.onNotFound([](AsyncWebServerRequest* request) {
     request->send(404, "text/plain", "Página não encontrada.");
@@ -189,12 +242,33 @@ void setup() {
   // Iniciar servidor
   server.begin();
 }
-
+/*
 void loop() {
   // Verificar se é hora de enviar os dados
   unsigned long currentTime = millis();
   if (currentTime - lastPostTime >= 2000) { // aqui 60000
     lastPostTime = currentTime;
+
+    // Obter os dados do sensor
+    float temperatureCelsius, temperatureFahrenheit, humidity;
+    if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, true)) {
+      // Obter data e hora atual do endpoint
+      String dateTime = getCurrentDateTime();
+      sendPostRequest(temperatureCelsius, temperatureFahrenheit, humidity, dateTime);
+    } else {
+      Serial.println("Falha ao ler do sensor DHT22. Tentativas esgotadas.");
+    }
+  }
+}
+*/
+
+void loop() {
+  // Verificar se é hora de enviar os dados
+  String dateTimeCheck = getCurrentDateTime();
+  int currentMinute = dateTimeCheck.substring(14, 16).toInt();
+
+  if (currentMinute != lastMinuteSent) { // aqui compara o minuto do servidor
+    lastMinuteSent = currentMinute;
 
     // Obter os dados do sensor
     float temperatureCelsius, temperatureFahrenheit, humidity;
