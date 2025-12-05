@@ -9,7 +9,7 @@ const char* ssid = "GABRIEL_HOME";
 const char* password = "@FlakE2021#";
 
 // Configurar IP estático
-IPAddress local_IP(192, 168, 1, 101);  // Endereço IP desejado para o ESP32
+IPAddress local_IP(192, 168, 1, 100);  // Endereço IP desejado para o ESP32
 IPAddress gateway(192, 168, 1, 1);     // Gateway (normalmente o IP do roteador)
 IPAddress subnet(255, 255, 255, 0);    // Máscara de sub-rede
 IPAddress primaryDNS(8, 8, 8, 8);      // Servidor DNS primário (opcional)
@@ -24,8 +24,8 @@ DHT dht(DHTPIN, DHTTYPE);
 AsyncWebServer server(80);
 
 // Configurar URL do servidor externo destino dos dados
-const char* postServerUrl = "http://192.168.1.7:8081/api/dht22/post_data";
-const char* timeServerUrl = "http://192.168.1.7:8081/api/dht22/now";  // Substitua pelo seu endpoint que retorna a data e hora
+const char* postServerUrl = "http://192.168.1.14:8081/api/dht22/post_data";
+const char* timeServerUrl = "http://192.168.1.14:8081/api/dht22/now";  // Substitua pelo seu endpoint que retorna a data e hora
 
 // Criar variável para armazenar o tempo do último envio de dados
 unsigned long lastPostTime = 0;
@@ -189,9 +189,12 @@ void setup() {
   server.on("/esp32/api/temperatura", HTTP_GET, [](AsyncWebServerRequest* request) {
     float temperatureCelsius, temperatureFahrenheit, humidity;
 
+    // Nada aqui — removido pois não tem função no GET
+/*
     // Obter a hora do servidor primeiro
     String dateTimeCheck = getCurrentDateTime();
     int currentMinute = dateTimeCheck.substring(14, 16).toInt();
+*/
 
 // REMOVIDO O BLOQUEIO POR MINUTO (somente isto)
 /*
@@ -262,6 +265,7 @@ void loop() {
 }
 */
 
+/*
 void loop() {
   // Verificar se é hora de enviar os dados
   String dateTimeCheck = getCurrentDateTime();
@@ -275,6 +279,27 @@ void loop() {
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, true)) {
       // Obter data e hora atual do endpoint
       String dateTime = getCurrentDateTime();
+      sendPostRequest(temperatureCelsius, temperatureFahrenheit, humidity, dateTime);
+    } else {
+      Serial.println("Falha ao ler do sensor DHT22. Tentativas esgotadas.");
+    }
+  }
+}
+*/
+
+void loop() {
+  // Obter a data e hora (agora só uma vez)
+  String dateTime = getCurrentDateTime();
+  int currentMinute = dateTime.substring(14, 16).toInt();
+
+  // Enviar apenas quando o minuto mudar
+  if (currentMinute != lastMinuteSent) {
+    lastMinuteSent = currentMinute;
+
+    // Obter os dados do sensor
+    float temperatureCelsius, temperatureFahrenheit, humidity;
+    if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, true)) {
+      // Enviar usando a MESMA data/hora obtida acima
       sendPostRequest(temperatureCelsius, temperatureFahrenheit, humidity, dateTime);
     } else {
       Serial.println("Falha ao ler do sensor DHT22. Tentativas esgotadas.");
