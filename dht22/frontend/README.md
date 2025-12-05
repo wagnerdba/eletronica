@@ -1,31 +1,9 @@
-# MONITORAMENTO DE TEMPERATURA E UMIDADE
+# Sistema de Monitoramento Ambiental com ESP32, DHT22, Java, PostgreSQL e React
 
-By Wagner Pires - 2024
+O sistema desenvolvido tem como objetivo realizar o monitoramento ambiental contínuo por meio da aquisição, transmissão, armazenamento e visualização de dados de temperatura e umidade. Para isso, foi empregado um microcontrolador **ESP32**, ao qual está acoplado um sensor **DHT22**, responsável pela leitura precisa da temperatura — expressa tanto em graus Celsius quanto em Fahrenheit — e da umidade relativa do ar. O ESP32 executa a coleta dos dados em intervalos regulares de um minuto, tratando internamente as informações e preparando-as para envio.
 
-## Available Scripts
+A transmissão dos dados ocorre via rede Wi-Fi, diretamente para um **backend implementado em Java**, hospedado em um servidor dentro da própria rede local. Esse backend recebe as medições enviadas pelo ESP32, realiza validações, aplica regras de consistência e, posteriormente, registra as informações em um **banco de dados PostgreSQL**, que opera dentro de um contêiner Docker. A utilização de contêineres garante isolamento, portabilidade e facilidade de replicação do ambiente, além de permitir escalabilidade e simplificar a manutenção do sistema como um todo.
 
-In the project directory, you can run:
+Para a visualização dos dados coletados, foi desenvolvido um **frontend em React**, responsável por exibir gráficos e painéis que representam de forma clara e intuitiva a evolução temporal das grandezas monitoradas. A aplicação consome os dados diretamente do backend Java por meio de requisições à API, permitindo atualização praticamente instantânea das informações e oferecendo ao usuário uma experiência rica e informativa.
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
+A integração entre o sensor DHT22, o microcontrolador ESP32, o backend em Java, o banco PostgreSQL em contêiner Docker e a interface web em React resulta em um **sistema completo e robusto de monitoramento ambiental em tempo real**. Essa combinação de tecnologias típicas de Internet das Coisas (IoT), microsserviços, contêinerização e interfaces web modernas demonstra a viabilidade de construir uma solução modular, eficiente e facilmente expansível para aplicações de monitoramento contínuo.
