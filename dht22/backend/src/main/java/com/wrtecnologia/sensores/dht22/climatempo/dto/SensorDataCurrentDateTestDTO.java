@@ -11,4 +11,5 @@ public class SensorDataCurrentDateTestDTO {
     private String tableDate;
     private String currentDate;
     private String currentTime;
+
 }
