@@ -5,35 +5,52 @@
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
 
+//----------------------------------
 // Definir credenciais Wi-Fi
+//----------------------------------
 const char* ssid = "GABRIEL_HOME";
 const char* password = "@FlakE2021#";
 
+//----------------------------------
 // Configurar IP estático
+//----------------------------------
 IPAddress local_IP(192, 168, 1, 100);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
 IPAddress secondaryDNS(8, 8, 4, 4);
 
-// Configurar DHT
+//----------------------------------
+// Configurar sensor DHT
+//----------------------------------
 #define DHTPIN 18
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
-// Configurar porta
+//----------------------------------
+// Configurar porta http
+//----------------------------------
 AsyncWebServer server(80);
 
-// Configurar URL do servidor externo destino dos dados
+//--------------------------------------------------------------
+// Configurar URL do servidor de aplicação (java backend)
+//--------------------------------------------------------------
 const char* postServerUrl = "http://192.168.1.14:8081/api/dht22/post_data";
 const char* timeServerUrl = "http://192.168.1.14:8081/api/dht22/now";
 
+//-------------------------------------------------
 // Variável para armazenar o minuto do último envio
+//-------------------------------------------------
 int lastMinuteSent = -1;
 
-void connectWiFi();  // declaração antecipada da função
+//------------------------------------------------
+// declaração da função de persistência da Wifi
+//------------------------------------------------
+void connectWiFi();  
 
+//------------------------------------------------
 // Função para obter a data e hora atual
+//------------------------------------------------
 String getCurrentDateTime(int attempts = 3) {
   HTTPClient http;
   String dateTime = "Erro ao obter data e hora";
@@ -54,8 +71,9 @@ String getCurrentDateTime(int attempts = 3) {
   http.end();
   return dateTime;
 }
-
-// Função para enviar POST
+//-----------------------------------------------------------
+// Função para enviar o POST ENDPOINT (persistir os dados)
+//-----------------------------------------------------------
 void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, float humidity, String dateTime, int attempts = 3) {
   while (attempts-- > 0) {
     if (WiFi.status() == WL_CONNECTED) {
@@ -90,7 +108,9 @@ void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, floa
   Serial.println("Falha ao enviar os dados após várias tentativas.");
 }
 
-// Função para tentar ler o sensor várias vezes
+//------------------------------------------------
+// Função para tentar ler o sensor várias (3x)
+//------------------------------------------------
 bool tryReadSensor(float& temperatureCelsius, float& temperatureFahrenheit, float& humidity, bool origem, int attempts = 3) {
   while (attempts-- > 0) {
     temperatureCelsius = dht.readTemperature();
@@ -121,21 +141,26 @@ bool tryReadSensor(float& temperatureCelsius, float& temperatureFahrenheit, floa
   return false;
 }
 
+//------------------------------------------------
+// Setup
+//------------------------------------------------
 void setup() {
   Serial.begin(115200);
   dht.begin();
 
-    // ---------- WATCHDOG ----------
+// ---------- WATCHDOG ----------
 // Configuração do Watchdog
+
   esp_task_wdt_config_t wdt_config = {
-    .timeout_ms = 240000, // 240 segundos
+    .timeout_ms = 240000, // 240 segundos - 4 minutos de inatividade o esp32 é reiniciado pelo watchdog
   };
   esp_task_wdt_init(&wdt_config);
 
 // versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
 // esp_task_wdt_init(120, true); // timeout em segundos, panic=true
   
-  esp_task_wdt_add(NULL);      // adiciona a task principal (loop) ao WDT
+  esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
+// ---------- WATCHDOG ----------
 
   if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
     Serial.println("Configuração de IP falhou.");
@@ -152,6 +177,7 @@ void setup() {
   Serial.println("Endereço IP: " + WiFi.localIP().toString());
   Serial.println("Hostname: " + String(WiFi.getHostname()));
 
+// ---------- GET ENDPOINT ----------
   server.on("/esp32/api/temperatura", HTTP_GET, [](AsyncWebServerRequest* request) {
     float temperatureCelsius, temperatureFahrenheit, humidity;
 
@@ -175,6 +201,7 @@ void setup() {
       request->send(response);
     }
   });
+  // ---------- GET ENDPOINT ----------
 
   server.onNotFound([](AsyncWebServerRequest* request) {
     request->send(404, "text/plain", "Página não encontrada.");
@@ -182,12 +209,14 @@ void setup() {
 
   server.begin();
 
-// ---------- Criar task de envio de POST a cada minuto ----------
+// -----------------------------------------------------
+// Criar task de envio dos dados (POST) a cada minuto
+// -----------------------------------------------------
 xTaskCreate(
   [](void*) {
 
     TickType_t xLastWakeTime = xTaskGetTickCount();
-    const TickType_t xFrequency = 60000 / portTICK_PERIOD_MS; // 60s
+    const TickType_t xFrequency = 60000 / portTICK_PERIOD_MS; // 60s = a task é executada uma vez por minuto
 
     for (;;) {
       // Garantir Wi-Fi conectado
@@ -220,7 +249,9 @@ xTaskCreate(
 );
 }
 
-// ---------- WI-FI RESILIENTE ----------
+// -------------------
+// WI-FI resiliente
+// -------------------
 void connectWiFi() {
   if (WiFi.status() == WL_CONNECTED) return;
 
@@ -247,7 +278,7 @@ void connectWiFi() {
 }
 
 void loop() {
-  // Apenas reset do watchdog e execução do servidor
-   esp_task_wdt_reset();
-   delay(200);
+  // ---------- Apenas reset do watchdog e execução do servidor ----------
+  esp_task_wdt_reset();
+  delay(200);
 }
