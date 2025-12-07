@@ -120,36 +120,6 @@ html, body {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.9); /* Sombra suave */
 }
 
-/* Media query para telas pequenas */
-@media (max-width: 768px) {
-  .graph-container {
-    flex-direction: column; /* Coloca os gráficos em uma coluna */
-    height: auto; /* Ajusta a altura automaticamente */
-  }
-
-  .chart-container,
-  .temperature-panel-container {
-    margin: 10px 0; /* Margem vertical para espaçamento igual em dispositivos móveis */
-    width: 100%; /* Faz cada gráfico e painel ocupar toda a largura do contêiner */
-    height: 150px; /* Ajusta a altura para se adequar à tela pequena */
-  }
-
-  .RealTimeText {
-    margin-top: 10px;
-    margin-bottom: 0; /* Remove a margem inferior */
-    padding-bottom: 5px; /* Adiciona um pequeno padding para espaçamento */
-  }
-
-  .RealTimeGraph {
-    margin-top: 0px; /* Remove a margem superior */
-    padding-top: 5px; /* Adiciona um pequeno padding para espaçamento */
-  }
-  .temperature-panel {
-    width: 10;
-  }
-
-}
-
 .tooltip-custom {
   font-size: 12px;
   text-align: center;
@@ -209,6 +179,36 @@ html, body {
 .humidity-high {
   color: rgb(54, 156, 3);
   
+}
+
+/* Media query para telas pequenas */
+@media (max-width: 768px) {
+  .graph-container {
+    flex-direction: column; /* Coloca os gráficos em uma coluna */
+    height: auto; /* Ajusta a altura automaticamente */
+  }
+
+  .chart-container,
+  .temperature-panel-container {
+    margin: 10px 0; /* Margem vertical para espaçamento igual em dispositivos móveis */
+    width: 100%; /* Faz cada gráfico e painel ocupar toda a largura do contêiner */
+    height: 150px; /* Ajusta a altura para se adequar à tela pequena */
+  }
+
+  .RealTimeText {
+    margin-top: 10px;
+    margin-bottom: 0; /* Remove a margem inferior */
+    padding-bottom: 5px; /* Adiciona um pequeno padding para espaçamento */
+  }
+
+  .RealTimeGraph {
+    margin-top: 0px; /* Remove a margem superior */
+    padding-top: 5px; /* Adiciona um pequeno padding para espaçamento */
+  }
+  .temperature-panel {
+    width: 10;
+  }
+
 }
 
 /* Esconde o painel de temperatura e umidade em orientação vertical */
