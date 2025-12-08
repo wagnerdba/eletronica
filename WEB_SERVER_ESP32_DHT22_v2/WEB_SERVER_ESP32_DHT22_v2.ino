@@ -14,7 +14,7 @@ const char* password = "@FlakE2021#";
 //----------------------------------
 // Configurar IP estático
 //----------------------------------
-IPAddress local_IP(192, 168, 1, 100);
+IPAddress local_IP(192, 168, 1, 101);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
@@ -35,8 +35,8 @@ AsyncWebServer server(80);
 //--------------------------------------------------------------
 // Configurar URL do servidor de aplicação (java backend)
 //--------------------------------------------------------------
-const char* postServerUrl = "http://192.168.1.14:8081/api/dht22/post_data";
-const char* timeServerUrl = "http://192.168.1.14:8081/api/dht22/now";
+const char* postServerUrl = "http://192.168.1.7:8081/api/dht22/post_data";
+const char* timeServerUrl = "http://192.168.1.7:8081/api/dht22/now";
 
 //-------------------------------------------------
 // Variável para armazenar o minuto do último envio
@@ -60,7 +60,7 @@ String getCurrentDateTime(int attempts = 3) {
     int httpResponseCode = http.GET();
     if (httpResponseCode == 200) {
       String payload = http.getString();
-      DynamicJsonDocument jsonDoc(1024);
+      JsonDocument jsonDoc;
       deserializeJson(jsonDoc, payload);
       dateTime = jsonDoc["data_hora"].as<String>();
       break;
@@ -81,7 +81,7 @@ void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, floa
       http.begin(postServerUrl);
       http.addHeader("Content-Type", "application/json");
 
-      DynamicJsonDocument jsonDoc(1024);
+      JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
       jsonDoc["umidade"] = humidity;
@@ -91,7 +91,17 @@ void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, floa
       serializeJson(jsonDoc, jsonString);
 
       int httpResponseCode = http.POST(jsonString);
-      if (httpResponseCode > 0) {
+
+      // ➤ TRATAR ERRO -11 AQUI
+      if (httpResponseCode == -11) {
+        Serial.println("Servidor recusou a conexão (-11). Tentando novamente...");
+        http.end();
+        delay(1500);
+        continue; // <-- volta ao while e tenta novamente
+      }
+
+      // SUCESSO REAL = 200 ~ 299
+      if (httpResponseCode >= 200 && httpResponseCode < 300) {
         String response = http.getString();
         Serial.println("Requisição Enviada: " + response);
         http.end();
@@ -150,14 +160,14 @@ void setup() {
 
 // ---------- WATCHDOG ----------
 // Configuração do Watchdog
-
+/*
   esp_task_wdt_config_t wdt_config = {
     .timeout_ms = 480000, // 480 segundos - 8 minutos de inatividade o esp32 é reiniciado pelo watchdog
   };
   esp_task_wdt_init(&wdt_config);
-
+*/
 // versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
-// esp_task_wdt_init(480, true); // timeout em segundos, panic=true
+  esp_task_wdt_init(480, true); // timeout em segundos, panic=true
   
   esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
 // ---------- WATCHDOG ----------
@@ -184,7 +194,7 @@ void setup() {
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
       String dateTime = getCurrentDateTime();
 
-      DynamicJsonDocument jsonDoc(1024);
+      JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
       jsonDoc["umidade"] = humidity;
