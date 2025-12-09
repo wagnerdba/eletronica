@@ -14,7 +14,7 @@ const char *password = "@FlakE2021#";
 //----------------------------------
 // Configurar IP estático
 //----------------------------------
-IPAddress local_IP(192, 168, 1, 100);
+IPAddress local_IP(192, 168, 1, 101);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
@@ -91,13 +91,14 @@ void setup()
   dht.begin();
 
 // ---------- WATCHDOG ----------
+/*
   esp_task_wdt_config_t wdt_config = {
     .timeout_ms = 240000, // 240 segundos - 4 minutos de inatividade o esp32 é reiniciado pelo watchdog
   };
   esp_task_wdt_init(&wdt_config);
-
+*/
 // versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
-//  esp_task_wdt_init(240, true); // timeout em segundos, panic=true
+  esp_task_wdt_init(240, true); // timeout em segundos, panic=true
   
   esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
 // 
