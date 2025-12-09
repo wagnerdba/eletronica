@@ -218,6 +218,13 @@ void setup() {
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
       String dateTime = getCurrentDateTime();
 
+      // Log dos valores lidos
+      Serial.println("[ESP32] Dados coletados com sucesso:");
+      Serial.print("  Temperatura Celsius: "); Serial.println(temperatureCelsius);
+      Serial.print("  Temperatura Fahrenheit: "); Serial.println(temperatureFahrenheit);
+      Serial.print("  Umidade: "); Serial.println(humidity);
+      Serial.print("  Data/Hora: "); Serial.println(dateTime);
+
       JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
