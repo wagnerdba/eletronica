@@ -33,7 +33,7 @@ DHT dht(DHTPIN, DHTTYPE);
 AsyncWebServer server(80);
 
 //-------------------------------------------------
-int lastMinuteSent = -1;
+// Declaração antecipada
 //------------------------------------------------
 void connectWiFi();
 
