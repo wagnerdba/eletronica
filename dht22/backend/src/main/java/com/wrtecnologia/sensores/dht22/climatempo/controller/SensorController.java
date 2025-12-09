@@ -46,6 +46,17 @@ public class SensorController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("POST - Falha de validação: " + e.getMessage());
         } catch (Exception e) {
+
+            // *** ALTERAÇÃO COM LOG ***
+            if (e.getMessage() != null && e.getMessage().contains("Registro duplicado ignorado pela trigger")) {
+
+                // LOG NO JAVA
+                // System.out.println("Registro duplicado ignorado pela trigger");
+
+                return ResponseEntity.ok("Registro duplicado ignorado pela trigger");
+            }
+            // *** FIM DA ALTERAÇÃO ***
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("POST - Falha ao processar dados: " + e.getMessage());
         }
     }

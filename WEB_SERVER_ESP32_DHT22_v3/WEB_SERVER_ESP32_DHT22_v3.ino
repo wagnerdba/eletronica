@@ -51,6 +51,7 @@ void connectWiFi();
 //------------------------------------------------
 // Função para obter a data e hora atual
 //------------------------------------------------
+/*
 String getCurrentDateTime(int attempts = 6) {
   HTTPClient http;
   String dateTime = "Erro ao obter data e hora";
@@ -71,6 +72,29 @@ String getCurrentDateTime(int attempts = 6) {
   http.end();
   return dateTime;
 }
+*/
+
+String getCurrentDateTime(int attempts = 6) {
+  String dateTime = "Erro ao obter data e hora";
+
+  while (attempts-- > 0) {
+
+    struct tm timeinfo;
+    if (getLocalTime(&timeinfo)) {
+
+      char buffer[20];
+      strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &timeinfo);
+      dateTime = String(buffer);
+      break;
+
+    } else {
+      delay(1000);
+    }
+  }
+
+  return dateTime;
+}
+
 //-----------------------------------------------------------
 // Função para enviar o POST ENDPOINT (persistir os dados)
 //-----------------------------------------------------------
@@ -218,6 +242,8 @@ void setup() {
   });
 
   server.begin();
+
+  configTime(-3 * 3600, 3600, "pool.ntp.org", "time.nist.gov");
 
 // -----------------------------------------------------
 // Criar task de envio dos dados (POST) a cada minuto
