@@ -28,7 +28,7 @@ public class Esp32CollectorService {
 
     @Scheduled(fixedRate = 60000)
     public void executarColetaAutomatica() {
-        int maxTentativas = 6;
+        int maxTentativas = 3;
 
         for (int tentativa = 1; tentativa <= maxTentativas; tentativa++) {
             try {
@@ -92,7 +92,7 @@ public class Esp32CollectorService {
                         Thread.sleep(2000);
                     } catch (InterruptedException ignored) {}
                 } else {
-                    System.out.println("Falha após 6 tentativas.");
+                    System.out.println("Falha após " + maxTentativas + " tentativas.");
                 }
             }
         }
