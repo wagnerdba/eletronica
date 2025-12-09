@@ -129,6 +129,62 @@ public class SensorController {
         List<SensorDataCurrentDateTestDTO> data = sensorService.getSensorDataAndCurrentDate();
         return ResponseEntity.ok(data);
     }
+
+    // FAZ O POST MANUALMENTE (para testes - http://192.168.1.7:8081/api/dht22/collect)
+    @GetMapping("/collect")
+    public ResponseEntity<String> collectFromEsp32() {
+        try {
+            // 1. Chamar o endpoint externo
+            String url = "http://192.168.1.101/esp32/api/temperatura";
+
+            java.net.URL requestUrl = new java.net.URL(url);
+            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) requestUrl.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                        .body("Falha ao acessar ESP32. Código HTTP: " + responseCode);
+            }
+
+            // 2. Ler resposta JSON
+            java.io.BufferedReader reader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(connection.getInputStream())
+            );
+
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+
+            reader.close();
+            connection.disconnect();
+
+            String json = jsonBuilder.toString();
+
+            // 3. Converter JSON para DTO
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            SensorDataDTO dto = mapper.readValue(json, SensorDataDTO.class);
+
+            // 4. SALVAR usando seu método já existente (post_data interno)
+            SensorData saved = sensorService.saveSensorData(dto);
+
+            // 5. Resposta
+            return ResponseEntity.ok(
+                    "Dados coletados e salvos com sucesso -> id: "
+                            + saved.getId() + ", uuid: " + saved.getUuid()
+            );
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao coletar dados do ESP32: " + e.getMessage());
+        }
+    }
+
+
 }
 
 /* OpenAPI - Swagger
