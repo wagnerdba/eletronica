@@ -248,6 +248,7 @@ void setup() {
 // -----------------------------------------------------
 // Criar task de envio dos dados (POST) a cada minuto
 // -----------------------------------------------------
+/*
 xTaskCreate(
   [](void*) {
 
@@ -283,6 +284,7 @@ xTaskCreate(
   1,           // prioridade
   NULL
 );
+*/
 }
 
 // -------------------
