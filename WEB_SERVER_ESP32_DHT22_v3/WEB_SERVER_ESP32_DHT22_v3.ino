@@ -98,6 +98,7 @@ String getCurrentDateTime(int attempts = 4) {
 //-----------------------------------------------------------
 // Função para enviar o POST ENDPOINT (persistir os dados)
 //-----------------------------------------------------------
+/*
 void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, float humidity, String dateTime, int attempts = 4) {
   while (attempts-- > 0) {
     if (WiFi.status() == WL_CONNECTED) {
@@ -141,6 +142,7 @@ void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, floa
   }
   Serial.println("Falha ao enviar os dados após várias tentativas.");
 }
+*/
 
 //------------------------------------------------
 // Função para tentar ler o sensor várias (3x)
