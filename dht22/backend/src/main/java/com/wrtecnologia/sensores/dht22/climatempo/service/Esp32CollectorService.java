@@ -26,7 +26,8 @@ public class Esp32CollectorService {
         this.sensorService = sensorService;
     }
 
-    @Scheduled(fixedRate = 60000)
+    // @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 * * * * *")  // Executa no segundo 00 de cada minuto
     public void executarColetaAutomatica() {
         int maxTentativas = 3;
 

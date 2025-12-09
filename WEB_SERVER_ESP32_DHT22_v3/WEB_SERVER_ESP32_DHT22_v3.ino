@@ -52,7 +52,7 @@ void connectWiFi();
 // Função para obter a data e hora atual
 //------------------------------------------------
 /*
-String getCurrentDateTime(int attempts = 6) {
+String getCurrentDateTime(int attempts = 4) {
   HTTPClient http;
   String dateTime = "Erro ao obter data e hora";
 
@@ -74,7 +74,7 @@ String getCurrentDateTime(int attempts = 6) {
 }
 */
 
-String getCurrentDateTime(int attempts = 6) {
+String getCurrentDateTime(int attempts = 4) {
   String dateTime = "Erro ao obter data e hora";
 
   while (attempts-- > 0) {
@@ -98,7 +98,7 @@ String getCurrentDateTime(int attempts = 6) {
 //-----------------------------------------------------------
 // Função para enviar o POST ENDPOINT (persistir os dados)
 //-----------------------------------------------------------
-void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, float humidity, String dateTime, int attempts = 6) {
+void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, float humidity, String dateTime, int attempts = 4) {
   while (attempts-- > 0) {
     if (WiFi.status() == WL_CONNECTED) {
       HTTPClient http;
@@ -145,7 +145,7 @@ void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, floa
 //------------------------------------------------
 // Função para tentar ler o sensor várias (3x)
 //------------------------------------------------
-bool tryReadSensor(float& temperatureCelsius, float& temperatureFahrenheit, float& humidity, bool origem, int attempts = 6) {
+bool tryReadSensor(float& temperatureCelsius, float& temperatureFahrenheit, float& humidity, bool origem, int attempts = 4) {
   while (attempts-- > 0) {
     temperatureCelsius = dht.readTemperature();
     temperatureFahrenheit = dht.readTemperature(true);
@@ -170,7 +170,7 @@ bool tryReadSensor(float& temperatureCelsius, float& temperatureFahrenheit, floa
     }
 
 	 Serial.println("Nova tentativa em 3s...");
-    delay(3000);
+    delay(2000);
   }
   return false;
 }
