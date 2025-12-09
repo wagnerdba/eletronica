@@ -143,7 +143,6 @@ void sendPostRequest(float temperatureCelsius, float temperatureFahrenheit, floa
   Serial.println("Falha ao enviar os dados após várias tentativas.");
 }
 */
-
 //------------------------------------------------
 // Função para tentar ler o sensor várias (3x)
 //------------------------------------------------
@@ -188,12 +187,12 @@ void setup() {
 // Configuração do Watchdog
 
   esp_task_wdt_config_t wdt_config = {
-    .timeout_ms = 480000, // 480 segundos - 8 minutos de inatividade o esp32 é reiniciado pelo watchdog
+    .timeout_ms = 240000, // 240 segundos - 4 minutos de inatividade o esp32 é reiniciado pelo watchdog
   };
   esp_task_wdt_init(&wdt_config);
 
 // versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
-// esp_task_wdt_init(480, true); // timeout em segundos, panic=true
+// esp_task_wdt_init(240, true); // timeout em segundos, panic=true
   
   esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
 // ---------- WATCHDOG ----------

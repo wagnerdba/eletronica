@@ -1,8 +1,9 @@
-package com.wrtecnologia.sensores.dht22.climatempo.service;
+package com.wrtecnologia.sensores.dht22.climatempo.service.job;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
+import com.wrtecnologia.sensores.dht22.climatempo.service.SensorService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class Esp32CollectorService {
     }
 
     // @Scheduled(fixedRate = 60000)
-    @Scheduled(cron = "0 * * * * *")  // Executa no segundo 00 de cada minuto
+    @Scheduled(cron = "5 * * * * *")  // Executa no segundo 05 de cada minuto
     public void executarColetaAutomatica() {
         int maxTentativas = 3;
 
@@ -83,7 +84,7 @@ public class Esp32CollectorService {
 
                 // 🟥 Trigger impedindo duplicata → parar na hora
                 if (e.getMessage() != null && e.getMessage().contains("duplicado")) {
-                    System.out.println("Trigger detectou duplicidade — parando.");
+                    System.out.println("Registro duplicado ignorado pela trigger");
                     break;
                 }
 

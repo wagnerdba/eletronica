@@ -169,7 +169,7 @@ public class SensorController {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             SensorDataDTO dto = mapper.readValue(json, SensorDataDTO.class);
 
-            // 4. SALVAR usando seu método já existente (post_data interno)
+            // 4. Salvar
             SensorData saved = sensorService.saveSensorData(dto);
 
             // 5. Resposta
@@ -183,8 +183,6 @@ public class SensorController {
                     .body("Erro ao coletar dados do ESP32: " + e.getMessage());
         }
     }
-
-
 }
 
 /* OpenAPI - Swagger
