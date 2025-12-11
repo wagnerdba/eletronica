@@ -36,7 +36,7 @@ public class Esp32CollectorService {
             try {
 
                 System.out.println(
-                        "Coleta automática... Tentativa " + tentativa +
+                        "Job executado. Tentativa " + tentativa +
                                 " em " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 );
 
@@ -66,7 +66,7 @@ public class Esp32CollectorService {
                 connection.disconnect();
 
                 String json = jsonBuilder.toString();
-                System.out.println("[ESP32] " + json);
+                System.out.println("[ESP32] json: " + json);
 
                 // 🟦 3. Converter JSON para DTO
                 ObjectMapper mapper = new ObjectMapper();
@@ -74,7 +74,7 @@ public class Esp32CollectorService {
 
                 // 🟦 4. SALVAR no banco
                 SensorData saved = sensorService.saveSensorData(dto);
-                System.out.println("[BANCO] id: " +
+                System.out.println("[BANCO] id..: " +
                         saved.getId() + ", uuid: " + saved.getUuid());
 
                 // sucesso → parar tentativas
