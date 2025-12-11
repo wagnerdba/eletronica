@@ -30,7 +30,7 @@ public class Esp32CollectorService {
     // @Scheduled(fixedRate = 60000)
     @Scheduled(cron = "5 * * * * *")  // Executa no segundo 05 de cada minuto
     public void executarColetaAutomatica() {
-        int maxTentativas = 3;
+        int maxTentativas = 6;
 
         for (int tentativa = 1; tentativa <= maxTentativas; tentativa++) {
             try {
@@ -44,8 +44,8 @@ public class Esp32CollectorService {
                 URL requestUrl = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
                 connection.setRequestMethod("GET");
-                connection.setConnectTimeout(3000);
-                connection.setReadTimeout(3000);
+                connection.setConnectTimeout(4000);
+                connection.setReadTimeout(4000);
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode != 200) {
@@ -89,9 +89,9 @@ public class Esp32CollectorService {
                 }
 
                 if (tentativa < maxTentativas) {
-                    System.out.println("Tentativa falhou, nova tentativa em 2s...");
+                    System.out.println("Tentativa falhou, nova tentativa em 3s...");
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException ignored) {}
                 } else {
                     System.out.println("Falha após " + maxTentativas + " tentativas.");
