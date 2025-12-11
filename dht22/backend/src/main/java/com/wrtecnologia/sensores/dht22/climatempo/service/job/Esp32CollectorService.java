@@ -66,7 +66,7 @@ public class Esp32CollectorService {
                 connection.disconnect();
 
                 String json = jsonBuilder.toString();
-                System.out.println("JSON Recebido: " + json);
+                System.out.println("[ESP32] " + json);
 
                 // 🟦 3. Converter JSON para DTO
                 ObjectMapper mapper = new ObjectMapper();
@@ -74,7 +74,7 @@ public class Esp32CollectorService {
 
                 // 🟦 4. SALVAR no banco
                 SensorData saved = sensorService.saveSensorData(dto);
-                System.out.println("Dados salvos com sucesso -> id: " +
+                System.out.println("[BANCO] id: " +
                         saved.getId() + ", uuid: " + saved.getUuid());
 
                 // sucesso → parar tentativas
