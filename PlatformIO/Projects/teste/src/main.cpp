@@ -4,6 +4,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
+#include <esp_timer.h>
 
 //----------------------------------
 // Definir credenciais Wi-Fi
@@ -14,7 +15,7 @@ const char *password = "@FlakE2021#";
 //----------------------------------
 // Configurar IP estático
 //----------------------------------
-IPAddress local_IP(192, 168, 1, 102);
+IPAddress local_IP(192, 168, 1, 101);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
@@ -85,13 +86,28 @@ bool tryReadSensor(float &temperatureCelsius, float &temperatureFahrenheit, floa
 }
 
 //------------------------------------------------
+String getUptime() {
+  uint64_t us = esp_timer_get_time();
+  uint64_t s = us / 1000000;
+
+  uint32_t sec = s % 60;
+  uint32_t min = (s / 60) % 60;
+  uint32_t hr  = (s / 3600) % 24;
+  uint32_t days = s / 86400;
+
+  char buffer[32];
+  sprintf(buffer, "%u:%02u:%02u:%02u", days, hr, min, sec);
+  return String(buffer);
+}
+
+//------------------------------------------------
 void setup()
 {
   Serial.begin(115200);
   dht.begin();
 
 // ---------- WATCHDOG ----------
-/*
+ /* 
   esp_task_wdt_config_t wdt_config = {
     .timeout_ms = 240000, // 240 segundos - 4 minutos de inatividade o esp32 é reiniciado pelo watchdog
   };
@@ -112,18 +128,21 @@ void setup()
 
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
       String dateTime = getCurrentDateTime();
+		String upTime = getUptime();
 
       Serial.println("✅ [ESP32] Dados coletados com sucesso:");
       Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
       Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
       Serial.print("  Umidade (%): "); Serial.println(humidity);
       Serial.print("  Data/Hora: "); Serial.println(dateTime);
+		Serial.print("  Uptime: ");  Serial.println(upTime);
 
       JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
       jsonDoc["umidade"] = humidity;
       jsonDoc["data_hora"] = dateTime;
+		jsonDoc["uptime"] = upTime;
 
       String jsonString;
       serializeJson(jsonDoc, jsonString);
