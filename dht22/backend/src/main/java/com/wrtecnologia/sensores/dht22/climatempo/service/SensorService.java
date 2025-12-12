@@ -38,7 +38,7 @@ public class SensorService {
         sensorData.setTemperaturaFahrenheit(sensorDataDTO.getTemperaturaFahrenheit());
         sensorData.setUmidade(sensorDataDTO.getUmidade());
         sensorData.setDataHora(sensorDataDTO.getDataHoraAsLocalDateTime());
-
+        sensorData.setUptime(sensorDataDTO.getUptime());
         // Salvar no banco de dados
         return sensorDataRepository.save(sensorData);
     }

@@ -20,6 +20,7 @@ public class SensorDataMapper {
         dto.setUmidade(entity.getUmidade());
         dto.setDataHora(entity.getDataHora().format(formatter));  // Converte LocalDateTime para String
         dto.setUuid(entity.getUuid());
+        dto.setUptime(entity.getUptime());
         return dto;
     }
 

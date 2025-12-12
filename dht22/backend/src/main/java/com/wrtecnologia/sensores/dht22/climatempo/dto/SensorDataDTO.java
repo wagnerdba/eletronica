@@ -30,6 +30,9 @@ public class SensorDataDTO {
     @JsonProperty("uuid")
     private UUID uuid; // Adiciona o campo UUID
 
+    @JsonProperty("uptime")
+    private String uptime;
+
     // Getters e Setters
 
     public Long getId() {
@@ -70,6 +73,14 @@ public class SensorDataDTO {
 
     public void setDataHora(String dataHora) {
         this.dataHora = dataHora;
+    }
+
+    public String getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(String uptime) {
+        this.uptime = uptime;
     }
 
     // Adicione @JsonIgnore ao campo ou método que deseja ocultar

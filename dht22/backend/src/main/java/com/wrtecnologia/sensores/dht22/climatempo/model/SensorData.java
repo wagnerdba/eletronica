@@ -28,6 +28,9 @@ public class SensorData {
     @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
+    @Column(name = "uptime", length = 8)
+    private String uptime;
+
     @PrePersist
     public void prePersist() {
         if (this.uuid == null) {
@@ -83,6 +86,15 @@ public class SensorData {
     public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
+
+    public String getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(String uptime) {
+        this.uptime = uptime;
+    }
+
 
     @Override
     public String toString() {
