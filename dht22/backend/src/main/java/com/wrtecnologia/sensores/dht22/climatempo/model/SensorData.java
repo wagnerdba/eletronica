@@ -28,7 +28,7 @@ public class SensorData {
     @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
-    @Column(name = "uptime", length = 8)
+    @Column(name = "uptime", length = 15)
     private String uptime;
 
     @PrePersist
