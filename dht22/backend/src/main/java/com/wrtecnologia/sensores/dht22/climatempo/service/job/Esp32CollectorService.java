@@ -89,7 +89,7 @@ public class Esp32CollectorService {
                 }
 
                 if (tentativa < maxTentativas) {
-                    System.out.println("Tentativa falhou, nova tentativa em 3s...");
+                    System.out.println("Tentativa falhou, nova tentativa em 3s..." + e.getMessage());
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ignored) {
