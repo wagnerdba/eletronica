@@ -36,7 +36,7 @@ public class Esp32CollectorService {
             try {
 
                 System.out.println(
-                        "Job executado. Tentativa " + tentativa +
+                        "[⚡ JOB *] Execução " + tentativa +
                                 " em " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 );
 
@@ -49,8 +49,8 @@ public class Esp32CollectorService {
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode != 200) {
-                    System.out.println("Falha ao acessar ESP32 -> HTTP: " + responseCode);
-                    throw new RuntimeException("Falha HTTP: " + responseCode);
+                    System.out.println("\uD83D\uDD34 Falha ao acessar ESP32 -> HTTP: " + responseCode);
+                    throw new RuntimeException("\uD83D\uDD34 Falha HTTP: " + responseCode);
                 }
 
                 // 🟦 2. Ler JSON do ESP32
@@ -66,7 +66,7 @@ public class Esp32CollectorService {
                 connection.disconnect();
 
                 String json = jsonBuilder.toString();
-                System.out.println("[ESP32] GET json.: " + json);
+                System.out.println("[\uD83D\uDD0D ESP32] GET json.: " + json);
 
                 // 🟦 3. Converter JSON para DTO
                 ObjectMapper mapper = new ObjectMapper();
@@ -74,7 +74,7 @@ public class Esp32CollectorService {
 
                 // 🟦 4. SALVAR no banco
                 SensorData saved = sensorService.saveSensorData(dto);
-                System.out.println("[BANCO] POST id..: " +
+                System.out.println("[\uD83D\uDCBE BANCO] POST id..: " +
                         saved.getId() + ", uuid: " + saved.getUuid());
 
                 // sucesso → parar tentativas
@@ -89,28 +89,28 @@ public class Esp32CollectorService {
                                 cause instanceof java.net.SocketTimeoutException ||
                                         cause instanceof java.net.ConnectException))
                 ) {
-                    System.out.println("ESP32 indisponível temporariamente: " + e.getMessage());
+                    System.out.println("\uD83D\uDD34 ESP32 indisponível temporariamente: " + e.getMessage());
                 }
                 // 🟢 No route to host (erro de rede)
                 else if (e.getMessage() != null && e.getMessage().contains("No route to host")) {
-                    System.out.println("Erro de rede: Não foi possível alcançar o host.");
+                    System.out.println("\uD83D\uDD34 Erro de rede: Não foi possível alcançar o host.");
                 }
 
                 // 🟥 Trigger impedindo duplicata → parar na hora
                 if (e.getMessage() != null && e.getMessage().contains("duplicado")) {
-                    System.out.println("Registro duplicado ignorado pela trigger");
+                    System.out.println("\uD83D\uDD34 Registro duplicado ignorado pela trigger.");
                     break;
                 }
 
                 // 🔁 Retry normal
                 if (tentativa < maxTentativas) {
-                    System.out.println("Tentativa falhou, nova tentativa em 3s... " + e.getMessage());
+                    System.out.println("\uD83D\uDD34 Tentativa falhou, nova tentativa em 3s... ");
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ignored) {
                     }
                 } else {
-                    System.out.println("Falha após " + maxTentativas + " tentativas.");
+                    System.out.println("\uD83D\uDD34 Falha após " + maxTentativas + " tentativas.");
                 }
             }
         }
