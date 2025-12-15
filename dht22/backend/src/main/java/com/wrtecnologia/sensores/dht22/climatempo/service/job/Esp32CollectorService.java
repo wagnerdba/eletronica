@@ -81,7 +81,6 @@ public class Esp32CollectorService {
                 break;
 
             } catch (Exception e) {
-
                 // 🟡 Falhas normais de rede (esperadas)
                 Throwable cause = e.getCause();
                 if (e instanceof java.net.SocketTimeoutException ||
@@ -92,6 +91,10 @@ public class Esp32CollectorService {
                 ) {
                     System.out.println("ESP32 indisponível temporariamente: " + e.getMessage());
                 }
+                // 🟢 No route to host (erro de rede)
+                else if (e.getMessage() != null && e.getMessage().contains("No route to host")) {
+                    System.out.println("Erro de rede: Não foi possível alcançar o host.");
+                }
 
                 // 🟥 Trigger impedindo duplicata → parar na hora
                 if (e.getMessage() != null && e.getMessage().contains("duplicado")) {
@@ -101,7 +104,7 @@ public class Esp32CollectorService {
 
                 // 🔁 Retry normal
                 if (tentativa < maxTentativas) {
-                    System.out.println("Tentativa falhou, nova tentativa em 3s..." + e.getMessage());
+                    System.out.println("Tentativa falhou, nova tentativa em 3s... " + e.getMessage());
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ignored) {
