@@ -98,7 +98,7 @@ public class Esp32CollectorService {
 
                 // 🟥 Trigger impedindo duplicata → parar na hora
                 if (e.getMessage() != null && e.getMessage().contains("duplicado")) {
-                    System.out.println("\uD83D\uDD34 Registro duplicado ignorado pela trigger.");
+                    System.out.println("\uD83D\uDD34 Trigger ignorou registro duplicado.");
                     break;
                 }
 
