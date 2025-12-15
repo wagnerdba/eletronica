@@ -82,12 +82,24 @@ public class Esp32CollectorService {
 
             } catch (Exception e) {
 
+                // 🟡 Falhas normais de rede (esperadas)
+                Throwable cause = e.getCause();
+                if (e instanceof java.net.SocketTimeoutException ||
+                        e instanceof java.net.ConnectException ||
+                        (cause != null && (
+                                cause instanceof java.net.SocketTimeoutException ||
+                                        cause instanceof java.net.ConnectException))
+                ) {
+                    System.out.println("ESP32 indisponível temporariamente: " + e.getMessage());
+                }
+
                 // 🟥 Trigger impedindo duplicata → parar na hora
                 if (e.getMessage() != null && e.getMessage().contains("duplicado")) {
                     System.out.println("Registro duplicado ignorado pela trigger");
                     break;
                 }
 
+                // 🔁 Retry normal
                 if (tentativa < maxTentativas) {
                     System.out.println("Tentativa falhou, nova tentativa em 3s..." + e.getMessage());
                     try {
