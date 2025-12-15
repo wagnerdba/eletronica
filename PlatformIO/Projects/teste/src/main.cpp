@@ -107,14 +107,14 @@ void setup()
   dht.begin();
 
 // ---------- WATCHDOG ----------
- /* 
+ /*
   esp_task_wdt_config_t wdt_config = {
     .timeout_ms = 240000, // 240 segundos - 4 minutos de inatividade o esp32 é reiniciado pelo watchdog
   };
   esp_task_wdt_init(&wdt_config);
 */
 // versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
-  esp_task_wdt_init(240, true); // timeout em segundos, panic=true
+ esp_task_wdt_init(240, true); // timeout em segundos, panic=true
   
   esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
 // 
@@ -128,21 +128,21 @@ void setup()
 
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
       String dateTime = getCurrentDateTime();
-		String upTime = getUptime();
+		  String upTime = getUptime();
 
       Serial.println("✅ [ESP32] Dados coletados com sucesso:");
       Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
       Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
       Serial.print("  Umidade (%): "); Serial.println(humidity);
       Serial.print("  Data/Hora: "); Serial.println(dateTime);
-		Serial.print("  Uptime: ");  Serial.println(upTime);
+		  Serial.print("  Uptime: ");  Serial.println(upTime);
 
       JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
       jsonDoc["umidade"] = humidity;
       jsonDoc["data_hora"] = dateTime;
-		jsonDoc["uptime"] = upTime;
+		  jsonDoc["uptime"] = upTime;
 
       String jsonString;
       serializeJson(jsonDoc, jsonString);
@@ -172,6 +172,10 @@ void connectWiFi()
 {
   if (WiFi.status() == WL_CONNECTED)
     return;
+
+  // 🔒 Configurações de persistência e reconexão
+  WiFi.persistent(true);
+  WiFi.setAutoReconnect(true);
 
   if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS))
     Serial.println("❌ Falha ao configurar IP...");
