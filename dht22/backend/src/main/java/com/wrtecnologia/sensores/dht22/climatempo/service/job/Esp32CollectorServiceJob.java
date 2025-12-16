@@ -28,7 +28,7 @@ public class Esp32CollectorServiceJob {
     }
 
     // @Scheduled(fixedRate = 60000)
-    @Scheduled(cron = "6 * * * * *")  // Executa no segundo 05 de cada minuto
+    @Scheduled(cron = "5 * * * * *")  // Executa no segundo 05 de cada minuto
     public void executarColetaAutomatica() {
         int maxTentativas = 6;
 
@@ -81,36 +81,35 @@ public class Esp32CollectorServiceJob {
                 break;
 
             } catch (Exception e) {
-                // 🟡 Falhas normais de rede (esperadas)
-                Throwable cause = e.getCause();
-                if (e instanceof java.net.SocketTimeoutException ||
-                        e instanceof java.net.ConnectException ||
-                        (cause != null && (
-                                cause instanceof java.net.SocketTimeoutException ||
-                                        cause instanceof java.net.ConnectException))
-                ) {
-                    System.out.println("\uD83D\uDD34 ESP32 indisponível temporariamente: " + e.getMessage());
-                }
-                // 🟢 No route to host (erro de rede)
-                else if (e.getMessage() != null && e.getMessage().contains("No route to host")) {
-                    System.out.println("\uD83D\uDD34 Erro de rede: Não foi possível alcançar o host.");
-                }
 
-                // 🟥 Trigger impedindo duplicata → parar na hora
-                if (e.getMessage() != null && e.getMessage().contains("duplicado")) {
-                    System.out.println("\uD83D\uDD34 Trigger ignorou registro duplicado.");
+                String msg = e.getMessage();
+
+                // 🟥 Violação de índice único (duplicata por minuto)
+                if (msg != null && msg.contains("ux_sensor_data_day_hour_minute")) {
+                    System.out.println("🟥 Registro duplicado por minuto — já existe no banco. Job encerrado.");
                     break;
                 }
 
-                // 🔁 Retry normal
-                if (tentativa < maxTentativas) {
-                    System.out.println("\uD83D\uDD34 Falha - Será feita uma nova tentativa... ");
+                // 🟡 Falhas normais de rede
+                if (e instanceof java.net.SocketTimeoutException ||
+                        e instanceof java.net.ConnectException) {
+
+                    System.out.println("🔴 ESP32 indisponível temporariamente: " + e.getMessage());
+                }
+
+                // 🟢 No route to host
+                else if (msg != null && msg.contains("No route to host")) {
+                    System.out.println("🔴 Erro de rede: Não foi possível alcançar o host.");
+                }
+
+                // 🔁 Retry
+                else if (tentativa < maxTentativas) {
+                    System.out.println("🔁 Falha - Será feita uma nova tentativa...");
                     try {
                         Thread.sleep(3000);
-                    } catch (InterruptedException ignored) {
-                    }
+                    } catch (InterruptedException ignored) {}
                 } else {
-                    System.out.println("\uD83D\uDD34 Falha após " + maxTentativas + " tentativas.");
+                    System.out.println("⛔ Falha após " + maxTentativas + " tentativas.");
                 }
             }
         }

@@ -130,6 +130,7 @@ public class SensorController {
         return ResponseEntity.ok(data);
     }
 
+    /*
     // FAZ O POST MANUALMENTE (para testes - http://192.168.1.7:8081/api/dht22/collect)
     @GetMapping("/collect")
     public ResponseEntity<String> collectFromEsp32() {
@@ -183,6 +184,7 @@ public class SensorController {
                     .body("Erro ao coletar dados do ESP32: " + e.getMessage());
         }
     }
+     */
 }
 
 /* OpenAPI - Swagger
