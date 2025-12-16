@@ -114,7 +114,7 @@ void setup()
   esp_task_wdt_init(&wdt_config);
 */
 // versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
- esp_task_wdt_init(240, true); // timeout em segundos, panic=true
+  esp_task_wdt_init(240, true); // timeout em segundos, panic=true
   
   esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
 // 
