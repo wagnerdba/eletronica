@@ -86,7 +86,7 @@ public class Esp32CollectorServiceJob {
 
                 // 🟥 Violação de índice único (duplicata por minuto)
                 if (msg != null && msg.contains("ux_sensor_data_day_hour_minute")) {
-                    System.out.println("🟥 Registro duplicado por minuto — já existe no banco. Job encerrado.");
+                    System.out.println("\uD83D\uDFE1 Registro duplicado. Job concluído.");
                     break;
                 }
 
@@ -104,12 +104,12 @@ public class Esp32CollectorServiceJob {
 
                 // 🔁 Retry
                 else if (tentativa < maxTentativas) {
-                    System.out.println("🔁 Falha - Será feita uma nova tentativa...");
+                    System.out.println("🔴 Falha - Será feita uma nova tentativa...");
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ignored) {}
                 } else {
-                    System.out.println("⛔ Falha após " + maxTentativas + " tentativas.");
+                    System.out.println("🔴 Falha após " + maxTentativas + " tentativas.");
                 }
             }
         }
