@@ -16,14 +16,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class Esp32CollectorService {
+public class Esp32CollectorServiceJob {
 
     private final SensorService sensorService;
 
     @Value("${esp32.api.url}")
     private String url;
 
-    public Esp32CollectorService(SensorService sensorService) {
+    public Esp32CollectorServiceJob(SensorService sensorService) {
         this.sensorService = sensorService;
     }
 
@@ -44,8 +44,8 @@ public class Esp32CollectorService {
                 URL requestUrl = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
                 connection.setRequestMethod("GET");
-                connection.setConnectTimeout(4000);
-                connection.setReadTimeout(4000);
+                connection.setConnectTimeout(8000);
+                connection.setReadTimeout(8000);
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode != 200) {
@@ -104,7 +104,7 @@ public class Esp32CollectorService {
 
                 // 🔁 Retry normal
                 if (tentativa < maxTentativas) {
-                    System.out.println("\uD83D\uDD34 Tentativa falhou, nova tentativa em 3s... ");
+                    System.out.println("\uD83D\uDD34 Falha - Será feita uma nova tentativa... ");
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ignored) {

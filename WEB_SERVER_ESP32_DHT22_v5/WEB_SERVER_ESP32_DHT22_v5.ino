@@ -96,7 +96,7 @@ String getUptime() {
   uint32_t days = s / 86400;
 
   char buffer[32];
-  sprintf(buffer, "%u:%02u:%02u:%02u", days, hr, min, sec);
+  sprintf(buffer, "%u:%02u:%02cu:%02u", days, hr, min, sec);
   return String(buffer);
 }
 
