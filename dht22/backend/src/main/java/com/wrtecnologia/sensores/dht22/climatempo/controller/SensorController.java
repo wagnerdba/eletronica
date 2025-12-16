@@ -24,7 +24,7 @@ public class SensorController {
     public SensorController(SensorService sensorService) {
         this.sensorService = sensorService;
     }
-
+/*
     @PostMapping("/post_data")
     public ResponseEntity<String> receivePostSensorData(@RequestBody SensorDataDTO sensorDataDTO) {
         try {
@@ -48,19 +48,19 @@ public class SensorController {
         } catch (Exception e) {
 
             // *** ALTERAÇÃO COM LOG ***
-            if (e.getMessage() != null && e.getMessage().contains("Registro duplicado ignorado pela trigger")) {
+            if (e.getMessage() != null && e.getMessage().contains("Trigger ignorou registro duplicado.")) {
 
                 // LOG NO JAVA
-                // System.out.println("Registro duplicado ignorado pela trigger");
+                // System.out.println("Trigger ignorou registro duplicado.");
 
-                return ResponseEntity.ok("Registro duplicado ignorado pela trigger");
+                return ResponseEntity.ok("Trigger ignorou registro duplicado.");
             }
             // *** FIM DA ALTERAÇÃO ***
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("POST - Falha ao processar dados: " + e.getMessage());
         }
     }
-
+*/
     // Novo endpoint GET para consulta
     @GetMapping("/test")
     public ResponseEntity<String> consultarTest() {

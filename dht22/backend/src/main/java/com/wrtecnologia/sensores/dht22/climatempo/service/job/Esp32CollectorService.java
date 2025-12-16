@@ -28,7 +28,7 @@ public class Esp32CollectorService {
     }
 
     // @Scheduled(fixedRate = 60000)
-    @Scheduled(cron = "5 * * * * *")  // Executa no segundo 05 de cada minuto
+    @Scheduled(cron = "6 * * * * *")  // Executa no segundo 05 de cada minuto
     public void executarColetaAutomatica() {
         int maxTentativas = 6;
 
