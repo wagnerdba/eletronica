@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Leitura ESP32 - Temperatura</title>
+    <style>
+        body {
+            font-family: Consolas, monospace;
+            background: #f4f6f8;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #dcdcdc;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .error {
+            color: #ff5555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ESP32 – Retorno dos Endpoints - /esp32/api/temperatura</h1>
+
+    <div class="card">
+        <h2>192.168.1.100</h2>
+        <pre id="esp100">Carregando...</pre>
+    </div>
+
+    <div class="card">
+        <h2>192.168.1.101</h2>
+        <pre id="esp101">Carregando...</pre>
+    </div>
+
+    <div class="card">
+        <h2>192.168.1.102</h2>
+        <pre id="esp102">Carregando...</pre>
+    </div>
+
+    <script>
+        function carregar(url, elementoId) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("HTTP " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    document.getElementById(elementoId).textContent =
+                        JSON.stringify(json, null, 2);
+                })
+                .catch(err => {
+                    document.getElementById(elementoId).innerHTML =
+                        '<span class="error">Erro: ' + err.message + '</span>';
+                });
+        }
+
+        carregar("http://192.168.1.100/esp32/api/temperatura", "esp100");
+        carregar("http://192.168.1.101/esp32/api/temperatura", "esp101");
+        carregar("http://192.168.1.102/esp32/api/temperatura", "esp102");
+    </script>
+
+</body>
+</html>
