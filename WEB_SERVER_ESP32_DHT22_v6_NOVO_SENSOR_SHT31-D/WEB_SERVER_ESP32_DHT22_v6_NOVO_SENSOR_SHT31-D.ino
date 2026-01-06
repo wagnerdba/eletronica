@@ -30,9 +30,11 @@ IPAddress secondaryDNS(8, 8, 4, 4);
 //----------------------------------
 // Configurar sensor DHT
 //----------------------------------
+/*
 #define DHTPIN 18
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
+*/
 
 //----------------------------------
 // Configurar porta http
@@ -156,7 +158,7 @@ void setup()
       Serial.println("✅ [ESP32] Dados coletados com sucesso:");
       Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
       // Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
-      Serial.printf(" Temperatura (Fº): %.6f\n", temperatureFahrenheit);
+      Serial.printf("  Temperatura (Fº): %.3f\n", temperatureFahrenheit);
       Serial.print("  Umidade (%): "); Serial.println(humidity);
       Serial.print("  Data/Hora: "); Serial.println(dateTime);
 		  Serial.print("  Uptime: ");  Serial.println(upTime);

@@ -73,9 +73,17 @@
                 });
         }
 
-        carregar("http://192.168.1.100/esp32/api/temperatura", "esp100");
-        carregar("http://192.168.1.101/esp32/api/temperatura", "esp101");
-        carregar("http://192.168.1.102/esp32/api/temperatura", "esp102");
+        function atualizarTodos() {
+            carregar("http://192.168.1.100/esp32/api/temperatura", "esp100");
+            carregar("http://192.168.1.101/esp32/api/temperatura", "esp101");
+            carregar("http://192.168.1.102/esp32/api/temperatura", "esp102");
+        }
+
+        // primeira carga imediata
+        atualizarTodos();
+
+        // atualiza a cada 15 segundos (15000 ms)
+        setInterval(atualizarTodos, 15000);
     </script>
 
 </body>
