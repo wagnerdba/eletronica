@@ -21,7 +21,7 @@ const char *password = "@FlakE2021#";
 //----------------------------------
 // Configurar IP estático
 //----------------------------------
-IPAddress local_IP(192, 168, 1, 100);
+IPAddress local_IP(192, 168, 1, 101);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
