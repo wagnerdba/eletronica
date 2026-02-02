@@ -121,7 +121,8 @@ void setup()
   esp_task_wdt_config_t wdt_config = {
     .timeout_ms = 240000,
   };
-  esp_task_wdt_init(&wdt_config);
+
+  /* esp_task_wdt_init(&wdt_config); */
   
   esp_task_wdt_add(NULL);
 
@@ -134,6 +135,13 @@ void setup()
       String dateTime = getCurrentDateTime();
       String upTime = getUptime();
 
+      Serial.println("✅ [ESP32] Dados coletados com sucesso em " + WiFi.localIP().toString());
+      Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
+      Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
+      Serial.print("  Umidade (%): "); Serial.println(humidity);
+      Serial.print("  Data/Hora: "); Serial.println(dateTime);
+		  Serial.print("  Uptime: ");  Serial.println(upTime);
+      
       JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
@@ -180,6 +188,8 @@ void connectWiFi()
   WiFi.setHostname("[ESP32Server]");
   WiFi.begin(ssid, password);
   
+  Serial.println();
+  Serial.println("⌛ Conectando-se à rede");
   unsigned long startAttemptTime = millis();
 
   while (WiFi.status() != WL_CONNECTED)
@@ -191,6 +201,10 @@ void connectWiFi()
       ESP.restart();
     }
   }
+  
+  Serial.println("🌐 Conexão estabelecida");
+	Serial.println("🧿 Endereço IP: " + WiFi.localIP().toString());
+	Serial.println("🛜 Hostname: " + String(WiFi.getHostname()));
 }
 
 //------------------------------------------------
