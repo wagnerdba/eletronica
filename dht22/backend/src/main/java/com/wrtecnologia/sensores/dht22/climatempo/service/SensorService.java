@@ -39,6 +39,7 @@ public class SensorService {
         sensorData.setUmidade(sensorDataDTO.getUmidade());
         sensorData.setDataHora(sensorDataDTO.getDataHoraAsLocalDateTime());
         sensorData.setUptime(sensorDataDTO.getUptime());
+        sensorData.setFallback(sensorDataDTO.isFallback());
         // Salvar no banco de dados
         return sensorDataRepository.save(sensorData);
     }
@@ -64,6 +65,7 @@ public class SensorService {
                     dto.setUmidade(sensorData.getUmidade());
                     dto.setDataHora(sensorData.getDataHora().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                     dto.setUuid(sensorData.getUuid());
+                    dto.setFallback(sensorData.isFallback());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -88,6 +90,7 @@ public class SensorService {
             sensorDataDTO.setUmidade(sensorData.getUmidade());
             sensorDataDTO.setDataHora(sensorData.getDataHora().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             sensorDataDTO.setUuid(sensorData.getUuid());
+            sensorDataDTO.setFallback(sensorData.isFallback());
             return Optional.of(sensorDataDTO);
         } else {
             return Optional.empty();

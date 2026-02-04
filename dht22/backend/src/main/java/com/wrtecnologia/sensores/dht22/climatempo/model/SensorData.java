@@ -31,6 +31,9 @@ public class SensorData {
     @Column(name = "uptime", length = 15)
     private String uptime;
 
+    @Column(name = "fallback")
+    private boolean fallback;
+
     @PrePersist
     public void prePersist() {
         if (this.uuid == null) {
@@ -95,6 +98,13 @@ public class SensorData {
         this.uptime = uptime;
     }
 
+    public boolean isFallback() {
+        return fallback;
+    }
+
+    public void setFallback(boolean fallback) {
+        this.fallback = fallback;
+    }
 
     @Override
     public String toString() {

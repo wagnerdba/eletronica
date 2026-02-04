@@ -33,6 +33,9 @@ public class SensorDataDTO {
     @JsonProperty("uptime")
     private String uptime;
 
+    @JsonProperty("fallback")
+    private boolean fallback;
+
     // Getters e Setters
 
     public Long getId() {
@@ -83,6 +86,8 @@ public class SensorDataDTO {
         this.uptime = uptime;
     }
 
+    public void setFallback(boolean fallback) { this.fallback = fallback; }
+
     // Adicione @JsonIgnore ao campo ou método que deseja ocultar
     @JsonIgnore
     public LocalDateTime getDataHoraAsLocalDateTime() {
@@ -104,6 +109,10 @@ public class SensorDataDTO {
         this.uuid = uuid;
     }
 
+    public boolean isFallback() {
+        return fallback;
+    }
+
     @Override
     public String toString() {
         return "SensorDataDTO{" +
@@ -113,4 +122,5 @@ public class SensorDataDTO {
                 ", dataHora='" + dataHora + '\'' +
                 '}';
     }
+
 }
