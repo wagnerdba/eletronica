@@ -24,7 +24,7 @@ public class SensorService {
     }
 
     @Autowired
-    private SensorDataMapper sensorDataMapper;  // Certifique-se de que esta linha está presente
+    private SensorDataMapper sensorDataMapper;
 
     public SensorData saveSensorData(SensorDataDTO sensorDataDTO) {
         // Verificar se o campo dataHora é nulo ou vazio

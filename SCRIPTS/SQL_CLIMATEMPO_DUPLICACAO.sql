@@ -3,7 +3,7 @@ select * from sensor_data where uuid = 'b07cf602-3b6e-42f2-9af5-d376fe44b065'
 select * from sensor_data order by id desc limit 3
 
 select * from sensor_data where id >= 780700;
-select * from sensor_data where fallback = true;
+select * from sensor_data where fallback = true or id = 780670;
 
 select now();
 show timezone;

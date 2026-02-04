@@ -128,14 +128,11 @@ public class Esp32CollectorServiceJob {
 
                 final LocalDateTime jobStartTime = LocalDateTime.now().withNano(0);
 
-                System.out.println(
-                        "[⚡ JOB *] Execução " + tentativa +
-                                " em " + jobStartTime.format(
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                System.out.println("[⚡ JOB *] Execução " + tentativa + " em " + jobStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
                 SensorDataDTO dto;
 
-                // 🔁 Tentativas 1 a 5 → ESP32
+                // 🔁 Tentativas 1 a 4 → ESP32
                 if (tentativa < maxTentativas) {
 
                     // 🟦 1. Conectar ao ESP32
