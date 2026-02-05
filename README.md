@@ -157,3 +157,5 @@ Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICEN
 ## Contato
 
 Para mais informações ou suporte, entre em contato com [wagnerdba@gmail.com].
+
+![Arquitetura IoT](PLATAFORMA_IOT_COLETA_PERSISTENCIA__DADOS_AMBIENTAIS_v001.2026.png)
