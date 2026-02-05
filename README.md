@@ -24,6 +24,8 @@ Em seguida, os dados processados são enviados ao banco de dados por meio de uma
 
 Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de processamento (backend Java) e a camada de persistência (banco de dados), permitindo maior escalabilidade, tolerância a falhas e facilidade de manutenção do sistema.
 
+![Arquitetura IoT](PLATAFORMA_IOT_COLETA_PERSISTENCIA__DADOS_AMBIENTAIS_v001.2026.png)
+
 ## Estrutura do Projeto
 
 - **1. Camada de Sensoriamento (Edge Layer)**
@@ -157,5 +159,3 @@ Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICEN
 ## Contato
 
 Para mais informações ou suporte, entre em contato com [wagnerdba@gmail.com].
-
-![Arquitetura IoT](PLATAFORMA_IOT_COLETA_PERSISTENCIA__DADOS_AMBIENTAIS_v001.2026.png)
