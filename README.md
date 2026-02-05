@@ -1,78 +1,146 @@
-# Sensor DHT22 ClimaTempo
+# Plataforma IoT para Coleta e Persistência de Dados Ambientais 
 
-Este projeto é uma aplicação backend em Java que utiliza o sensor DHT22 para coletar dados meteorológicos. A aplicação é desenvolvida usando as tecnologias Jakarta EE, Spring Boot, Spring Data JPA e Spring MVC. O projeto também utiliza o Lombok para simplificação do código.
+A arquitetura apresentada ilustra um sistema de aquisição, processamento e persistência de dados ambientais baseado em IoT, composto por sensor, microcontrolador, backend e banco de dados.
+
+O sensor SHT45 é responsável pela medição de temperatura e umidade do ar. Esse sensor está conectado a um ESP32, que realiza a leitura periódica dos dados ambientais, além de manter informações internas como uptime e data/hora.
+
+O ESP32 atua como um Web Server, expondo os dados coletados por meio de um endpoint HTTP no formato JSON. Esse endpoint é acessado via rede sem fio (Wi-Fi).
+
+No backend, desenvolvido em Java, existe um job agendado que é executado a cada 1 minuto. Esse job realiza uma requisição HTTP GET ao ESP32 para obter os dados mais recentes do sensor. Após a recepção, o backend pode aplicar validações, normalizações e regras de negócio — incluindo mecanismos de fallback, caso o ESP32 esteja indisponível ou retorne dados inconsistentes.
+
+Em seguida, os dados processados são enviados ao banco de dados por meio de uma requisição HTTP POST (ou operação equivalente de persistência). As informações armazenadas incluem:
+
+	Temperatura (°C e °F)
+
+	Umidade do ar
+
+	Data e hora da medição
+
+	UUID de identificação
+
+	Uptime do ESP32
+
+	Indicador de fallback
+
+Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de processamento (backend Java) e a camada de persistência (banco de dados), permitindo maior escalabilidade, tolerância a falhas e facilidade de manutenção do sistema.
 
 ## Estrutura do Projeto
 
-- **Configurações do Spring MVC:**
-    - A classe `WebConfig` configurada permite CORS para todos os endpoints.
-- **Controladores:**
-    - `SensorController`: Responsável por gerenciar as requisições relacionadas ao sensor DHT22.
-- **DTOs:**
-    - `SensorDataCountDTO`, `SensorDataCurrentDateTestDTO`, `SensorDataDTO`, `SensorDataHoraDTO`, `SensorDataStatisticsDTO`: Representações de dados transferidos entre client e servidor.
-- **Mapper:**
-    - `SensorDataMapper`: Mapeamento entre entidades e DTOs.
-- **Modelo:**
-    - `SensorData`: Entidade que representa os dados do sensor.
-- **Repositórios:**
-    - `SensorDataRepository` e `SensorDataRepositoryCustom`: Interfaces de acesso aos dados armazenados.
-- **Serviços:**
-    - `SensorService`: Lógica de negócios sobre os dados do sensor.
+- **1. Camada de Sensoriamento (Edge Layer)**
 
-## Pré-requisitos
+    O sensor SHT45 realiza medições de temperatura e umidade relativa do ar, oferecendo alta precisão e estabilidade térmica. Ele se comunica com o microcontrolador por meio de barramento I²C, com leituras periódicas controladas pelo firmware.
+	 
+	 O ESP32 atua como dispositivo de borda (edge device) e possui múltiplas responsabilidades:
+	 
+	 Aquisição dos dados do sensor
 
-- Java 21
-- Maven 3.x
-- Docker (opcional, para execução em container)
+	 Gerenciamento de uptime
 
-## Configuração
+	 Sincronização de data e hora (tipicamente via NTP)
 
-### Banco de Dados
+	 Disponibilização dos dados via API REST
 
-O projeto inclui um script SQL `DDL.sql` para criar as tabelas necessárias no banco de dados.
+	 Operação contínua com suporte a watchdog, prevenindo travamentos
 
-### Configuração do Spring
+- **2. Exposição dos Dados (Web Server embarcado)**
 
-O arquivo `application.properties` contém as configurações do banco de dados e outras propriedades do Spring Boot.
+	O ESP32 executa um Web Server HTTP, expondo um endpoint do tipo GET, que retorna os dados no formato JSON, contendo:
+	
+		Temperatura em Celsius e Fahrenheit
 
-### Docker
+		Umidade do ar
 
-Você pode construir a imagem Docker da aplicação usando o Dockerfile incluído no projeto.
+		Data e hora da medição
 
-```bash
-docker build -t sensor-dht22 .
-```
+		Tempo de atividade do dispositivo (uptime)
+	
+	Essa abordagem elimina a necessidade de push contínuo, reduzindo consumo de energia e tráfego de rede, além de facilitar testes e diagnósticos manuais.
 
-## Compilação e Execução
+- **3. Comunicação em Rede**
 
-Você pode compilar e executar a aplicação usando Maven:
+	Toda a comunicação ocorre via Wi-Fi, utilizando o protocolo HTTP, o que garante:
+	
+		Simplicidade de integração
+	
+		Compatibilidade com firewalls e redes locais
+	
+		Facilidade de expansão para HTTPS, autenticação por token ou API Key
 
-```bash
-mvn clean install
-mvn spring-boot:run
-```
+- **4. Camada de Backend (Processamento Central)**
 
-Ou usar o script `start-app.sh` para iniciar a aplicação:
+	O backend Java funciona como o núcleo lógico do sistema. Um job agendado, executado a cada 1 minuto, realiza as seguintes etapas:
+	
+	Requisição HTTP GET ao ESP32
+	
+		Desserialização do JSON recebido
+	
+		Validação dos dados (faixa válida, valores nulos, consistência temporal)
+	
+		Aplicação de regras de negócio
+	
+		Mecanismo de Fallback
+	
+	Caso o ESP32 esteja indisponível ou retorne erro:
+	
+		O backend registra a falha
+	
+		Marca o registro com o indicador fallback
 
-```bash
-./start-app.sh
-```
+	Opcionalmente reutiliza o último valor válido conhecido
 
-## Endpoints
+	Esse mecanismo garante continuidade histórica dos dados, mesmo em cenários de falha intermitente do dispositivo.
 
-- **GET** `/sensor/data/count` : Retorna a contagem de registros de dados do sensor.
-- **GET** `/sensor/data/current` : Retorna os dados atuais do sensor.
-- **POST** `/sensor/data` : Adiciona um novo registro de dados do sensor.
+- **5. Persistência de Dados (Data Layer)**
 
-## Testes
+	Após o processamento, o backend realiza a persistência no banco de dados, via POST ou acesso direto ao repositório. Cada registro armazena:
 
-Os testes unitários e de integração estão incluídos no projeto. As classes de teste estão localizadas no diretório `src/test`.
+		UUID único para rastreabilidade
 
-Você pode executar os testes usando Maven:
+		Temperatura (°C e °F)
 
-```bash
-mvn test
-```
+		Umidade do ar
+
+		Data/hora normalizada
+
+		Uptime do ESP32
+
+		Flag de fallback
+
+	Esse modelo favorece:
+
+	Auditoria de dados
+
+	Análises históricas
+
+	Identificação de falhas de comunicação ou hardware
+
+- **6. Boas práticas e pontos fortes da arquitetura**
+
+	✔ Desacoplamento total entre hardware e persistência
+	
+	✔ Backend como orquestrador, evitando lógica complexa no ESP32
+	
+	✔ Escalável: múltiplos ESP32 podem ser integrados facilmente
+	
+	✔ Observabilidade: uptime e fallback ajudam no diagnóstico
+	
+	✔ Tolerância a falhas com watchdog e fallback lógico
+	
+	✔ Extensível: fácil inclusão de novos sensores ou métricas
+	
+	✔ Pronto para dashboards, alertas e integração com sistemas externos
+
+## Possíveis evoluções naturais
+
+	Uso de HTTPS + autenticação
+	
+	Cache local no ESP32 para o caso de falha
+
+	Envio assíncrono via MQTT
+
+	Alertas automáticos (ex: temperatura fora do limite)
+
+	Monitoramento de saúde do dispositivo (health check)
 
 ## Contribuições
 
@@ -88,4 +156,4 @@ Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICEN
 
 ## Contato
 
-Para mais informações ou suporte, entre em contato com [seu-email@dominio.com].
+Para mais informações ou suporte, entre em contato com [wagnerdba@gmail.com].
