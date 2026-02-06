@@ -116,14 +116,48 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 	Identificação de falhas de comunicação ou hardware
 
-- **6. Frontend**
+- **6. Visualização e Monitoramento em Tempo Real (Frontend)**
 
-	Texto em desenvolvimento
+	Foi incorporada à solução uma camada de frontend dedicada à visualização gráfica dos dados ambientais, ampliando a usabilidade e a capacidade de monitoramento do sistema. 
+	
+	O frontend consome os dados disponibilizados pelo backend e apresenta gráficos dinâmicos, incluindo visualizações em tempo real, que refletem continuamente as leituras mais recentes de temperatura e umidade coletadas pelos dispositivos IoT.
+
+	Funcionalidades principais do frontend
+
+		Exibição de gráficos históricos, permitindo análise temporal das medições
+
+		Visualização em tempo real, com atualização periódica automática
+
+		Separação clara entre:
+
+			Temperatura (°C / °F) Celsius e Fahrenheit
+
+			Umidade do ar
+
+		Painéis informativos com dados consolidados
+
+		Atualização contínua sem necessidade de recarregamento da página
+
+	Integração com a arquitetura
+
+	O frontend não se comunica diretamente com os dispositivos ESP32. Toda a interação ocorre exclusivamente por meio do backend, o que garante:
+
+	Segurança, evitando exposição direta dos dispositivos
+
+	Desacoplamento, permitindo evolução independente da interface
+
+	Escalabilidade, já que múltiplos usuários podem acessar os gráficos simultaneamente
+
+	Essa abordagem transforma os dados brutos coletados pelo sistema IoT em informação visual compreensível, facilitando a tomada de decisão, o acompanhamento de tendências e a identificação rápida de anomalias ambientais.
+
+	Contribuição para a solução
+
+	A inclusão do frontend eleva a arquitetura de um sistema de coleta passiva para uma plataforma completa de monitoramento, tornando a solução adequada tanto para aplicações acadêmicas quanto para cenários profissionais e industriais.
 
 ![React Frontend](REACT_FRONTEND.png)
 
 
-- **6. Boas práticas e pontos fortes da arquitetura**
+- **7. Boas práticas e pontos fortes da arquitetura**
 
 	✔ Desacoplamento total entre hardware e persistência
 	
