@@ -2,7 +2,7 @@ select * from sensor_data where data_hora::date >= '2025-12-15' order by id desc
 select * from sensor_data where uuid = 'b07cf602-3b6e-42f2-9af5-d376fe44b065'
 select * from sensor_data order by id desc limit 3
 
-select * from sensor_data where id >= 780969;
+select * from sensor_data where id >= 782030;
 select * from sensor_data where fallback = true or id = 780670;
 
 select now();
@@ -84,8 +84,7 @@ ORDER BY m.minuto;
 -------------------------------------------------------------
 -- Fallback
 
-ALTER TABLE sensor_data
-ADD COLUMN fallback BOOLEAN NOT NULL DEFAULT FALSE;
+-- ALTER TABLE sensor_data ADD COLUMN fallback BOOLEAN NOT NULL DEFAULT FALSE;
 
 
 
