@@ -4,6 +4,8 @@ select * from sensor_data order by id desc limit 3
 
 select * from sensor_data where id >= 782354 limit 4;
 select * from sensor_data where fallback = true or id = 780670;
+select * from sensor_data where fallback is true and data_hora::date = current_date
+
 
 select now();
 show timezone;

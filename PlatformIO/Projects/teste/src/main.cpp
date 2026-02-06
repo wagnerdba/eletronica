@@ -15,7 +15,7 @@ const char *password = "@FlakE2021#";
 //----------------------------------
 // Configurar IP estático
 //----------------------------------
-IPAddress local_IP(192, 168, 1, 101);
+IPAddress local_IP(192, 168, 1, 102);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
@@ -113,8 +113,9 @@ void setup()
   };
   esp_task_wdt_init(&wdt_config);
 */
+
 // versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
-  esp_task_wdt_init(240, true); // timeout em segundos, panic=true
+ esp_task_wdt_init(240, true); // timeout em segundos, panic=true
   
   esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
 // 
