@@ -2,7 +2,7 @@ select * from sensor_data where data_hora::date >= '2025-12-15' order by id desc
 select * from sensor_data where uuid = 'b07cf602-3b6e-42f2-9af5-d376fe44b065'
 select * from sensor_data order by id desc limit 3
 
-select * from sensor_data where id >= 782030;
+select * from sensor_data where id >= 782354 limit 4;
 select * from sensor_data where fallback = true or id = 780670;
 
 select now();
