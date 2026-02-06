@@ -62,11 +62,11 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 	Toda a comunicação ocorre via Wi-Fi, utilizando o protocolo HTTP, o que garante:
 	
-		Simplicidade de integração
+	- Simplicidade de integração
 	
-		Compatibilidade com firewalls e redes locais
+	- Compatibilidade com firewalls e redes locais
 	
-		Facilidade de expansão para HTTPS, autenticação por token ou API Key
+	- Facilidade de expansão para HTTPS, autenticação por token ou API Key
 
 - **4. Camada de Backend (Processamento Central)**
 
@@ -110,9 +110,9 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 	Esse modelo favorece:
 
-	Auditoria de dados
+	- Auditoria de dados
 
-	Análises históricas
+	- Análises históricas
 
 	Identificação de falhas de comunicação ou hardware
 
@@ -159,31 +159,65 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 - **7. Boas práticas e pontos fortes da arquitetura**
 
-	✔ Desacoplamento total entre hardware e persistência
+	- Desacoplamento total entre hardware e persistência
 	
-	✔ Backend como orquestrador, evitando lógica complexa no ESP32
+	- Backend como orquestrador, evitando lógica complexa no ESP32
 	
-	✔ Escalável: múltiplos ESP32 podem ser integrados facilmente
+	- Escalável: múltiplos ESP32 podem ser integrados facilmente
 	
-	✔ Observabilidade: uptime e fallback ajudam no diagnóstico
+	- Observabilidade: uptime e fallback ajudam no diagnóstico
 	
-	✔ Tolerância a falhas com watchdog e fallback lógico
+	- Tolerância a falhas com watchdog e fallback lógico
 	
-	✔ Extensível: fácil inclusão de novos sensores ou métricas
+	- Extensível: fácil inclusão de novos sensores ou métricas
 	
-	✔ Pronto para dashboards, alertas e integração com sistemas externos
+	- Pronto para dashboards, alertas e integração com sistemas externos
+
+- **8. Tecnologias utilizadas na solução**
+
+	- ESP32 – microcontrolador com conectividade Wi-Fi
+
+	- Sensor SHT45 – sensor digital de temperatura e umidade
+
+	- C/C++ (Arduino Framework) – desenvolvimento do firmware embarcado
+
+	- Wi-Fi – meio de comunicação
+
+	- HTTP – protocolo de comunicação
+
+	- JSON – formato de serialização de dados
+
+	- Java – linguagem do backend
+
+	- Spring Boot – framework para criação do backend
+
+	- Spring Web – APIs REST
+
+	- Spring Scheduling – execução de jobs agendados
+
+	- Spring Data JPA / Hibernate – persistência de dados
+
+	- Banco de Dados Relacional – armazenamento histórico das medições
+
+	- UUID – identificação única dos registros
+
+	- React – desenvolvimento do frontend
+
+	- ApexCharts (React ApexCharts) – visualização gráfica e tempo real
+
+	- Git – controle de versão
 
 ## Possíveis evoluções naturais
 
-	Uso de HTTPS + autenticação
+- Uso de HTTPS + autenticação
 	
-	Cache local no ESP32 para o caso de falha
+- Cache local no ESP32 para o caso de falha
 
-	Envio assíncrono via MQTT
+- Envio assíncrono via MQTT
 
-	Alertas automáticos (ex: temperatura fora do limite)
+- Alertas automáticos (ex: temperatura fora do limite)
 
-	Monitoramento de saúde do dispositivo (health check)
+- Monitoramento de saúde do dispositivo (health check)
 
 ## Contribuições
 
@@ -195,8 +229,8 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 ## Licença
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+	Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ## Contato
 
-Para mais informações ou suporte, entre em contato com [wagnerdba@gmail.com].
+	Para mais informações ou suporte, entre em contato com wagnerdba@gmail.com

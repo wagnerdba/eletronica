@@ -17,7 +17,7 @@
 
         .card {
             background: #ffffff;
-            border-radius: 6px;
+            border-radius: 20px;
             padding: 12px;
             margin-bottom: 20px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -25,9 +25,9 @@
 
         pre {
             background: #1e1e1e;
-            color: #dcdcdc;
+            color: rgb(36, 202, 36);
             padding: 10px;
-            border-radius: 4px;
+            border-radius: 10px;
             overflow-x: auto;
         }
 
@@ -42,20 +42,21 @@
 </head>
 <body>
 
-    <h1>ESP32 – Retorno dos Endpoints - /esp32/api/temperatura</h1>
+    <h1>HEALTH CHECK - MONITOR EM TEMPO REAL</h1>
+	 <h2>Microcontroladores ESP32 - API /esp32/api/v1/temperatura (GET)</h2>
 
     <div class="card">
-        <h2>192.168.1.100 <span class="paren">(SHT45)</span></h2>
+        <h2>192.168.1.100 <span class="paren">(sensor SHT45) status: ativo</span></h2>
         <pre id="esp100">Carregando...</pre>
     </div>
 
     <div class="card">
-        <h2>192.168.1.101 <span class="paren">(SHT31-D)</span></h2>
+        <h2>192.168.1.101 <span class="paren">(sensor SHT31-D) status: ativo</span></h2>
         <pre id="esp101">Carregando...</pre>
     </div>
 
     <div class="card">
-        <h2>192.168.1.102 <span class="paren">(DHT22)</span></h2>
+        <h2>192.168.1.102 <span class="paren">(sensor DHT22) status: ativo</span></h2>
         <pre id="esp102">Carregando...</pre>
     </div>
 
@@ -87,8 +88,8 @@
         // primeira carga imediata
         atualizarTodos();
 
-        // atualiza a cada 15 segundos (15000 ms)
-        setInterval(atualizarTodos, 15000);
+        // atualiza a cada 1 minuto (60000 ms)
+        setInterval(atualizarTodos, 60000);
     </script>
 
 </body>
