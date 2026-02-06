@@ -21,6 +21,7 @@ public class SensorDataMapper {
         dto.setDataHora(entity.getDataHora().format(formatter));  // Converte LocalDateTime para String
         dto.setUuid(entity.getUuid());
         dto.setUptime(entity.getUptime());
+        dto.setFallback(entity.isFallback());
         return dto;
     }
 
