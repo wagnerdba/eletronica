@@ -116,6 +116,13 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 	Identificação de falhas de comunicação ou hardware
 
+- **6. Frontend**
+
+	Texto em desenvolvimento
+
+![React Frontend](REACT_FRONTEND.png)
+
+
 - **6. Boas práticas e pontos fortes da arquitetura**
 
 	✔ Desacoplamento total entre hardware e persistência
