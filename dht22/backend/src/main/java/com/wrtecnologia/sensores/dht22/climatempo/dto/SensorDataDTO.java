@@ -115,12 +115,7 @@ public class SensorDataDTO {
             throw new IllegalArgumentException("Campo 'data_hora' não pode ser nulo ou vazio");
         }
 
-        try {
-            return LocalDateTime.parse(dataHora, DATA_HORA_FORMATTER);
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Formato de data inválido para 'data_hora': " + dataHora, e
-            );
-        }
+        return LocalDateTime.parse(dataHora, DATA_HORA_FORMATTER);
     }
 
     public UUID getUuid() {
