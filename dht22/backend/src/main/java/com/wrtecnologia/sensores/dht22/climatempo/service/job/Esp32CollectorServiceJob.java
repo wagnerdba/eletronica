@@ -81,7 +81,7 @@ public class Esp32CollectorServiceJob {
                 // 🟨 Tentativa 4 → FALLBACK (SEM REDE COM ESP32)
                 else {
 
-                    System.out.println("🟡 Falha na comunicação com o ESP32: Fallback executado.");
+                    System.out.println("🟡 [FALLBACK] Falha na comunicação com o ESP32: Fallback executado.");
 
                     Optional<SensorDataDTO> lastOpt = sensorService.getLastSensorData();
 
