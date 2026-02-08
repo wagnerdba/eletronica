@@ -1,6 +1,6 @@
 select * from sensor_data where data_hora::date >= '2025-12-15' order by id desc; --current_date order by id desc;
 select * from sensor_data where uuid = 'b07cf602-3b6e-42f2-9af5-d376fe44b065'
-select * from sensor_data order by id desc limit 3
+select * from sensor_data order by id desc limit 10
 
 select * from sensor_data where id >= 782354 limit 4;
 select * from sensor_data where fallback = true or id = 780670;
@@ -89,4 +89,7 @@ ORDER BY m.minuto;
 -- ALTER TABLE sensor_data ADD COLUMN fallback BOOLEAN NOT NULL DEFAULT FALSE;
 
 
+select * from sensor_data where data_hora::varchar like '2026-02-08 15:38%'
 
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback)
+     values (27.16296, 80.89333, 65.96536, '2026-02-08 15:40:28', 0, true);

@@ -159,6 +159,32 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 ![React Frontend](REACT_FRONTEND.png)
 
 
+- **7. Backup Automático e Confiabilidade dos Dados**
+
+	Backup Automático e Confiabilidade dos Dados
+
+	A solução implementa um mecanismo de backup automático diário, garantindo a integridade, disponibilidade e segurança dos dados ambientais armazenados no sistema.
+
+	O banco de dados PostgreSQL, responsável pela persistência das medições, está hospedado em infraestrutura de nuvem utilizando o serviço Railway, que fornece suporte nativo a backups gerenciados.
+
+	Funcionamento do backup
+
+	O backup é executado automaticamente todos os dias à 0h (00:00)
+
+	O processo é totalmente automatizado, não exigindo intervenção manual
+
+	Os dados são armazenados em ambiente de nuvem, independente da aplicação
+
+	O procedimento protege contra:
+
+		Falhas de hardware
+
+		Corrupção de dados
+
+		Erros operacionais
+
+		Exclusões acidentais
+
 - **7. Boas práticas e pontos fortes da arquitetura**
 
 	- Desacoplamento total entre hardware e persistência
@@ -208,6 +234,8 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 	- ApexCharts (React ApexCharts) – visualização gráfica e tempo real
 
 	- Git – controle de versão
+
+	- Railway – infraestrutura em nuvem e gerenciamento de backups
 
 ## Possíveis evoluções naturais
 
