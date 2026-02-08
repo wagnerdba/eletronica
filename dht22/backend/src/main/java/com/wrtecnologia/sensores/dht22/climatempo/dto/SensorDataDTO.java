@@ -11,6 +11,9 @@ import java.util.UUID;
 
 public class SensorDataDTO {
 
+    private static final DateTimeFormatter DATA_HORA_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @JsonProperty("id")
     private Long id;
 
@@ -93,6 +96,7 @@ public class SensorDataDTO {
     }
 
     // Adicione @JsonIgnore ao campo ou método que deseja ocultar
+    /*
     @JsonIgnore
     public LocalDateTime getDataHoraAsLocalDateTime() {
         if (this.dataHora == null || this.dataHora.isEmpty()) {
@@ -102,6 +106,20 @@ public class SensorDataDTO {
             return LocalDateTime.parse(this.dataHora, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Formato de data inválido para 'data_hora': " + this.dataHora);
+        }
+    }
+     */
+    @JsonIgnore
+    public LocalDateTime getDataHoraAsLocalDateTime() {
+        if (dataHora == null || dataHora.isBlank()) {
+            throw new IllegalArgumentException("Campo 'data_hora' não pode ser nulo ou vazio");
+        }
+
+        try {
+            return LocalDateTime.parse(dataHora, DATA_HORA_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Formato de data inválido para 'data_hora': " + dataHora, e
+            );
         }
     }
 
