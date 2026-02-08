@@ -185,7 +185,7 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 		Exclusões acidentais
 
-- **7. Boas práticas e pontos fortes da arquitetura**
+- **8. Boas práticas e pontos fortes da arquitetura**
 
 	- Desacoplamento total entre hardware e persistência
 	
@@ -201,7 +201,7 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 	
 	- Pronto para dashboards, alertas e integração com sistemas externos
 
-- **8. Tecnologias utilizadas na solução**
+- **9. Tecnologias utilizadas na solução**
 
 	- ESP32 – microcontrolador com conectividade Wi-Fi
 
