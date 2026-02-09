@@ -174,7 +174,14 @@ public class Esp32CollectorServiceJob {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final SensorService sensorService;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate = criarRestTemplate();
+
+    private RestTemplate criarRestTemplate() {
+      var factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+      factory.setConnectTimeout(8000);
+      factory.setReadTimeout(8000);
+      return new RestTemplate(factory);
+    }
 
     @Value("${esp32.api.url}")
     private String url;
