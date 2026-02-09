@@ -90,7 +90,25 @@ ORDER BY m.minuto;
 -- ALTER TABLE sensor_data ADD COLUMN fallback BOOLEAN NOT NULL DEFAULT FALSE;
 -- ALTER TABLE sensor_data ADD COLUMN sensor_ip VARCHAR(14) NOT NULL DEFAULT '192.168.1.100';
 
+select * from sensor_data where data_hora::varchar like '2026-02-09 17:32%'
 select * from sensor_data where data_hora::varchar like '2026-02-08 15:38%'
 
-insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback)
-     values (27.16296, 80.89333, 65.96536, '2026-02-08 15:40:28', 0, true);
+select * from sensor_data where data_hora::varchar like '2026-02-09 17:33%'
+select * from sensor_data where data_hora::varchar like '2026-02-09 17:34%'
+select * from sensor_data where data_hora::varchar like '2026-02-09 17:35%'
+
+-- delete from sensor_data where data_hora::varchar like '2026-02-09 17:33%';
+-- delete from sensor_data where data_hora::varchar like '2026-02-09 17:34%';
+-- delete from sensor_data where data_hora::varchar like '2026-02-09 17:35%';
+
+/*
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:33:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:34:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:35:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:42:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:43:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:44:05', 0, true);
+
+
+
+
