@@ -81,8 +81,6 @@ public class Esp32CollectorServiceJob {
                 // 🟨 Tentativa 4 → FALLBACK (SEM REDE COM ESP32)
                 else {
 
-                    System.out.println("🟡 [FALLBACK] Falha na comunicação com o ESP32: Fallback executado.");
-
                     Optional<SensorDataDTO> lastOpt = sensorService.getLastSensorData();
 
                     if (!lastOpt.isPresent()) {
@@ -99,7 +97,8 @@ public class Esp32CollectorServiceJob {
                     dto.setDataHora(jobStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                     dto.setFallback(true);
                     dto.setUptime("0");
-                    // dataHora, uuid, uptime → gerados no save normal
+
+                    System.out.println("[🟡 FALLBACK] Falha na comunicação com o ESP32: Fallback executado.");
                 }
 
                 // 🟦 4. Salvar no banco (fluxo normal)
