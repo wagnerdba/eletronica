@@ -34,6 +34,9 @@ public class SensorData {
     @Column(name = "fallback")
     private boolean fallback;
 
+    @Column(name = "sensor_ip", length = 14)
+    private String sensorIp;
+
     @PrePersist
     public void prePersist() {
         if (this.uuid == null) {
@@ -106,13 +109,25 @@ public class SensorData {
         this.fallback = fallback;
     }
 
+    public String getSensorIp() {
+        return sensorIp;
+    }
+
+    public void setSensorIp(String sensorIp) {
+        this.sensorIp = sensorIp;
+    }
+
     @Override
     public String toString() {
-        return "SensorData{" +
+        return "SensorDataDTO{" +
                 "temperaturaCelsius=" + temperaturaCelsius +
                 ", temperaturaFahrenheit=" + temperaturaFahrenheit +
                 ", umidade=" + umidade +
-                ", dataHora=" + dataHora +
-                '}';
+                ", dataHora='" + dataHora +
+                ", uptime=" + uptime +
+                ", fallback =" + fallback +
+                ", uuid=" + uuid +
+                ", sensorIp='" + sensorIp + + '\''
+                + '}';
     }
 }

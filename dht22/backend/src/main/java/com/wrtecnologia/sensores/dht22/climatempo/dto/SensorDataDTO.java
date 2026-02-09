@@ -3,6 +3,7 @@ package com.wrtecnologia.sensores.dht22.climatempo.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +39,9 @@ public class SensorDataDTO {
 
     @JsonProperty("fallback")
     private boolean fallback;
+
+    @JsonProperty("sensor_ip")
+    private String sensorIp;
 
     public Long getId() {
         return id;
@@ -95,6 +99,14 @@ public class SensorDataDTO {
         this.fallback = fallback;
     }
 
+    public String getSensorIp() {
+        return sensorIp;
+    }
+
+    public void setSensorIp(String sensorIp) {
+        this.sensorIp = sensorIp;
+    }
+
     // Adicione @JsonIgnore ao campo ou método que deseja ocultar
     /*
     @JsonIgnore
@@ -132,7 +144,11 @@ public class SensorDataDTO {
                 "temperaturaCelsius=" + temperaturaCelsius +
                 ", temperaturaFahrenheit=" + temperaturaFahrenheit +
                 ", umidade=" + umidade +
-                ", dataHora='" + dataHora + '\'' +
-                '}';
+                ", dataHora='" + dataHora +
+                ", uptime=" + uptime +
+                ", fallback =" + fallback +
+                ", uuid=" + uuid +
+                ", sensorIp='" + sensorIp + + '\''
+                + '}';
     }
 }

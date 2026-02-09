@@ -1,5 +1,4 @@
 #include <WiFi.h>
-#include <DHT.h>
 #include <ESPAsyncWebServer.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -11,8 +10,8 @@
 #include <Adafruit_SHT4x.h>
 Adafruit_SHT4x sht4 = Adafruit_SHT4x();
 
-#define SDA_PIN 21
-#define SCL_PIN 22
+#define SCL_PIN 21
+#define SDA_PIN 22
 
 //----------------------------------
 // Definir credenciais Wi-Fi
@@ -134,13 +133,15 @@ void setup()
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
       String dateTime = getCurrentDateTime();
       String upTime = getUptime();
+      String sensorIp = WiFi.localIP().toString();
 
-      Serial.println("✅ [ESP32] Dados coletados com sucesso em " + WiFi.localIP().toString());
+      Serial.println("✅ [ESP32] Dados coletados com sucesso em ") + sensorIp;
       Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
       Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
       Serial.print("  Umidade (%): "); Serial.println(humidity);
       Serial.print("  Data/Hora: "); Serial.println(dateTime);
 		  Serial.print("  Uptime: ");  Serial.println(upTime);
+      Serial.print("  IP Sensor: "); Serial.println(sensorIp);
       
       JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
@@ -148,6 +149,7 @@ void setup()
       jsonDoc["umidade"] = humidity;
       jsonDoc["data_hora"] = dateTime;
       jsonDoc["uptime"] = upTime;
+      jsonDoc["sensor_ip"] = sensorIp;
 
       String jsonString;
       serializeJson(jsonDoc, jsonString);
@@ -185,7 +187,7 @@ void connectWiFi()
     Serial.println("❌ Falha ao configurar IP...");
 
   WiFi.mode(WIFI_STA);
-  WiFi.setHostname("[ESP32Server]");
+  WiFi.setHostname("ESP32WEBSERVER");
   WiFi.begin(ssid, password);
   
   Serial.println();

@@ -88,7 +88,7 @@ ORDER BY m.minuto;
 -- Fallback
 
 -- ALTER TABLE sensor_data ADD COLUMN fallback BOOLEAN NOT NULL DEFAULT FALSE;
-
+-- ALTER TABLE sensor_data ADD COLUMN sensor_ip VARCHAR(14) NOT NULL DEFAULT '192.168.1.100';
 
 select * from sensor_data where data_hora::varchar like '2026-02-08 15:38%'
 
