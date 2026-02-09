@@ -10,8 +10,8 @@
 #include <Adafruit_SHT4x.h>
 Adafruit_SHT4x sht4 = Adafruit_SHT4x();
 
-#define SDA_PIN 21
-#define SCL_PIN 22
+#define SCL_PIN 21
+#define SDA_PIN 22
 
 //----------------------------------
 // Definir credenciais Wi-Fi
@@ -187,7 +187,7 @@ void connectWiFi()
     Serial.println("❌ Falha ao configurar IP...");
 
   WiFi.mode(WIFI_STA);
-  WiFi.setHostname("ESP32WEBSERVER]");
+  WiFi.setHostname("ESP32WEBSERVER");
   WiFi.begin(ssid, password);
   
   Serial.println();

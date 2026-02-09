@@ -8,10 +8,11 @@
 
 #include <Wire.h>
 #include <Adafruit_SHT31.h>
-#define SDA_PIN 21
-#define SCL_PIN 22
-Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
+#define SCL_PIN 21
+#define SDA_PIN 22
+Adafruit_SHT31 sht31 = Adafruit_SHT31();
+ 
 //----------------------------------
 // Definir credenciais Wi-Fi
 //----------------------------------
