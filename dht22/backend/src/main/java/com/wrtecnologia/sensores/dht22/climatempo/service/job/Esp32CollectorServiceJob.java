@@ -97,7 +97,7 @@ public class Esp32CollectorServiceJob {
                     dto.setDataHora(jobStartTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                     dto.setFallback(true);
                     dto.setUptime("0");
-                    dto.setSensorIp(last.getSensorIp());
+                    dto.setSensorIp("0.0.0.0");
 
                     System.out.println("[🟡 FALLBACK] Falha na comunicação com o ESP32: Fallback executado.");
                 }
