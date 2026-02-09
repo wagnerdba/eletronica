@@ -1,5 +1,5 @@
 #include <WiFi.h>
-#include <DHT.h>
+// #include <DHT.h>
 #include <ESPAsyncWebServer.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -153,22 +153,24 @@ void setup()
 
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
       String dateTime = getCurrentDateTime();
-		  String upTime = getUptime();
+      String upTime = getUptime();
+      String sensorIp = WiFi.localIP().toString();
 
-      Serial.println("✅ [ESP32] Dados coletados com sucesso:");
+      Serial.println("✅ [ESP32] Dados coletados com sucesso em ") + sensorIp;
       Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
-      // Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
-      Serial.printf("  Temperatura (Fº): %.3f\n", temperatureFahrenheit);
+      Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
       Serial.print("  Umidade (%): "); Serial.println(humidity);
       Serial.print("  Data/Hora: "); Serial.println(dateTime);
 		  Serial.print("  Uptime: ");  Serial.println(upTime);
-
+      Serial.print("  IP Sensor: "); Serial.println(sensorIp);
+      
       JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
       jsonDoc["umidade"] = humidity;
       jsonDoc["data_hora"] = dateTime;
-		  jsonDoc["uptime"] = upTime;
+      jsonDoc["uptime"] = upTime;
+      jsonDoc["sensor_ip"] = sensorIp;
 
       String jsonString;
       serializeJson(jsonDoc, jsonString);

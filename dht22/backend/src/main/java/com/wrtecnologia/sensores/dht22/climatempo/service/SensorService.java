@@ -40,6 +40,7 @@ public class SensorService {
         sensorData.setDataHora(sensorDataDTO.getDataHoraAsLocalDateTime());
         sensorData.setUptime(sensorDataDTO.getUptime());
         sensorData.setFallback(sensorDataDTO.isFallback());
+        sensorData.setSensorIp(sensorDataDTO.getSensorIp());
         // Salvar no banco de dados
         return sensorDataRepository.save(sensorData);
     }
@@ -64,8 +65,10 @@ public class SensorService {
                     dto.setTemperaturaFahrenheit(sensorData.getTemperaturaFahrenheit());
                     dto.setUmidade(sensorData.getUmidade());
                     dto.setDataHora(sensorData.getDataHora().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                    dto.setUptime(sensorData.getUptime());
                     dto.setUuid(sensorData.getUuid());
                     dto.setFallback(sensorData.isFallback());
+                    dto.setSensorIp(sensorData.getSensorIp());
                     return dto;
                 })
                 .collect(Collectors.toList());
