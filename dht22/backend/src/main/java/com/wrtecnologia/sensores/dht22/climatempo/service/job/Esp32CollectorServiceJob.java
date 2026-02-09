@@ -141,25 +141,29 @@ public class Esp32CollectorServiceJob {
     }
 }
 */
-
 package com.wrtecnologia.sensores.dht22.climatempo.service.job;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
 import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
 import com.wrtecnologia.sensores.dht22.climatempo.service.SensorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
 public class Esp32CollectorServiceJob {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(Esp32CollectorServiceJob.class);
 
     private static final int MAX_TENTATIVAS = 4;
     private static final int RETRY_DELAY_MS = 3000;
@@ -187,8 +191,8 @@ public class Esp32CollectorServiceJob {
 
                 final LocalDateTime jobStartTime = LocalDateTime.now().withNano(0);
 
-                System.out.println("[⚡ JOB *] Execução " + tentativa + " em "
-                        + jobStartTime.format(DT_FORMAT));
+                log.info("[⚡ JOB *] Execução {} em {}",
+                        tentativa, jobStartTime.format(DT_FORMAT));
 
                 SensorDataDTO dto;
 
@@ -203,8 +207,8 @@ public class Esp32CollectorServiceJob {
 
                 // 🟦 Salvar no banco
                 SensorData saved = sensorService.saveSensorData(dto);
-                System.out.println("[💾 BANCO] POST id..: "
-                        + saved.getId() + ", uuid: " + saved.getUuid());
+                log.info("[💾 BANCO] POST id..: {}, uuid: {}",
+                        saved.getId(), saved.getUuid());
 
                 break; // sucesso
 
@@ -214,7 +218,7 @@ public class Esp32CollectorServiceJob {
 
                 // 🟥 Registro duplicado
                 if (msg != null && msg.contains("ux_sensor_data_day_hour_minute")) {
-                    System.out.println("🟡 Registro duplicado. Job concluído.");
+                    log.warn("🟡 Registro duplicado. Job concluído.");
                     break;
                 }
 
@@ -224,7 +228,9 @@ public class Esp32CollectorServiceJob {
                                 (msg != null && msg.contains("No route to host"));
 
                 if (erroRede) {
-                    System.out.println("🔴 Erro de rede: Não foi possível alcançar o host (ESP32).");
+                    log.error("🔴 Erro de rede: Não foi possível alcançar o host (ESP32).");
+                } else {
+                    log.error("🔴 Erro inesperado na execução do job.", e);
                 }
 
                 // 🔁 Retry
@@ -235,7 +241,7 @@ public class Esp32CollectorServiceJob {
                         Thread.currentThread().interrupt();
                     }
                 } else {
-                    System.out.println("🔴 Falha após " + MAX_TENTATIVAS + " tentativas.");
+                    log.error("🔴 Falha após {} tentativas.", MAX_TENTATIVAS);
                 }
             }
         }
@@ -243,10 +249,7 @@ public class Esp32CollectorServiceJob {
 
     /**
      * Chamada HTTP ao ESP32 usando RestTemplate.
-     *
-     * Mantém o mesmo comportamento:
-     * - erro HTTP ≠ 200 → exceção
-     * - erro de rede → exceção
+     * Mantém o mesmo comportamento funcional do fluxo original.
      */
     private SensorDataDTO obterDadosDoEsp32() throws Exception {
 
@@ -259,13 +262,14 @@ public class Esp32CollectorServiceJob {
 
         String json = response.getBody();
 
-        System.out.println("[🔍 ESP32] GET json.: " + json);
+        log.info("[🔍 ESP32] GET json.: {}", json);
 
         return MAPPER.readValue(json, SensorDataDTO.class);
     }
 
     /**
      * Fallback usando último registro persistido.
+     * Executado apenas na última tentativa.
      */
     private SensorDataDTO executarFallback(LocalDateTime jobStartTime) {
 
@@ -285,7 +289,7 @@ public class Esp32CollectorServiceJob {
         dto.setUptime("0");
         dto.setSensorIp("0.0.0.0");
 
-        System.out.println("[🟡 FALLBACK] Falha na comunicação com o ESP32: Fallback executado.");
+        log.warn("[🟡 FALLBACK] Falha na comunicação com o ESP32: Fallback executado.");
 
         return dto;
     }
