@@ -164,8 +164,8 @@ public class Esp32CollectorServiceJob {
 
     private static final Logger log = LoggerFactory.getLogger(Esp32CollectorServiceJob.class);
 
-    private static final int MAX_TENTATIVAS = 4;
-    private static final int RETRY_DELAY_MS = 3000;
+    private static final int MAX_TENTATIVAS = 6;
+    private static final int RETRY_DELAY_MS = 2000;
 
     private static final DateTimeFormatter DT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

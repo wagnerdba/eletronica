@@ -259,7 +259,7 @@ Esse fluxo garante a desacoplagem entre a camada de coleta (ESP32), a camada de 
 
 ## Licença
 
-	Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+	Este projeto está licenciado sob a Licença MIT.
 
 ## Contato
 
