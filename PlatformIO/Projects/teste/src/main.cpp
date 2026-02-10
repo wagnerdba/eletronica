@@ -1,10 +1,16 @@
 #include <WiFi.h>
-#include <DHT.h>
 #include <ESPAsyncWebServer.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
 #include <esp_timer.h>
+#include <Wire.h>
+#include <Adafruit_SHT4x.h>
+
+#define SCL_PIN 21
+#define SDA_PIN 22
+
+Adafruit_SHT4x sht4 = Adafruit_SHT4x();
 
 //----------------------------------
 // Definir credenciais Wi-Fi
@@ -20,13 +26,6 @@ IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
 IPAddress secondaryDNS(8, 8, 4, 4);
-
-//----------------------------------
-// Configurar sensor DHT
-//----------------------------------
-#define DHTPIN 18
-#define DHTTYPE DHT22
-DHT dht(DHTPIN, DHTTYPE);
 
 //----------------------------------
 // Configurar porta http
@@ -63,25 +62,23 @@ bool tryReadSensor(float &temperatureCelsius, float &temperatureFahrenheit, floa
 {
   while (attempts-- > 0)
   {
-    temperatureCelsius = dht.readTemperature();
-    temperatureFahrenheit = dht.readTemperature(true);
-    humidity = dht.readHumidity();
+    sensors_event_t humidityEvent, tempEvent;
+    sht4.getEvent(&humidityEvent, &tempEvent);
 
-    if (temperatureCelsius == 0 || humidity == 0)
-    {
-      Serial.println("❌ Leitura zerada. Tentando novamente...");
+    temperatureCelsius = tempEvent.temperature;
+    humidity = humidityEvent.relative_humidity;
+
+    if (isnan(temperatureCelsius) || isnan(humidity)) {
+      if (origem)
+        Serial.println("❌ Falha ao ler SHT45... Tentativas restantes: " + String(attempts));
       delay(2000);
       continue;
     }
 
-    if (!isnan(temperatureCelsius) && !isnan(humidity))
-      return true;
-
-    if (origem)
-      Serial.println("❌ Falha ao ler sensor... Tentativas restantes: " + String(attempts));
-
-    delay(2000);
+    temperatureFahrenheit = temperatureCelsius * 1.8 + 32.0;
+    return true;
   }
+
   return false;
 }
 
@@ -104,46 +101,48 @@ String getUptime() {
 void setup()
 {
   Serial.begin(115200);
-  dht.begin();
 
-// ---------- WATCHDOG ----------
- /*
-  esp_task_wdt_config_t wdt_config = {
-    .timeout_ms = 240000, // 240 segundos - 4 minutos de inatividade o esp32 é reiniciado pelo watchdog
-  };
-  esp_task_wdt_init(&wdt_config);
-*/
+  Wire.begin(SDA_PIN, SCL_PIN);
 
-// versao mais antiga tirar o comentário e comentar o trecho acima ou vice-versa
- esp_task_wdt_init(240, true); // timeout em segundos, panic=true
-  
-  esp_task_wdt_add(NULL);        // adiciona a task principal (loop) ao WDT
-// 
+  if (!sht4.begin()) {
+    Serial.println("❌ SHT45 não encontrado");
+    while (1);
+  }
 
-  // ---- Conectar usando a função resiliente ----
+  sht4.setPrecision(SHT4X_HIGH_PRECISION);
+  sht4.setHeater(SHT4X_NO_HEATER);
+
+  Serial.println("✅ SHT45 iniciado");
+
+  // ---------- WATCHDOG ----------
+ 
+  esp_task_wdt_add(NULL);
+
   connectWiFi();
 
-  // ---------- GET ENDPOINT ----------
   server.on("/esp32/api/temperatura", HTTP_GET, [](AsyncWebServerRequest *request) {
     float temperatureCelsius, temperatureFahrenheit, humidity;
 
     if (tryReadSensor(temperatureCelsius, temperatureFahrenheit, humidity, false)) {
       String dateTime = getCurrentDateTime();
-		  String upTime = getUptime();
+      String upTime = getUptime();
+      String sensorIp = WiFi.localIP().toString();
 
-      Serial.println("✅ [ESP32] Dados coletados com sucesso:");
+      Serial.println("✅ [ESP32] Dados coletados com sucesso em ") + sensorIp;
       Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
       Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
       Serial.print("  Umidade (%): "); Serial.println(humidity);
       Serial.print("  Data/Hora: "); Serial.println(dateTime);
 		  Serial.print("  Uptime: ");  Serial.println(upTime);
-
+      Serial.print("  IP Sensor: "); Serial.println(sensorIp);
+      
       JsonDocument jsonDoc;
       jsonDoc["temperatura_celsius"] = temperatureCelsius;
       jsonDoc["temperatura_fahrenheit"] = temperatureFahrenheit;
       jsonDoc["umidade"] = humidity;
       jsonDoc["data_hora"] = dateTime;
-		  jsonDoc["uptime"] = upTime;
+      jsonDoc["uptime"] = upTime;
+      jsonDoc["sensor_ip"] = sensorIp;
 
       String jsonString;
       serializeJson(jsonDoc, jsonString);
@@ -174,7 +173,6 @@ void connectWiFi()
   if (WiFi.status() == WL_CONNECTED)
     return;
 
-  // 🔒 Configurações de persistência e reconexão
   WiFi.persistent(true);
   WiFi.setAutoReconnect(true);
 
@@ -182,7 +180,7 @@ void connectWiFi()
     Serial.println("❌ Falha ao configurar IP...");
 
   WiFi.mode(WIFI_STA);
-  WiFi.setHostname("[ESP32Server]");
+  WiFi.setHostname("ESP32WEBSERVER");
   WiFi.begin(ssid, password);
   
   Serial.println();
@@ -192,15 +190,13 @@ void connectWiFi()
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
-   // Serial.print(".");
-
     if (millis() - startAttemptTime > 30000)
     {
       Serial.println("❌ WiFi não conectou — Reiniciando ESP...");
       ESP.restart();
     }
   }
-
+  
   Serial.println("🌐 Conexão estabelecida");
 	Serial.println("🧿 Endereço IP: " + WiFi.localIP().toString());
 	Serial.println("🛜 Hostname: " + String(WiFi.getHostname()));
@@ -210,9 +206,6 @@ void connectWiFi()
 void loop()
 {
   esp_task_wdt_reset();
-
-  // Verifica e reconecta caso caia
   connectWiFi();
-
   delay(200);
 }
