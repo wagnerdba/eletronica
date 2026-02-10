@@ -162,14 +162,12 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class Esp32CollectorServiceJob {
 
-    private static final Logger log =
-            LoggerFactory.getLogger(Esp32CollectorServiceJob.class);
+    private static final Logger log = LoggerFactory.getLogger(Esp32CollectorServiceJob.class);
 
     private static final int MAX_TENTATIVAS = 4;
     private static final int RETRY_DELAY_MS = 3000;
 
-    private static final DateTimeFormatter DT_FORMAT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -198,8 +196,7 @@ public class Esp32CollectorServiceJob {
 
                 final LocalDateTime jobStartTime = LocalDateTime.now().withNano(0);
 
-                log.info("[⚡ JOB *] Execução {} em {}",
-                        tentativa, jobStartTime.format(DT_FORMAT));
+                log.info("[⚡ JOB *] Execução {} em {}", tentativa, jobStartTime.format(DT_FORMAT));
 
                 SensorDataDTO dto;
 
@@ -214,8 +211,7 @@ public class Esp32CollectorServiceJob {
 
                 // 🟦 Salvar no banco
                 SensorData saved = sensorService.saveSensorData(dto);
-                log.info("[💾 BANCO] POST id..: {}, uuid: {}",
-                        saved.getId(), saved.getUuid());
+                log.info("[💾 BANCO] POST id..: {}, uuid: {}", saved.getId(), saved.getUuid());
 
                 break; // sucesso
 
@@ -230,9 +226,7 @@ public class Esp32CollectorServiceJob {
                 }
 
                 // 🟡 Falhas de rede / HTTP
-                boolean erroRede =
-                        e instanceof RestClientException ||
-                                (msg != null && msg.contains("No route to host"));
+                boolean erroRede = e instanceof RestClientException || (msg != null && msg.contains("No route to host"));
 
                 if (erroRede) {
                     log.error("🔴 Erro de rede: Não foi possível alcançar o host (ESP32).");
@@ -255,13 +249,11 @@ public class Esp32CollectorServiceJob {
     }
 
     /**
-     * Chamada HTTP ao ESP32 usando RestTemplate.
-     * Mantém o mesmo comportamento funcional do fluxo original.
-     */
+     * Chamada HTTP ao ESP32
+    */
     private SensorDataDTO obterDadosDoEsp32() throws Exception {
 
-        ResponseEntity<String> response =
-                restTemplate.getForEntity(url, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException("Falha HTTP: " + response.getStatusCode());
@@ -281,11 +273,7 @@ public class Esp32CollectorServiceJob {
     private SensorDataDTO executarFallback(LocalDateTime jobStartTime) {
 
         SensorDataDTO last = sensorService.getLastSensorData()
-                .orElseThrow(() ->
-                        new IllegalStateException(
-                                "Não existe registro anterior para fallback."
-                        )
-                );
+                .orElseThrow(() -> new IllegalStateException("Não existe registro anterior para fallback."));
 
         SensorDataDTO dto = new SensorDataDTO();
         dto.setTemperaturaCelsius(last.getTemperaturaCelsius());
