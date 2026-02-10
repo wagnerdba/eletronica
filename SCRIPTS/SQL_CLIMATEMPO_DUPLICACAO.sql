@@ -8,6 +8,8 @@ select * from sensor_data where fallback = true or id = 780670;
 select * from sensor_data where fallback is true and data_hora::date = current_date order by id
 
 
+-- delete from sensor_data
+
 select now();
 show timezone;
 alter system set timezone = 'America/Sao_Paulo';
@@ -107,7 +109,7 @@ insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, d
 insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:35:05', 0, true);
 insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:42:05', 0, true);
 insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:43:05', 0, true);
-insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:44:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback, sensor_ip) values (26.23903, 79.23026, 60.61707, '2026-02-10 16:52:05', 0, true, '0.0.0.0');
 
 
 

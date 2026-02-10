@@ -4,14 +4,13 @@
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
 #include <esp_timer.h>
-
 #include <Wire.h>
-
 #include <Adafruit_SHT4x.h>
-Adafruit_SHT4x sht4 = Adafruit_SHT4x();
 
 #define SCL_PIN 21
 #define SDA_PIN 22
+
+Adafruit_SHT4x sht4 = Adafruit_SHT4x();
 
 //----------------------------------
 // Definir credenciais Wi-Fi
@@ -22,7 +21,7 @@ const char *password = "@FlakE2021#";
 //----------------------------------
 // Configurar IP estático
 //----------------------------------
-IPAddress local_IP(192, 168, 1, 100);
+IPAddress local_IP(192, 168, 1, 101);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);
@@ -135,11 +134,11 @@ void setup()
       String upTime = getUptime();
       String sensorIp = WiFi.localIP().toString();
 
-      Serial.println("✅ [ESP32] Dados coletados com sucesso em ") + sensorIp;
+      Serial.println("✅ [ESP32] Dados coletados com sucesso");
+      Serial.print("  Data/Hora: "); Serial.println(dateTime);
       Serial.print("  Temperatura (Cº): "); Serial.println(temperatureCelsius);
       Serial.print("  Temperatura (Fº): "); Serial.println(temperatureFahrenheit);
       Serial.print("  Umidade (%): "); Serial.println(humidity);
-      Serial.print("  Data/Hora: "); Serial.println(dateTime);
 		  Serial.print("  Uptime: ");  Serial.println(upTime);
       Serial.print("  IP Sensor: "); Serial.println(sensorIp);
       

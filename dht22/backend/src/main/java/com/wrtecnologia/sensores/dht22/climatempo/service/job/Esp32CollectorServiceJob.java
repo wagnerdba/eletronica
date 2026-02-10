@@ -1,3 +1,4 @@
+/*
 package com.wrtecnologia.sensores.dht22.climatempo.service.job;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -137,5 +138,154 @@ public class Esp32CollectorServiceJob {
                 }
             }
         }
+    }
+}
+*/
+package com.wrtecnologia.sensores.dht22.climatempo.service.job;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wrtecnologia.sensores.dht22.climatempo.dto.SensorDataDTO;
+import com.wrtecnologia.sensores.dht22.climatempo.model.SensorData;
+import com.wrtecnologia.sensores.dht22.climatempo.service.SensorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Service
+public class Esp32CollectorServiceJob {
+
+    private static final Logger log = LoggerFactory.getLogger(Esp32CollectorServiceJob.class);
+
+    private static final int MAX_TENTATIVAS = 6;
+    private static final int RETRY_DELAY_MS = 2000;
+
+    private static final DateTimeFormatter DT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private final SensorService sensorService;
+    private final RestTemplate restTemplate = criarRestTemplate();
+
+    private RestTemplate criarRestTemplate() {
+      var factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+      factory.setConnectTimeout(8000);
+      factory.setReadTimeout(8000);
+      return new RestTemplate(factory);
+    }
+
+    @Value("${esp32.api.url}")
+    private String url;
+
+    public Esp32CollectorServiceJob(SensorService sensorService) {
+        this.sensorService = sensorService;
+    }
+
+    @Scheduled(cron = "5 * * * * *") // Executa no segundo 05 de cada minuto
+    public void executarColetaAutomatica() {
+
+        for (int tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+            try {
+
+                final LocalDateTime jobStartTime = LocalDateTime.now().withNano(0);
+
+                log.info("[⚡ JOB *] Execução {} em {}", tentativa, jobStartTime.format(DT_FORMAT));
+
+                SensorDataDTO dto;
+
+                // 🔁 Tentativas 1 a 3 → ESP32
+                if (tentativa < MAX_TENTATIVAS) {
+                    dto = obterDadosDoEsp32();
+                }
+                // 🟨 Tentativa 4 → FALLBACK
+                else {
+                    dto = executarFallback(jobStartTime);
+                }
+
+                // 🟦 Salvar no banco
+                SensorData saved = sensorService.saveSensorData(dto);
+                log.info("[💾 BANCO] POST id..: {}, uuid: {}", saved.getId(), saved.getUuid());
+
+                break; // sucesso
+
+            } catch (Exception e) {
+
+                String msg = e.getMessage();
+
+                // 🟥 Registro duplicado
+                if (msg != null && msg.contains("ux_sensor_data_day_hour_minute")) {
+                    log.warn("🟡 Registro duplicado. Job concluído.");
+                    break;
+                }
+
+                // 🟡 Falhas de rede / HTTP
+                boolean erroRede = e instanceof RestClientException || (msg != null && msg.contains("No route to host"));
+
+                if (erroRede) {
+                    log.error("🔴 Erro de rede: Não foi possível alcançar o host (ESP32).");
+                } else {
+                    log.error("🔴 Erro inesperado na execução do job.", e);
+                }
+
+                // 🔁 Retry
+                if (tentativa < MAX_TENTATIVAS) {
+                    try {
+                        Thread.sleep(RETRY_DELAY_MS);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else {
+                    log.error("🔴 Falha após {} tentativas.", MAX_TENTATIVAS);
+                }
+            }
+        }
+    }
+
+    /**
+     * Chamada HTTP ao ESP32
+    */
+    private SensorDataDTO obterDadosDoEsp32() throws Exception {
+
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Falha HTTP: " + response.getStatusCode());
+        }
+
+        String json = response.getBody();
+
+        log.info("[🔍 ESP32] GET json.: {}", json);
+
+        return MAPPER.readValue(json, SensorDataDTO.class);
+    }
+
+    /**
+     * Fallback usando último registro persistido.
+     * Executado apenas na última tentativa.
+     */
+    private SensorDataDTO executarFallback(LocalDateTime jobStartTime) {
+
+        SensorDataDTO last = sensorService.getLastSensorData()
+                .orElseThrow(() -> new IllegalStateException("Não existe registro anterior para fallback."));
+
+        SensorDataDTO dto = new SensorDataDTO();
+        dto.setTemperaturaCelsius(last.getTemperaturaCelsius());
+        dto.setTemperaturaFahrenheit(last.getTemperaturaFahrenheit());
+        dto.setUmidade(last.getUmidade());
+        dto.setDataHora(jobStartTime.format(DT_FORMAT));
+        dto.setFallback(true);
+        dto.setUptime("0");
+        dto.setSensorIp("0.0.0.0");
+
+        log.warn("[🟡 FALLBACK] Falha na comunicação com o ESP32: Fallback executado.");
+
+        return dto;
     }
 }
