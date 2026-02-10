@@ -4,14 +4,13 @@
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h>
 #include <esp_timer.h>
-
 #include <Wire.h>
-
 #include <Adafruit_SHT4x.h>
-Adafruit_SHT4x sht4 = Adafruit_SHT4x();
 
 #define SCL_PIN 21
 #define SDA_PIN 22
+
+Adafruit_SHT4x sht4 = Adafruit_SHT4x();
 
 //----------------------------------
 // Definir credenciais Wi-Fi
