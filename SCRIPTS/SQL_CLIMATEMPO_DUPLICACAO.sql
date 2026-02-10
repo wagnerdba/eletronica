@@ -8,6 +8,8 @@ select * from sensor_data where fallback = true or id = 780670;
 select * from sensor_data where fallback is true and data_hora::date = current_date order by id
 
 
+-- delete from sensor_data
+
 select now();
 show timezone;
 alter system set timezone = 'America/Sao_Paulo';
