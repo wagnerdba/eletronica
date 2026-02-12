@@ -268,10 +268,10 @@ function definirAmbiente(ip, badgeId) {
     const ultimo = ip.split(".").pop();
     const badge = document.getElementById(badgeId);
 
-    if (ultimo === "100") { badge.innerHTML = 'PRODUÇÃO • SHT45'; badge.className = "env-badge prod"; }
-    else if (ultimo === "101") { badge.innerHTML = 'HOMOLOGAÇÃO • SHT31-D'; badge.className = "env-badge hml"; }
-    else if (ultimo === "102") { badge.innerHTML = 'DESENVOLVIMENTO • DHT22'; badge.className = "env-badge dev"; }
-    else if (ultimo === "103") { badge.innerHTML = 'TESTE • SHT-45'; badge.className = "env-badge teste"; }
+    if (ultimo === "100") { badge.innerHTML = 'PRODUÇÃO - SHT45'; badge.className = "env-badge prod"; }
+    else if (ultimo === "101") { badge.innerHTML = 'HOMOLOGAÇÃO - SHT31-D'; badge.className = "env-badge hml"; }
+    else if (ultimo === "102") { badge.innerHTML = 'DESENVOLVIMENTO - DHT22'; badge.className = "env-badge dev"; }
+    else if (ultimo === "103") { badge.innerHTML = 'TESTE - SHT-45'; badge.className = "env-badge teste"; }
 }
 
 function setStatus(isActive, statusId, ip) {
@@ -300,7 +300,7 @@ async function carregar(ip) {
 
         if (json.temperatura_celsius != null && json.umidade != null) {
             document.getElementById(`temp${ultimo}`).textContent =
-                `🌡️ ${json.temperatura_celsius.toFixed(2)}° C • 💧 ${json.umidade.toFixed(2)} %`;
+                `🌡️ ${json.temperatura_celsius.toFixed(2)}° C 💧 ${json.umidade.toFixed(2)} %`;
         } else {
             document.getElementById(`temp${ultimo}`).textContent = '';
         }
