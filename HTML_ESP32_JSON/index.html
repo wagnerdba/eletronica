@@ -1,96 +1,271 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Leitura ESP32 - Temperatura</title>
-    <style>
-        body {
-            font-family: Consolas, monospace;
-            background: #f4f6f8;
-            padding: 20px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 Health Monitor</title>
 
-        h2 {
-            margin-bottom: 5px;
-			color: black;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+}
 
-        .card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
+.header {
+    text-align: center;
+    padding: 30px 20px;
+}
 
-        pre {
-            background: #1e1e1e;
-            color: rgb(36, 202, 36);
-            padding: 10px;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
 
-        .error {
-            color: #ff5555;
-        }
-		
-		.paren {
-        color: blue; /* azul */
-    }
-    </style>
+.header p {
+    opacity: 0.7;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+
+.card h2 {
+    margin-top: 30px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.env-badge {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.prod { background: #007bff; }
+.hml  { background: #6f42c1; }
+.dev  { background: #28a745; }
+
+.status {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+@keyframes pulseGreen {
+    0% { box-shadow: 0 0 0 0 rgba(0,255,136,0.9); }
+    70% { box-shadow: 0 0 0 10px rgba(0,255,136,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); }
+}
+
+@keyframes pulseRed {
+    0% { box-shadow: 0 0 0 0 rgba(255,59,59,0.9); }
+    70% { box-shadow: 0 0 0 10px rgba(255,59,59,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,59,59,0); }
+}
+
+.active-dot {
+    background: #00ff88;
+    animation: pulseGreen 1.5s infinite;
+}
+
+.inactive-dot {
+    background: #ff3b3b;
+    animation: pulseRed 1.5s infinite;
+}
+
+pre {
+    background: rgba(0,0,0,0.6);
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 13px;
+    overflow-x: auto;
+    margin-top: 15px;
+    color: #00ff88;
+    width: calc(95% + 5px);
+    margin-left: -10px;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.countdown {
+    font-weight: bold;
+    color: #00ffcc;
+}
+</style>
 </head>
+
 <body>
 
-    <h1>HEALTH CHECK - MONITOR EM TEMPO REAL</h1>
-	 <h2>Microcontroladores ESP32 - API /esp32/api/v1/temperatura (GET)</h2>
+<div class="header">
+    <h1>ESP32 HEALTH MONITOR</h1>
+    <p>Monitoramento em tempo real • Atualização automática</p>
+</div>
+
+<div class="container">
 
     <div class="card">
-        <h2>192.168.1.100 <span class="paren">(sensor SHT45 - PROD) status: ativo</span></h2>
+        <div id="badge100" class="env-badge"></div>
+        <h2 id="titulo100">Carregando...</h2>
+        <div id="status100" class="status"></div>
         <pre id="esp100">Carregando...</pre>
     </div>
 
     <div class="card">
-        <h2>192.168.1.101 <span class="paren">(sensor SHT31-D - DEV) status: ativo</span></h2>
+        <div id="badge101" class="env-badge"></div>
+        <h2 id="titulo101">Carregando...</h2>
+        <div id="status101" class="status"></div>
         <pre id="esp101">Carregando...</pre>
     </div>
 
     <div class="card">
-        <h2>192.168.1.102 <span class="paren">(sensor DHT22 - DEV) status: ativo</span></h2>
+        <div id="badge102" class="env-badge"></div>
+        <h2 id="titulo102">Carregando...</h2>
+        <div id="status102" class="status"></div>
         <pre id="esp102">Carregando...</pre>
     </div>
 
-    <script>
-        function carregar(url, elementoId) {
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("HTTP " + response.status);
-                    }
-                    return response.json();
-                })
-                .then(json => {
-                    document.getElementById(elementoId).textContent =
-                        JSON.stringify(json, null, 2);
-                })
-                .catch(err => {
-                    document.getElementById(elementoId).innerHTML =
-                        '<span class="error">Erro: ' + err.message + '</span>';
-                });
-        }
+</div>
 
-        function atualizarTodos() {
-            carregar("http://192.168.1.100/esp32/api/temperatura", "esp100");
-            carregar("http://192.168.1.101/esp32/api/temperatura", "esp101");
-            carregar("http://192.168.1.102/esp32/api/temperatura", "esp102");
-        }
+<div class="footer">
+    Próxima atualização em <span class="countdown" id="contador">15</span>s
+</div>
 
-        // primeira carga imediata
-        atualizarTodos();
+<script>
 
-        // atualiza a cada 1 minuto (60000 ms)
-        setInterval(atualizarTodos, 60000);
-    </script>
+const sensores = ["192.168.1.100", "192.168.1.101", "192.168.1.102"];
+let sensoresInativos = new Set();
+let tempoRestante = 15;
+let atualizando = false;
+
+/* ===== FETCH COM TIMEOUT ===== */
+function fetchComTimeout(url, timeout = 2000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
+/* ===== AMBIENTE ===== */
+function definirAmbiente(ip, badgeId) {
+    const ultimo = ip.split(".").pop();
+    const badge = document.getElementById(badgeId);
+
+    if (ultimo === "100") { badge.innerHTML = 'PRODUÇÃO • SHT45'; badge.className = "env-badge prod"; }
+    else if (ultimo === "101") { badge.innerHTML = 'HOMOLOGAÇÃO • SHT31-D'; badge.className = "env-badge hml"; }
+    else if (ultimo === "102") { badge.innerHTML = 'DESENVOLVIMENTO • DHT22'; badge.className = "env-badge dev"; }
+}
+
+/* ===== STATUS ===== */
+function setStatus(isActive, statusId, ip) {
+    const status = document.getElementById(statusId);
+    if (isActive) {
+        status.innerHTML = '<div class="dot active-dot"></div> SENSOR ATIVO';
+        sensoresInativos.delete(ip);
+    } else {
+        status.innerHTML = '<div class="dot inactive-dot"></div> SENSOR INATIVO';
+        sensoresInativos.add(ip);
+    }
+}
+
+/* ===== CARREGAR SENSOR ===== */
+async function carregar(ip) {
+    const ultimo = ip.split(".").pop();
+    const url = `http://${ip}/esp32/api/temperatura`;
+
+    try {
+        const response = await fetchComTimeout(url, 2000);
+        if (!response.ok) throw new Error();
+        const json = await response.json();
+        definirAmbiente(ip, `badge${ultimo}`);
+        document.getElementById(`titulo${ultimo}`).textContent = ip;
+        setStatus(true, `status${ultimo}`, ip);
+        document.getElementById(`esp${ultimo}`).textContent = JSON.stringify(json, null, 2);
+    } catch {
+        definirAmbiente(ip, `badge${ultimo}`);
+        document.getElementById(`titulo${ultimo}`).textContent = ip;
+        setStatus(false, `status${ultimo}`, ip);
+        document.getElementById(`esp${ultimo}`).textContent = "Sem resposta.";
+    }
+}
+
+/* ===== ATUALIZAR TODOS (NÃO RESETAR O CONTADOR PARA OFFLINE) ===== */
+async function atualizarTodos() {
+    if (atualizando) return;
+    atualizando = true;
+    for (const ip of sensores) {
+        await carregar(ip);
+    }
+    tempoRestante = 15; // só reseta no ciclo normal
+    atualizando = false;
+}
+
+/* ===== CONTADOR ===== */
+setInterval(() => {
+    tempoRestante--;
+    if (tempoRestante < 0) tempoRestante = 0;
+    document.getElementById("contador").textContent = tempoRestante;
+
+    if (tempoRestante === 0) atualizarTodos();
+}, 1000);
+
+/* ===== MONITOR RÁPIDO DE SENSORES OFFLINE ===== */
+setInterval(() => {
+    sensoresInativos.forEach(async ip => {
+        try {
+            const res = await fetchComTimeout(`http://${ip}/esp32/api/temperatura`, 2000);
+            if (res.ok) {
+                await carregar(ip); // apenas recarrega o sensor
+            }
+        } catch {}
+    });
+}, 5000);
+
+/* ===== START ===== */
+atualizarTodos();
+
+</script>
 
 </body>
 </html>
