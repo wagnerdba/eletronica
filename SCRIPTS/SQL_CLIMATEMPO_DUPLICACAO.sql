@@ -11,8 +11,6 @@ select * from sensor_data where fallback = true or id = 780670;
 select * from sensor_data where fallback is true and data_hora::date = current_date order by id
 
 
--- delete from sensor_data
-
 select now();
 show timezone;
 alter system set timezone = 'America/Sao_Paulo';
@@ -20,7 +18,7 @@ select pg_reload_conf();
 
 select * from sensor_data order by id desc limit 10
 
--- delete from sensor_data where data_hora::date = current_date;
+-------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION trg_no_duplicate_day_hour_minute()
 RETURNS trigger AS $$
@@ -38,11 +36,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 -------------------------------------------------------------
+
 CREATE OR REPLACE TRIGGER no_duplicate_day_hour_minute
 BEFORE INSERT ON sensor_data
 FOR EACH ROW
 EXECUTE FUNCTION trg_no_duplicate_day_hour_minute();
+
 -------------------------------------------------------------
+
 DROP INDEX ux_sensor_data_day_hour_minute;
 CREATE UNIQUE INDEX ux_sensor_data_day_hour_minute
 ON sensor_data (date_trunc('minute', data_hora));
