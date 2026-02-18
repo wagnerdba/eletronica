@@ -1,352 +1,391 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ESP32 Health Monitor</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ESP32 Health Monitor</title>
 
-<style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: white;
-}
+	<style>
+		body {
+			margin: 0;
+			font-family: 'Segoe UI', sans-serif;
+			background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+			color: white;
+		}
 
-.header {
-    text-align: center;
-    padding: 5px 20px;
-    padding-bottom: 0px;
-}
+		.header {
+			text-align: center;
+			padding: 5px 20px;
+			padding-bottom: 0px;
+		}
 
-.header h1 {
-    margin: 0;
-    font-size: 28px;
-    letter-spacing: 1px;
-}
+		.header h1 {
+			margin: 0;
+			font-size: 28px;
+			letter-spacing: 1px;
+		}
 
-.header p {
-    opacity: 0.7;
-}
+		.header p {
+			opacity: 0.7;
+		}
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* sempre 2 colunas por padrão */
-    gap: 10px;
-	 justify-content: center; /* centraliza os cards */
-}
+		.container {
+			max-width: 1100px;
+			margin: auto;
+			padding: 20px;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			/* sempre 2 colunas por padrão */
+			gap: 10px;
+			justify-content: center;
+			/* centraliza os cards */
+		}
 
-/* Responsividade: em telas menores que 750px, usar 1 coluna */
-@media (max-width: 750px) {
-    .container {
-        grid-template-columns: 1fr;
-		  justify-content: center; /* mantém centralizado em 1 coluna */
-    }
-}
+		/* Responsividade: em telas menores que 750px, usar 1 coluna */
+		@media (max-width: 750px) {
+			.container {
+				grid-template-columns: 1fr;
+				justify-content: center;
+				/* mantém centralizado em 1 coluna */
+			}
+		}
 
-.card {
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    padding: 25px;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    transition: 0.3s;
-	 height: 320px;
-}
+		.card {
+			background: rgba(255, 255, 255, 0.08);
+			backdrop-filter: blur(12px);
+			border-radius: 20px;
+			padding: 25px;
+			position: relative;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+			transition: 0.3s;
+			height: 320px;
+		}
 
-.card h2 {
-    margin-top: 45px;
-	 text-align: center;
-}
+		.card h2 {
+			margin-top: 45px;
+			text-align: center;
+		}
 
-.card:hover {
-    transform: translateY(-5px);
-}
+		.card:hover {
+			transform: translateY(-5px);
+		}
 
-.env-badge {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-}
+		.env-badge {
+			position: absolute;
+			top: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: 6px 14px;
+			border-radius: 20px;
+			font-size: 18px;
+			font-weight: bold;
+			text-transform: uppercase;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			white-space: nowrap;
+		}
 
-.prod { background: #007bff; }
-.hml  { background: #6f42c1; }
-.dev  { background: #28a745; }
-.teste { background: #ff9900; } /* cor diferente para TESTE - SHT-45 */
+		.prod {
+			background: #007bff;
+		}
 
-.status {
-    display: flex;
-    align-items: center;
-	 justify-content: left;  /* centraliza horizontalmente */
-    margin-top: 10px;
-    font-weight: bold;
-	 font-size: 18px; /* aumento da fonte para os status */
-}
+		.hml {
+			background: #6f42c1;
+		}
 
-@keyframes pulseGreen {
-    0% { box-shadow: 0 0 0 0 rgba(0,255,136,0.9); }
-    70% { box-shadow: 0 0 0 10px rgba(0,255,136,0); }
-    100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); }
-}
+		.dev {
+			background: #28a745;
+		}
 
-@keyframes pulseRed {
-    0% { box-shadow: 0 0 0 0 rgba(255,59,59,0.9); }
-    70% { box-shadow: 0 0 0 10px rgba(255,59,59,0); }
-    100% { box-shadow: 0 0 0 0 rgba(255,59,59,0); }
-}
+		.teste {
+			background: #ff9900;
+		}
 
-.dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
+		/* cor diferente para TESTE - SHT-45 */
 
-.active-dot {
-    background: #00ff88;
-    animation: pulseGreen 1.5s infinite;
-}
+		.status {
+			display: flex;
+			align-items: center;
+			justify-content: left;
+			/* centraliza horizontalmente */
+			margin-top: 10px;
+			font-weight: bold;
+			font-size: 16px;
+			/* aumento da fonte para os status */
+		}
 
-.inactive-dot {
-    background: #ff3b3b;
-    animation: pulseRed 1.5s infinite;
-}
+		@keyframes pulseGreen {
+			0% {
+				box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.9);
+			}
 
-pre {
-    background: rgba(0,0,0,0.6);
-    padding: 15px;
-    border-radius: 12px;
-    font-size: 14px;
-    overflow-x: auto;
-    margin-top: 15px;
-    color: #00ff88;
-    width: calc(95% + 5px);
-    margin-left: -7px;
-}
+			70% {
+				box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+			}
 
-.temp-umidade {
-    margin-top: 0px;
-    margin-bottom: 18px;
-    font-weight: bold;
-    font-size: 18px;
-    color: #00ffcc;
-	 text-align: center;
-}
+			100% {
+				box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+			}
+		}
 
-.footer {
-    text-align: center;
-    padding: 20px;
-	 padding-top: 0px;
-    font-size: 14px;
-    opacity: 0.8;
-}
+		@keyframes pulseRed {
+			0% {
+				box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.9);
+			}
 
-.countdown {
-    font-weight: bold;
-    color: #00ffcc;
-}
+			70% {
+				box-shadow: 0 0 0 10px rgba(255, 59, 59, 0);
+			}
 
-.header h1 {
-    margin: 0;
-    font-size: 36px;
-    font-weight: 900;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-}
+			100% {
+				box-shadow: 0 0 0 0 rgba(255, 59, 59, 0);
+			}
+		}
 
-.header .emoji {
-    font-size: 48px;
-}
+		.dot {
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			margin-right: 10px;
+		}
 
-.header .title-text {
-    color: #00ffcc;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-}
+		.active-dot {
+			background: #00ff88;
+			animation: pulseGreen 1.5s infinite;
+		}
 
-.header p {
-    text-align: center;
-    font-size: 18px;
-    margin-top: 8px;
-    color: #ffffffcc;
-    font-style: italic;
-}
+		.inactive-dot {
+			background: #ff3b3b;
+			animation: pulseRed 1.5s infinite;
+		}
 
-.header p .emoji {
-    font-size: 20px;
-}
+		pre {
+			background: rgba(0, 0, 0, 0.6);
+			padding: 15px;
+			border-radius: 12px;
+			font-size: 14px;
+			overflow-x: auto;
+			margin-top: 15px;
+			color: #00ff88;
+			width: calc(95% + 5px);
+			margin-left: -7px;
+		}
 
-.ip-text {
-    font-size: 22px;
-    font-weight: bold;
-}
+		.temp-umidade {
+			margin-top: 0px;
+			margin-bottom: 18px;
+			font-weight: bold;
+			font-size: 26px;
+			color: #00ffcc;
+			text-align: center;
+		}
 
-</style>
+		.footer {
+			text-align: center;
+			padding: 20px;
+			padding-top: 0px;
+			font-size: 14px;
+			opacity: 0.8;
+		}
+
+		.countdown {
+			font-weight: bold;
+			color: #00ffcc;
+		}
+
+		.header h1 {
+			margin: 0;
+			font-size: 36px;
+			font-weight: 900;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.header .emoji {
+			font-size: 48px;
+		}
+
+		.header .title-text {
+			color: #00ffcc;
+			letter-spacing: 1px;
+			text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+		}
+
+		.header p {
+			text-align: center;
+			font-size: 18px;
+			margin-top: 8px;
+			color: #ffffffcc;
+			font-style: italic;
+		}
+
+		.header p .emoji {
+			font-size: 20px;
+		}
+
+		.ip-text {
+			font-size: 16px;
+			font-weight: bold;
+		}
+	</style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1>
-        <span class="emoji">☀️🌧️</span> 
-        <span class="title-text">ESP32 Health Monitor</span> 
-        <span class="emoji">🌦️⛈️</span> 
-    </h1>
-    <p><span class="emoji">⚡</span>Monitoramento em tempo real<span class="emoji">⚡</span></p>
-</div>
+	<div class="header">
+		<h1>
+			<span class="emoji">☀️🌧️</span>
+			<span class="title-text">ESP32 Health Monitor</span>
+			<span class="emoji">🌦️⛈️</span>
+		</h1>
+		<p><span class="emoji">⚡</span>Monitoramento em tempo real<span class="emoji">⚡</span></p>
+	</div>
 
-<div class="container">
+	<div class="container">
 
-    <div class="card">
-        <div id="badge100" class="env-badge"></div>
-        <h2 id="titulo100" class="ip-text">Carregando...</h2>
-        <div id="temp100" class="temp-umidade"></div>
-        <div id="status100" class="status"></div>
-        <pre id="esp100">Carregando...</pre>
-    </div>
+		<div class="card">
+			<div id="badge100" class="env-badge"></div>
+			<h2 id="titulo100" class="ip-text">Carregando...</h2>
+			<div id="temp100" class="temp-umidade"></div>
+			<div id="status100" class="status"></div>
+			<pre id="esp100">Carregando...</pre>
+		</div>
 
-    <div class="card">
-        <div id="badge101" class="env-badge"></div>
-        <h2 id="titulo101" class="ip-text">Carregando...</h2>
-        <div id="temp101" class="temp-umidade"></div>
-        <div id="status101" class="status"></div>
-        <pre id="esp101">Carregando...</pre>
-    </div>
+		<div class="card">
+			<div id="badge101" class="env-badge"></div>
+			<h2 id="titulo101" class="ip-text">Carregando...</h2>
+			<div id="temp101" class="temp-umidade"></div>
+			<div id="status101" class="status"></div>
+			<pre id="esp101">Carregando...</pre>
+		</div>
 
-    <div class="card">
-        <div id="badge102" class="env-badge"></div>
-        <h2 id="titulo102" class="ip-text">Carregando...</h2>
-        <div id="temp102" class="temp-umidade"></div> 
-        <div id="status102" class="status"></div>
-        <pre id="esp102">Carregando...</pre>
-    </div>
+		<div class="card">
+			<div id="badge102" class="env-badge"></div>
+			<h2 id="titulo102" class="ip-text">Carregando...</h2>
+			<div id="temp102" class="temp-umidade"></div>
+			<div id="status102" class="status"></div>
+			<pre id="esp102">Carregando...</pre>
+		</div>
 
-    <div class="card">
-        <div id="badge103" class="env-badge"></div>
-        <h2 id="titulo103" class="ip-text">Carregando...</h2>
-        <div id="temp103" class="temp-umidade"></div> 
-        <div id="status103" class="status"></div>
-        <pre id="esp103">Carregando...</pre>
-    </div>
+		<div class="card">
+			<div id="badge103" class="env-badge"></div>
+			<h2 id="titulo103" class="ip-text">Carregando...</h2>
+			<div id="temp103" class="temp-umidade"></div>
+			<div id="status103" class="status"></div>
+			<pre id="esp103">Carregando...</pre>
+		</div>
 
-</div>
+	</div>
 
-<div class="footer">
-    Próxima atualização em <span class="countdown" id="contador">15</span>s
-</div>
+	<div class="footer">
+		Próxima atualização em <span class="countdown" id="contador">60</span>s
+	</div>
 
-<script>
+	<script>
 
-const sensores = ["192.168.1.100", "192.168.1.101", "192.168.1.102", "192.168.1.103"];
-let sensoresInativos = new Set();
-let tempoRestante = 15;
-let atualizando = false;
+		const sensores = ["192.168.1.100", "192.168.1.101", "192.168.1.102", "192.168.1.103"];
+		let sensoresInativos = new Set();
+		let tempoRestante = 60;
+		let atualizando = false;
 
-function fetchComTimeout(url, timeout = 2000) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
-    return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
-}
+		function fetchComTimeout(url, timeout = 2000) {
+			const controller = new AbortController();
+			const timer = setTimeout(() => controller.abort(), timeout);
+			return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
+		}
 
-function definirAmbiente(ip, badgeId) {
-    const ultimo = ip.split(".").pop();
-    const badge = document.getElementById(badgeId);
+		function definirAmbiente(ip, badgeId) {
+			const ultimo = ip.split(".").pop();
+			const badge = document.getElementById(badgeId);
 
-    if (ultimo === "100") { badge.innerHTML = 'PRODUÇÃO - SHT45'; badge.className = "env-badge prod"; }
-    else if (ultimo === "101") { badge.innerHTML = 'HOMOLOGAÇÃO - SHT31-D'; badge.className = "env-badge hml"; }
-    else if (ultimo === "102") { badge.innerHTML = 'DESENVOLVIMENTO - DHT22'; badge.className = "env-badge dev"; }
-    else if (ultimo === "103") { badge.innerHTML = 'TESTE - SHT-45'; badge.className = "env-badge teste"; }
-}
+			if (ultimo === "100") { badge.innerHTML = 'PRODUÇÃO - SHT45'; badge.className = "env-badge prod"; }
+			else if (ultimo === "101") { badge.innerHTML = 'HOMOLOGAÇÃO - SHT31-D'; badge.className = "env-badge hml"; }
+			else if (ultimo === "102") { badge.innerHTML = 'DESENVOLVIMENTO - DHT22'; badge.className = "env-badge dev"; }
+			else if (ultimo === "103") { badge.innerHTML = 'TESTE - SHT-45'; badge.className = "env-badge teste"; }
+		}
 
-function setStatus(isActive, statusId, ip) {
-    const status = document.getElementById(statusId);
-    if (isActive) {
-        status.innerHTML = '<div class="dot active-dot"></div> SENSOR ATIVO';
-        sensoresInativos.delete(ip);
-    } else {
-        status.innerHTML = '<div class="dot inactive-dot"></div> SENSOR INATIVO';
-        sensoresInativos.add(ip);
-    }
-}
+		function setStatus(isActive, statusId, ip) {
+			const status = document.getElementById(statusId);
+			if (isActive) {
+				status.innerHTML = '<div class="dot active-dot"></div> SENSOR ATIVO';
+				sensoresInativos.delete(ip);
+			} else {
+				status.innerHTML = '<div class="dot inactive-dot"></div> SENSOR INATIVO';
+				sensoresInativos.add(ip);
+			}
+		}
 
-async function carregar(ip) {
-    const ultimo = ip.split(".").pop();
-    const url = `http://${ip}/esp32/api/temperatura`;
+		function truncar(valor, casas) {
+			const fator = Math.pow(10, casas);
+			return Math.trunc(valor * fator) / fator;
+		}
 
-    try {
-        const response = await fetchComTimeout(url, 2000);
-        if (!response.ok) throw new Error();
-        const json = await response.json();
-        definirAmbiente(ip, `badge${ultimo}`);
-        document.getElementById(`titulo${ultimo}`).textContent = ip;
-        setStatus(true, `status${ultimo}`, ip);
-        document.getElementById(`esp${ultimo}`).textContent = JSON.stringify(json, null, 2);
+		async function carregar(ip) {
+			const ultimo = ip.split(".").pop();
+			const url = `http://${ip}/esp32/api/temperatura`;
 
-        if (json.temperatura_celsius != null && json.umidade != null) {
-            document.getElementById(`temp${ultimo}`).textContent =
-                `🌡️ ${json.temperatura_celsius.toFixed(2)}° C 💧 ${json.umidade.toFixed(2)} %`;
-        } else {
-            document.getElementById(`temp${ultimo}`).textContent = '';
-        }
+			try {
+				const response = await fetchComTimeout(url, 2000);
+				if (!response.ok) throw new Error();
+				const json = await response.json();
+				definirAmbiente(ip, `badge${ultimo}`);
+				document.getElementById(`titulo${ultimo}`).textContent = ip;
+				setStatus(true, `status${ultimo}`, ip);
+				document.getElementById(`esp${ultimo}`).textContent = JSON.stringify(json, null, 2);
 
-    } catch {
-        definirAmbiente(ip, `badge${ultimo}`);
-        document.getElementById(`titulo${ultimo}`).textContent = ip;
-        setStatus(false, `status${ultimo}`, ip);
-        document.getElementById(`esp${ultimo}`).textContent = "Sem resposta.";
-        document.getElementById(`temp${ultimo}`).textContent = '';
-    }
-}
+				if (json.temperatura_celsius != null && json.umidade != null) {
+					document.getElementById(`temp${ultimo}`).textContent = `🌡️ ${truncar(json.temperatura_celsius, 0)}° C 💧 ${truncar(json.umidade, 0)} %`;
+				} else {
+					document.getElementById(`temp${ultimo}`).textContent = '';
+				}
 
-async function atualizarTodos() {
-    if (atualizando) return;
-    atualizando = true;
-    for (const ip of sensores) {
-        await carregar(ip);
-    }
-    tempoRestante = 15;
-    atualizando = false;
-}
+			} catch {
+				definirAmbiente(ip, `badge${ultimo}`);
+				document.getElementById(`titulo${ultimo}`).textContent = ip;
+				setStatus(false, `status${ultimo}`, ip);
+				document.getElementById(`esp${ultimo}`).textContent = "Sem resposta.";
+				document.getElementById(`temp${ultimo}`).textContent = '';
+			}
+		}
 
-setInterval(() => {
-    tempoRestante--;
-    if (tempoRestante < 0) tempoRestante = 0;
-    document.getElementById("contador").textContent = tempoRestante;
+		async function atualizarTodos() {
+			if (atualizando) return;
+			atualizando = true;
+			for (const ip of sensores) {
+				await carregar(ip);
+			}
+			tempoRestante = 60;
+			atualizando = false;
+		}
 
-    if (tempoRestante === 0) atualizarTodos();
-}, 1000);
+		setInterval(() => {
+			tempoRestante--;
+			if (tempoRestante < 0) tempoRestante = 0;
+			document.getElementById("contador").textContent = tempoRestante;
 
-setInterval(() => {
-    sensoresInativos.forEach(async ip => {
-        try {
-            const res = await fetchComTimeout(`http://${ip}/esp32/api/temperatura`, 2000);
-            if (res.ok) {
-                await carregar(ip);
-            }
-        } catch {}
-    });
-}, 5000);
+			if (tempoRestante === 0) atualizarTodos();
+		}, 1000);
 
-atualizarTodos();
+		setInterval(() => {
+			sensoresInativos.forEach(async ip => {
+				try {
+					const res = await fetchComTimeout(`http://${ip}/esp32/api/temperatura`, 2000);
+					if (res.ok) {
+						await carregar(ip);
+					}
+				} catch { }
+			});
+		}, 5000);
 
-</script>
+		atualizarTodos();
+
+	</script>
 
 </body>
+
 </html>
