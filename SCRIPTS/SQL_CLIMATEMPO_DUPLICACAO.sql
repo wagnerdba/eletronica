@@ -3,6 +3,9 @@ select * from sensor_data where uuid = 'b07cf602-3b6e-42f2-9af5-d376fe44b065'
 select * from sensor_data order by id desc limit 15
 select min(data_hora) from sensor_data
 
+select version() -- PostgreSQL 18.1 (Ubuntu 18.1-1.pgdg24.04+2) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, 64-bit
+select version() -- PostgreSQL 18.2 (Ubuntu 18.2-1.pgdg24.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, 64-bit
+
 select * from sensor_data where id >= 782354 limit 4;
 select * from sensor_data where fallback = true or id = 780670;
 select * from sensor_data where fallback is true and data_hora::date = current_date order by id
@@ -78,7 +81,7 @@ WITH minutos_do_dia AS (
 existentes AS (
     SELECT date_trunc('minute', data_hora) AS minuto
     FROM sensor_data
-    WHERE data_hora::date = (now() - interval '1 day')::date
+    WHERE data_hora::date = (now() - interval '2 day')::date
 )
 SELECT m.minuto
 FROM minutos_do_dia m
