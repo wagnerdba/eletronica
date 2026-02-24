@@ -155,8 +155,6 @@ function atualizarContador(){
     segundosRestantes--;
   }
 }
-
-buscarTemperatura();
 setInterval(atualizarContador,1000);
 </script>
 
@@ -167,6 +165,7 @@ setInterval(atualizarContador,1000);
 
 void handleRoot(){
   server.send_P(200,"text/html",HTML_PAGE);
+  Serial.println("200 OK");
 }
 
 void handleTemperatura(){
