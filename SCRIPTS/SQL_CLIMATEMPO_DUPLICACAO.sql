@@ -91,14 +91,39 @@ WHERE e.minuto IS NULL          -- minutos que faltam
 ORDER BY m.minuto;
 
 -------------------------------------------------------------
+-- Registros por dia
+
+SELECT 
+    count(id) AS qtd_gerada,
+    EXTRACT(hour FROM now()) * 60 + EXTRACT(minute FROM now()) + 1 AS qtd_momento,
+    1440 - count(id) as qtd_falha,
+	to_char(data_hora, 'DD/MM/YYYY') AS data,
+    to_char(now(), 'HH24:MI') AS hora_atual
+FROM 
+    sensor_data
+WHERE 
+    date_trunc('month', data_hora) = date_trunc('month', now())
+GROUP BY 
+    to_char(data_hora, 'DD/MM/YYYY')
+ORDER BY 
+    to_char(data_hora, 'DD/MM/YYYY') DESC;
+
+-------------------------------------------------------------
 -- Fallback
+
+select * 
+  from sensor_data
+where fallback is true 
+    and data_hora::date = current_date
+ order by data_hora desc
+
 
 -- ALTER TABLE sensor_data ADD COLUMN fallback BOOLEAN NOT NULL DEFAULT FALSE;
 -- ALTER TABLE sensor_data ADD COLUMN sensor_ip VARCHAR(14) NOT NULL DEFAULT '192.168.1.100';
 
 select * from sensor_data where data_hora::varchar like '2026-02-09 17:32%'
 
-select * from sensor_data where data_hora::varchar like '2026-02-09 17:33%'
+select * from sensor_data where data_hora::varchar like '2026-02-23 19:57%'
 select * from sensor_data where data_hora::varchar like '2026-02-09 17:34%'
 select * from sensor_data where data_hora::varchar like '2026-02-09 17:35%'
 
@@ -107,7 +132,16 @@ select * from sensor_data where data_hora::varchar like '2026-02-09 17:35%'
 -- delete from sensor_data where data_hora::varchar like '2026-02-09 17:35%';
 
 /*
-insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:33:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (21.69413, 71.04943, 80.85626, '2026-02-23 19:58:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (21.69413, 71.04943, 80.85626, '2026-02-23 19:59:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (21.69413, 71.04943, 80.85626, '2026-02-23 20:00:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (21.69413, 71.04943, 80.85626, '2026-02-23 20:01:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (21.69413, 71.04943, 80.85626, '2026-02-23 20:02:05', 0, true);
+insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (21.69413, 71.04943, 80.85626, '2026-02-23 20:03:05', 0, true);
+
+
+
+
 insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:34:05', 0, true);
 insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:35:05', 0, true);
 insert into sensor_data (temperatura_celsius, temperatura_fahrenheit, umidade, data_hora, uptime, fallback) values (26.23903, 79.23026, 60.61707, '2026-02-09 17:36:05', 0, true);
