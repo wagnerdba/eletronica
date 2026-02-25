@@ -23,7 +23,7 @@ WebServer server(80);
 
 float temperatura = 0.0;
 unsigned long lastUpdate = 0;
-const int intervaloAtualizacao = 5; // segundos
+const int intervaloAtualizacao = 30; // segundos
 int segundosRestantes = intervaloAtualizacao;
 
 // ========================= HTML =========================
@@ -155,22 +155,28 @@ const char HTML_PAGE[] PROGMEM = R"rawliteral(
         <div class="unidade">°C</div>
     </div>
 
-    <div class="subinfo" id="contador">5s</div>
+    <div class="subinfo" id="contador">--</div>
 </div>
 
 <script>
 const tempEl = document.getElementById("temp");
 const contadorEl = document.getElementById("contador");
 let atual = 0;
+let INTERVALO = 0; 
+let segundosRestantes = 0;
 
 // Atualiza temperatura e animação
 async function atualizarTemperatura(){
     try {
         const response = await fetch("/temperatura", {cache:"no-store"});
         const json = await response.json();
-        animarTemperatura(parseFloat(json.temperatura_celsius));
+        const novaTemp = parseFloat(json.temperatura_celsius);
+        // só atualiza se leitura válida
+        if(!isNaN(novaTemp) && novaTemp !== -127){
+            animarTemperatura(novaTemp);
+        }
     } catch(e){
-        animarTemperatura(0);
+        // falha na leitura, não atualiza
     }
 }
 
@@ -194,7 +200,7 @@ function animarTemperatura(novo){
 
 // Atualiza contador sincronizado pelo ESP
 function atualizarContador(){
-    contadorEl.textContent = segundosRestantes + "s";
+    contadorEl.textContent = "Atualizar em " + segundosRestantes + "s";
     if(segundosRestantes === 0){
         atualizarTemperatura();
         segundosRestantes = INTERVALO;
@@ -204,8 +210,6 @@ function atualizarContador(){
 }
 
 // Sincroniza o contador com o valor enviado pelo ESP
-let INTERVALO = 5; // será substituído pelo valor do ESP
-
 async function sincronizarContador(){
     try {
         const response = await fetch("/contador", {cache:"no-store"});
@@ -213,7 +217,7 @@ async function sincronizarContador(){
         INTERVALO = json.intervalo;
         segundosRestantes = json.restante;
     } catch(e){
-        INTERVALO = 5;
+        INTERVALO = 30;
         segundosRestantes = INTERVALO;
     }
 }
@@ -236,10 +240,15 @@ void handleRoot(){
 
 void handleTemperatura(){
     sensors.requestTemperatures();
-    temperatura = sensors.getTempCByIndex(0);
+    float leitura = sensors.getTempCByIndex(0);
+
+    // só atualiza se leitura válida
+    if(leitura != DEVICE_DISCONNECTED_C){  // -127 é leitura inválida
+        temperatura = leitura;
+    }
 
     String json = "{\"temperatura_celsius\":";
-    json += String(temperatura,2);
+    json += String(temperatura,2); // sempre envia último valor válido
     json += "}";
 
     server.send(200,"application/json",json);
