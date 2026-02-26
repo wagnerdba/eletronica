@@ -7,6 +7,12 @@
 #include <Wire.h>
 #include <Adafruit_SHT4x.h>
 
+#include <WiFi.h>
+//#include <WebServer.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <ESPmDNS.h>
+
 #define SCL_PIN 21
 #define SDA_PIN 22
 

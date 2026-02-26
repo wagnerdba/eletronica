@@ -243,7 +243,7 @@ void handleTemperatura(){
     float leitura = sensors.getTempCByIndex(0);
 
     // só atualiza se leitura válida
-    if(leitura != DEVICE_DISCONNECTED_C){  // -127 é leitura inválida
+    if(leitura != DEVICE_DISCONNECTED_C){ 
         temperatura = leitura;
     }
 
